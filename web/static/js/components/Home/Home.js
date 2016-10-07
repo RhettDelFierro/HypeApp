@@ -4,7 +4,7 @@ import { homeContainer } from './styles.css'
 
 const Home = (props) => {
         return (
-            <div>
+            <div className={homeContainer}>
               {'Hi!'}
             </div>
         )
