@@ -8,12 +8,14 @@ defmodule Hypeapp.RegistrationController  do
   @doc """
     New user creation. route: /api/v1/registrations POST request.
   """
+
   def create(conn, %{"user" => user_params}) do
     changeset = User.changeset(%User{}, user_params)
 
     #Check the changeset being built with the user params and User.changeset/2
     case Repo.insert(changeset) do
       {:ok, user} ->
+        # encode_and_sign/2 dishes out the jwt and sends it through request body
         {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user, :token)
 
         conn

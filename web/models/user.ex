@@ -1,6 +1,9 @@
 defmodule Hypeapp.User do
   use Hypeapp.Web, :model
 
+  #Poison is Phoenix's default JSON library.
+  @derive {Poison.Encoder, only: [:id, :first_name, :last_name, :email]}
+
   schema "users" do
     field :first_name, :string
     field :last_name, :string
@@ -30,7 +33,6 @@ defmodule Hypeapp.User do
   def registration_changeset(model, params \\ %{}) do
 
   end
-
 
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do

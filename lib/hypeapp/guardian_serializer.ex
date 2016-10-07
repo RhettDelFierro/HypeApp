@@ -1,4 +1,8 @@
 defmodule PhoenixTrello.GuardianSerializer do
+  @moduledocs """
+    This is a module that will tell Guardian how to encode
+    and decode the user into and out of the token
+  """
   @behaviour Guardian.Serializer
   #alias Hypeapp.Repo
   #alias Hypeapp.User
