@@ -1,15 +1,16 @@
 import React {Proptypes, Component}      from 'react';
 import { connect }  from 'react-redux';
-import { routeActions } from 'redux-simple-router';
+import { bindActionCreators } from 'redux'
+import { push } from 'react-router-redux'
 
 class AuthenticatedContainer extends Component {
   componentDidMount() {
     const { dispatch, currentUser } = this.props;
 
-    if (localStorage.getItem('phoenixAuthToken')) {
-      dispatch(Actions.currentUser());
+    if (sessionStorage.getItem('phoenixAuthToken')) {
+      //something here.
     } else {
-      dispatch(routeActions.push('/sign_up'));
+      this.props.changeRoute.push('/sign_up');
     }
   }
 
@@ -18,8 +19,20 @@ class AuthenticatedContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: state.session.currentUser,
-});
+const mapStateToProps = ({}) => {
+  return {
+    currentUser: .get('currentUser')
+  }
+};
 
-export default connect(mapStateToProps)(AuthenticatedContainer);
+const mapDispatchToProps = (dispatch) => {
+    //return bindActionCreators({...actionCreators, changeRoute: (url) => dispatch(push(url)) },dispatch)
+    return {
+      changeRoute: (url) => dispatch(push(url)),
+      dispatch
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
+
+container
