@@ -5,6 +5,7 @@ import thunk from 'redux-thunk'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import * as reducers from 'redux/modules'
+import {reducer as formReducer} from 'redux-form'
 
 import routes from 'config/routes'
 import { browserHistory, applyRouterMiddleware, useRouterHistory } from 'react-router'
@@ -14,7 +15,7 @@ const routermiddle = routerMiddleware(browserHistory)
 const render = applyRouterMiddleware(useScroll())
 
 const store = createStore(
-    combineReducers({...reducers, routing: routerReducer}),
+    combineReducers({...reducers, routing: routerReducer, form: formReducer}),
     compose(
         applyMiddleware(routermiddle, thunk),
         window.devToolsExtension ? window.devToolsExtension() : (f) => f

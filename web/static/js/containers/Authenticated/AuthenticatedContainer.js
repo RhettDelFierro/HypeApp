@@ -15,7 +15,7 @@ class AuthenticatedContainer extends Component {
   }
 
   render() {
-    // ...
+    //..
   }
 }
 
