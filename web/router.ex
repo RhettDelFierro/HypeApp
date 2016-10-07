@@ -9,9 +9,9 @@ defmodule Hypeapp.Router do
     plug :put_secure_browser_headers
   end
 
-  # pipeline :api do
-  #   plug :accepts, ["json"]
-  # end
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
 
   scope "/", Hypeapp do
     pipe_through :browser # Use the default browser stack
@@ -19,8 +19,14 @@ defmodule Hypeapp.Router do
     get "*path", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Hypeapp do
-  #   pipe_through :api
-  # end
+  scope "/api", Hypeapp do
+    pipe_through :api
+
+    scope "/v1" do
+      #/api/v1/registrations route wiht a POST request will go to
+      #the :create action in RegistrationController. To be made.
+      #accepts JSON.
+      post "/registrations", RegistrationController, :create
+    end
+  end
 end

@@ -12,10 +12,10 @@ defmodule Hypeapp.User do
   end
 
   @doc """
-  Builds a changeset based on the `struct` and `params`.
+  Builds a changeset based on the `model (a struct)` and `params`.
   """
-  def changeset(struct, params \\ %{}) do
-    struct
+  def changeset(model, params \\ %{}) do
+    model
     |> cast(params, [:first_name, :last_name, :email, :encrypted_password])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:first_name, min: 1, max: 20)
@@ -24,9 +24,24 @@ defmodule Hypeapp.User do
     |> validate_confirmation(:password, message: "Password does not match")
     |> validate_required([:first_name, :last_name, :email, :password)
     |> unique_constraint(:email, message: "Email already taken")
+    |> generate_encrypted_password
   end
 
   def registration_changeset(model, params \\ %{}) do
 
+  end
+
+
+  defp generate_encrypted_password(current_changeset) do
+    case current_changeset do
+      # All of the above in the changeset() function passed (is valid),
+      #then we'll store the encrypted password on the changet into the db.
+      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
+        put_change(current_changeset, :encrypted_password, Comeonin.Bcrypt.hashpwsalt(password))
+      # If the changeset/2 function doesn't pass all checks, it will return
+      # the original changeset and render the error messages to the user.
+      _ ->
+        current_changeset
+    end
   end
 end
