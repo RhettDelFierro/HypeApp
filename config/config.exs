@@ -26,7 +26,7 @@ config :logger, :console,
 config :guardian, Guardian,
   issuer: "Hypeapp",
   ttl: { 3, :days },
-  verify_issuer: true, # optional
+  verify_issuer: true,
   secret_key: <guardian secret key>,
   serializer: Hypeapp.GuardianSerializer
 
