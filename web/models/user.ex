@@ -1,7 +1,8 @@
 defmodule Hypeapp.User do
   use Hypeapp.Web, :model
 
-  #Poison is Phoenix's default JSON library.
+  #Poison is Phoenix's default JSON library. We will only return the specified
+  #fields when we render a user.
   @derive {Poison.Encoder, only: [:id, :first_name, :last_name, :email]}
 
   schema "users" do

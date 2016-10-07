@@ -27,7 +27,8 @@ config :guardian, Guardian,
   issuer: "Hypeapp",
   ttl: { 3, :days },
   verify_issuer: true,
-  secret_key: <guardian secret key>,
+  #mix phoenix.gen.secret
+  secret_key: "QFyoqmOKIFixwEngPcVp50OJ47+KexxM0jaPUNXlHmvZgE8BFSDowEp0xEPkwrZl",
   serializer: Hypeapp.GuardianSerializer
 
 # Import environment specific config. This must remain at the bottom
