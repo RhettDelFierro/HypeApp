@@ -2,7 +2,7 @@ import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 // import * as ActionCreators from 'redux/modules/whatever'
-// import {  } from 'components'
+import { Navbar } from 'components'
 import { mainContainer } from './styles.css'
 
 class MainContainer extends React.Component {
@@ -13,6 +13,7 @@ class MainContainer extends React.Component {
   render() {
     return (
       <div className={mainContainer}>
+        <Navbar />
         {this.props.children}
       </div>
     )

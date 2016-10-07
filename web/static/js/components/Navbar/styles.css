@@ -1,0 +1,21 @@
+.navbarContainer {
+  position: fixed;
+  justify-content: space-around;
+  display:flex;
+  left: 0;
+  top: 0;
+  height: 10%;
+  width: 100%;
+  background-color: blue;
+  overflow-y: scroll;
+  border-top: 1px solid black;
+}
+
+@media screen and (max-width: 740px) {
+  .navbarContainer {
+    top:90vh;
+    background-color: #F5F5F5;
+    color: #84868c;
+    border-top: 1px solid #d2d3d0;
+  }
+}
