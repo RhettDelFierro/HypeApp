@@ -6,6 +6,10 @@ const routes = (
   <Router history={browserHistory}>
     <Route path='/' component={MainContainer}>
       <IndexRoute component={HomeContainer} />
+        <Route path="/sign_up" component={RegistrationsNew} />
+        <Route path="/sign_in" component={SessionsNew} />
+        <Route path="/" component={AuthenticatedContainer}>
+        <Route path="/boards/:id" component={BoardsShowView} />  
     </Route>
   </Router>
 )
