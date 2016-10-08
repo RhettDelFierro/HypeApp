@@ -17,7 +17,12 @@ export function renderErrorsFor(errors, ref) {
 
 export async function registerUserAPI({ data,errorCallBack }) {
   try {
-        const response = axios.post("/api/v1/registrations", {data: {user: data}});
+        const response = axios.post("/api/v1/registrations", {data: {user: data}}, {
+            headers: {
+                // 'Authorization': 'Bearer ' + window.sessionStorage.getItem(tokenType)
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true});
         window.sessionStorage.setItem('phoenixAuthToken', response.jwtToken)
         return response.user
     } catch (error) {

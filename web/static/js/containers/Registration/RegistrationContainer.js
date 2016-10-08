@@ -1,7 +1,7 @@
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as ActionCreators from 'redux/modules/whatever'
+import * as usersActionCreators from 'redux/modules/users'
 import { Registration } from 'components'
 
 class RegistrationContainer extends Component {
@@ -39,7 +39,7 @@ function mapStateToProps({}) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators(ActionCreators, dispatch)
+    return bindActionCreators(usersActionCreators, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegistrationContainer)

@@ -6,7 +6,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import * as reducers from 'redux/modules'
 import {reducer as formReducer} from 'redux-form'
-
+import { useScroll } from 'react-router-scroll'
 import routes from 'config/routes'
 import { browserHistory, applyRouterMiddleware, useRouterHistory } from 'react-router'
 import { routerReducer, syncHistoryWithStore, routerMiddleware } from 'react-router-redux'

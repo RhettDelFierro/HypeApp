@@ -1,10 +1,9 @@
 import { fromJS, Map } from 'immutable'
-import { registerUserAPI, loginUser, logoutUser } from 'utils/userFunctions'
-import { closeModal } from 'redux/modules/modal'
-import { closeNavModal } from 'redux/modules/navModal'
+import { registerUserAPI } from 'utils/userFunctions'
 import { push, goBack } from 'react-router-redux'
 
 const REGISTER_USER = 'REGISTER_USER'
+const REGISTRATION_ERROR = 'REGISTRATION_ERROR'
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
 const FETCHING_USER = 'FETCHING_USER'
@@ -14,10 +13,10 @@ const SPOTIFY_AUTH = 'SPOTIFY_AUTH'
 const FORM_LOGIN = 'FORM_LOGIN'
 const SET_LAST_ROUTE = 'SET_LAST_ROUTE'
 
-export function authUser(uid) {
+export function authUser({ currentUser }) {
     return {
         type: AUTH_USER,
-        uid
+        currentUser
     }
 }
 
@@ -43,39 +42,18 @@ export function fetchingUser() {
 export function registerUser({ data }) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
-    const user = await registerUserAPI({ data },({ errorObject ) =>{
+    const user = await registerUserAPI({ data },({ errorObject }) =>{
       dispatch(errorHandler({ errorObject }))
     })
-    dispatch(fetchingUserSuccess({ user }))
+    dispatch(fetchingUserSuccess({ currentUser }))
+    dispatch(push('/'))
   }
 }
 
-export function fetchingUserSuccess({ user }) {
+export function fetchingUserSuccess({ currentUser }) {
     return {
         type: FETCHING_USER_SUCCESS,
-        user
-    }
-}
-
-export function register({email, username, password}) {
-    return async function (dispatch,getState) {
-        try {
-            dispatch(fetchingUser())
-            const data = await registerUser({username, email, password})
-            const user_id = data.user.user_id
-            const user = data.user
-            //I want to clean some of this.
-            //Possibly take care of a lot of it in fetchingUserSuccess()?
-            dispatch(fetchingUserSuccess({user_id, user, timestamp: Date.now()}))
-            dispatch(closeModal())
-            dispatch(closeNavModal())
-            dispatch(formLogin())
-            dispatch(authUser(user_id))
-            dispatch(push(goBack() || '/'))
-            return user_id
-        } catch (error) {
-            Error('error in registerUser', error)
-        }
+        currentUser
     }
 }
 
@@ -109,17 +87,6 @@ export function logout(){
     }
 }
 
-//putting the last route user visited here if they have to auth/re-auth
-//this will take them back to the route they were previously on.
-//will handle this here until I find out how to do it in
-//react-router/react-router-redux
-export function setLastRoute({ lastRoute }) {
-    return {
-        type: SET_LAST_ROUTE,
-        lastRoute
-    }
-}
-
 const userInitialState = fromJS({
     info: {
         username: '',
@@ -142,9 +109,8 @@ const initialState = fromJS({
     isAuthed: false,
     isFetching: false,
     error: false,
-    firstName: '',
-    lastName: '',
-    email: ''
+    currentUser: {},
+    errorObject: {},
 })
 
 export default function users(state = initialState, action) {
@@ -152,7 +118,7 @@ export default function users(state = initialState, action) {
         case AUTH_USER:
             return state.merge({
                 isAuthed: true,
-                authId: action.uid
+                currentUser: action.currentUser
             })
         case FETCHING_USER: {
             return state.merge({
@@ -163,18 +129,13 @@ export default function users(state = initialState, action) {
             return state.merge({
                 isFetching: false,
                 error: false,
-                firstName: action.user.firstName,
-                lastName: action.user.lastName,
-                email: action.user.email
+                currentUser: action.currentUser
             })
-        case FORM_LOGIN:
+        case REGISTRATION_ERROR:
             return state.merge({
-                appLogin: true
-            })
-        case SPOTIFY_AUTH:
-            return state.merge({
-                isFetching: false,
-                spotifyAuthed: true
+              isFetching: false,
+              error: true,
+              errorObject: action.errorObject
             })
         case SET_LAST_ROUTE:
             return state.merge({

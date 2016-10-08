@@ -1,5 +1,17 @@
 .registrationContainer {
+  display: flex;
+  flex-firection: column;
+  justify-content: center;
+  align-self: center;
+}
 
+.field {
+  padding: 10px;
+
+}
+
+.field > input {
+  border: 1px solid darkgray;
 }
 
 .error {

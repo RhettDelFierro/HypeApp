@@ -26,7 +26,7 @@ defmodule Hypeapp.User do
     |> validate_length(:last_name, min: 1, max: 20)
     |> validate_length(:password, min: 5)
     |> validate_confirmation(:password, message: "Password does not match")
-    |> validate_required([:first_name, :last_name, :email, :password)
+    |> validate_required([:first_name, :last_name, :email, :password])
     |> unique_constraint(:email, message: "Email already taken")
     |> generate_encrypted_password
   end
