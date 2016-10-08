@@ -28,10 +28,14 @@ defmodule Hypeapp.Router do
     pipe_through :api
 
     scope "/v1" do
-      #/api/v1/registrations route wiht a POST request will go to
-      #the :create action in RegistrationController. To be made.
-      #accepts JSON.
+      #accepts JSON
+
+      # get request to /api/v1/current_user
+      get "/current_user", CurrentUserController, :show
+      #/api/v1/registrations route with a POST request will go to
+      #the :create action in RegistrationController.
       post "/registrations", RegistrationController, :create
+      #POST requests to api/v1/sessions and /api/v1/sessions/:id respectively.
       resources "/sessions", SessionController, only: [:create, :delete]
     end
   end

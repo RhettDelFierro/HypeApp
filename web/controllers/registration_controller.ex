@@ -1,4 +1,7 @@
 defmodule Hypeapp.RegistrationController  do
+  @moduledoc """
+    New user controller.
+  """
   use Hypeapp.Web, :controller
 
   alias Hypeapp.{Repo, User}

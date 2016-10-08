@@ -1,5 +1,5 @@
 defmodule Hypeapp.Session do
-  @moduledocs """
+  @moduledoc """
     helpers to authenticate the use for Hypeapp.SessionController.
   """
   alias Hypeapp.{Repo, User}

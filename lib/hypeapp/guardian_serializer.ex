@@ -1,5 +1,5 @@
 defmodule PhoenixTrello.GuardianSerializer do
-  @moduledocs """
+  @moduledoc """
     This is a module that will tell Guardian how to encode
     and decode the user into and out of the token
   """

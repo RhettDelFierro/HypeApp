@@ -1,6 +1,6 @@
 defmodule Hypeapp.SessionController do
-  @moduledocs """
-    Standard user login.
+  @moduledoc """
+    Standard user login through send form data.
   """
   use Hypeapp.Web, :controller
 
@@ -32,6 +32,12 @@ defmodule Hypeapp.SessionController do
         |> put_status(:unprocessable_entity)
         |> render("error.json")
     end
+  end
+
+  def unauthenticated(conn, _params) do
+    conn
+    |> put_status(:forbidden)
+    |> render(Hypeapp.SessionView, "forbidden.json", error: "Not Authenticated")
   end
 
 end
