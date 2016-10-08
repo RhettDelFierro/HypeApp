@@ -11,6 +11,11 @@ defmodule Hypeapp.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    # looks for Authorization Header
+    plug Guardian.Plug.VerifyHeader
+    # makes current resource available to Guardian.Plug.current_resource(conn)
+    # IF the token is present.
+    plug Guardian.Plug.LoadResource
   end
 
   scope "/", Hypeapp do
@@ -27,6 +32,7 @@ defmodule Hypeapp.Router do
       #the :create action in RegistrationController. To be made.
       #accepts JSON.
       post "/registrations", RegistrationController, :create
+      resources "/sessions", SessionController, only: [:create, :delete]
     end
   end
 end

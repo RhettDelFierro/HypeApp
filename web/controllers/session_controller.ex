@@ -1,5 +1,5 @@
-defmodule PhoenixTrello.SessionController do
-  use PhoenixTrello.Web, :controller
+defmodule Hypeapp.SessionController do
+  use Hypeapp.Web, :controller
 
   # scrub_params: Ensure the required key exists ("session") for :create.
   # Change empty values from the map in params with the required key to nil
