@@ -27,7 +27,7 @@ class RegistrationContainer extends Component {
 
   render() {
     return (
-      <Registration />
+      <Registration registerRef={(ref) = this.registerNode = ref}/>
     )
   }
 }
