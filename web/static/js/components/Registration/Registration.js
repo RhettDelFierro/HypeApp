@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { error } from './styles.css'
 import { registrationContainer, connect } from 'react-redux'
-import * as userActions from 'redux/modules/users'
+import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
 import validate from './validate'
 import { renderErrors } from 'utils/userFunctions'
@@ -26,17 +26,16 @@ class RegistrationContainer extends Component {
     const { dispatch } = this.props;
 
     const data = {
-      first_name: this.refs.firstName.value,
-      last_name: this.refs.lastName.value,
-      email: this.refs.email.value,
-      password: this.refs.password.value,
-      password_confirmation: this.refs.passwordConfirmation.value,
+      first_name: this.firstNameNode.value,
+      last_name: this.lastNameNode.value,
+      email: this.emailNode.value,
+      password: this.passwordNode.value,
+      password_confirmation: this.passwordConfirmationNode.value,
     };
-
+    this.props.registerUser({data})
   }
     //could also user handleSubmit(() => register)
     render() {
-    const { handleSubmit, pristine, reset, submitting, register } = props
     return (
       <div className={registrationContainer}>
         <form onSubmit={this._handleSubmit}>
@@ -58,7 +57,7 @@ class RegistrationContainer extends Component {
               {renderErrorsFor(errors, 'password')}
             </div>
             <div className="field">
-              <Field inputRef={node => this.passwordConfirmNode = node} placeholder="Confirm Password" typeOf="password"/>
+              <Field inputRef={node => this.passwordConfirmationNode = node} placeholder="Confirm Password" typeOf="password"/>
               {renderErrorsFor(errors, 'password_confirmation')}
             </div>
             <button type="submit">Sign up</button>
@@ -69,4 +68,14 @@ class RegistrationContainer extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationContainer)
+const mapStateToProps = () => {
+  return {
+
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(userActionCreators,dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(RegistrationContainer)
