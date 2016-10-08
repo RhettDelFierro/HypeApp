@@ -1,4 +1,7 @@
 defmodule Hypeapp.SessionController do
+  @moduledocs """
+    Standard user login.
+  """
   use Hypeapp.Web, :controller
 
   # scrub_params: Ensure the required key exists ("session") for :create.
@@ -15,7 +18,7 @@ defmodule Hypeapp.SessionController do
   # Routes to /api/v1/sessions -> POST request to sign-in.
   def create(conn, %{"session" => session_params}) do
 
-    #check if user is authenticated then send back jwt if they are.
+    #check helper: user is authenticated, send back jwt if they are.
     case Hypeapp.Session.authenticate(session_params) do
       {:ok, user} ->
         {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
