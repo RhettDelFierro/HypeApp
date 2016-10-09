@@ -3,6 +3,7 @@ import { registerUserAPI } from 'utils/userFunctions'
 import { push, goBack } from 'react-router-redux'
 
 const REGISTER_USER = 'REGISTER_USER'
+const LOGIN_ERROR = 'LOGIN_ERROR'
 const REGISTRATION_ERROR = 'REGISTRATION_ERROR'
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
@@ -26,9 +27,16 @@ function unauthUser() {
     }
 }
 
-function errorHandler({ errorObject }){
+function errorRegisterHandler(errorObject){
   return {
     type: REGISTRATION_ERROR,
+    errorObject
+  }
+}
+
+function errorLoginHandler(errorObject){
+  return {
+    type: LOGIN_ERROR,
     errorObject
   }
 }
@@ -42,11 +50,24 @@ export function fetchingUser() {
 export function registerUser({ data }) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
-    const user = await registerUserAPI({ data },({ errorObject }) =>{
-      dispatch(errorHandler({ errorObject }))
+    const user = await registerUserAPI(
+    {
+      data,
+      errorCallBack: (errorObject) => dispatch(errorRegisterHandler(errorObject))
     })
     dispatch(fetchingUserSuccess({ currentUser }))
     dispatch(push('/'))
+  }
+}
+
+export function loginUser({data}) {
+  return async (dispatch,getState) => {
+    dispatch(fetchingUser())
+    const user = await loginUserAPI(
+      {
+        data,
+        errorCallBack: (errorObject) => dispatch(errorLoginHandler(errorObject))
+        })
   }
 }
 
@@ -54,28 +75,6 @@ export function fetchingUserSuccess({ currentUser }) {
     return {
         type: FETCHING_USER_SUCCESS,
         currentUser
-    }
-}
-
-export function login({email, password}) {
-    return async function (dispatch,getState) {
-        try {
-            dispatch(fetchingUser())
-            const data = await loginUser({email, password})
-            const user = data.user
-            const username = data.user.username
-            const user_id = data.user.user_id
-            //I want to clearn some of this.
-            dispatch(fetchingUserSuccess({user_id, user, timestamp: Date.now()}))
-            dispatch(closeModal())
-            dispatch(closeNavModal())
-            dispatch(formLogin())
-            dispatch(authUser(user_id))
-            dispatch(push(push(goBack() || '/')))
-            return user_id
-        } catch (error) {
-            Error('error in loginUser', error)
-        }
     }
 }
 
@@ -132,6 +131,12 @@ export default function users(state = initialState, action) {
                 currentUser: action.currentUser
             })
         case REGISTRATION_ERROR:
+            return state.merge({
+              isFetching: false,
+              error: true,
+              errorObject: action.errorObject
+            })
+        case LOGIN_ERROR:
             return state.merge({
               isFetching: false,
               error: true,
