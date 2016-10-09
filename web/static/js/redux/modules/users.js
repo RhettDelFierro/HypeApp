@@ -65,9 +65,11 @@ export function loginUser({data}) {
     dispatch(fetchingUser())
     const user = await loginUserAPI(
       {
-        data,
-        errorCallBack: (errorObject) => dispatch(errorLoginHandler(errorObject))
-        })
+      data,
+      errorCallBack: (errorObject) => dispatch(errorLoginHandler(errorObject))
+      })
+    dispatch(fetchingUserSuccess({ currentUser }))
+    dispatch(push('/'))
   }
 }
 
@@ -110,6 +112,7 @@ const initialState = fromJS({
     error: false,
     currentUser: {},
     errorObject: {},
+    socket: null
 })
 
 export default function users(state = initialState, action) {

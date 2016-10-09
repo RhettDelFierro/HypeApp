@@ -6,20 +6,10 @@ import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
 import validate from './validate'
 import { renderErrorsFor } from 'utils/userFunctions'
+import { Field } from 'components'
 import { loginContainer, field, error, submitRegistration } from './styles.css'
 
-class Field extends Component {
-  render() {
-    return (
-      <input className={this.props.classType} type={this.props.typeOf} placeholder={this.props.placeholder} ref={this.props.inputRef} required={true} />
-    )
-  }
-}
-
-class RegistrationContainer extends Component {
-  componentDidMount() {
-
-  }
+class Login extends Component {
 
   _handleSubmit(e) {
     e.preventDefault();
@@ -37,41 +27,48 @@ class RegistrationContainer extends Component {
   }
 
   _renderError() {
-    const { error } = this.props;
+    let { error } = this.props;
 
     if (!error) return false;
-    //could also user handleSubmit(() => register)
-    render() {
+
     return (
-      <div className={registrationContainer}>
-        <form onSubmit={this._handleSubmit}>
-            {this._renderError()}
-            <div className={field}>
-              <Field inputRef={node => this.firstNameNode = node} placeholder="First Name" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'first_name')}
-            </div>
-            <div className={field}>
-            <Field inputRef={node => this.lastNameNode = node} placeholder="Last Name" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'last_name')}
-            </div>
-            <div className={field}>
-            <Field inputRef={node => this.emailNode = node} placeholder="Email" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'email')}
-            </div>
-            <div className={field}>
-              <Field inputRef={node => this.passWordNode = node} typeOf="password" placeholder="Password" />
-              {renderErrorsFor(this.props.errors, 'password')}
-            </div>
-            <div className={field}>
-              <Field inputRef={node => this.passwordConfirmationNode = node} placeholder="Confirm Password" typeOf="password"/>
-              {renderErrorsFor(this.props.errors, 'password_confirmation')}
-            </div>
-            <button type={submitRegistration}>Sign up</button>
-        </form>
-        <Link to="/sign_in">{'Sign in'}</Link>
+      <div className="error">
+        {error}
       </div>
-    )
-    }
+    );
+  }
+
+  render() {
+  return (
+    <div className={loginContainer}>
+      <form onSubmit={this._handleSubmit}>
+          {this._renderError()}
+          <div className={field}>
+            <Field inputRef={node => this.firstNameNode = node} placeholder="First Name" typeOf="text"/>
+            {renderErrorsFor(this.props.errors, 'first_name')}
+          </div>
+          <div className={field}>
+          <Field inputRef={node => this.lastNameNode = node} placeholder="Last Name" typeOf="text"/>
+            {renderErrorsFor(this.props.errors, 'last_name')}
+          </div>
+          <div className={field}>
+          <Field inputRef={node => this.emailNode = node} placeholder="Email" typeOf="text"/>
+            {renderErrorsFor(this.props.errors, 'email')}
+          </div>
+          <div className={field}>
+            <Field inputRef={node => this.passWordNode = node} typeOf="password" placeholder="Password" />
+            {renderErrorsFor(this.props.errors, 'password')}
+          </div>
+          <div className={field}>
+            <Field inputRef={node => this.passwordConfirmationNode = node} placeholder="Confirm Password" typeOf="password"/>
+            {renderErrorsFor(this.props.errors, 'password_confirmation')}
+          </div>
+          <button type={submitRegistration}>Sign up</button>
+      </form>
+      <Link to="/sign_in">{'Sign in'}</Link>
+    </div>
+  )
+  }
 }
 
 const mapStateToProps = ({ users }) => {
@@ -84,4 +81,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(userActionCreators,dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(RegistrationContainer)
+export default connect(null, mapDispatchToProps)(Login)

@@ -7,16 +7,9 @@ import { push } from 'react-router-redux'
 import validate from './validate'
 import { renderErrorsFor } from 'utils/userFunctions'
 import { registrationContainer, field, error, submitRegistration } from './styles.css'
+import { Field } from 'components'
 
-class Field extends Component {
-  render() {
-    return (
-      <input className={this.props.classType} type={this.props.typeOf} placeholder={this.props.placeholder} ref={this.props.inputRef} required={true} />
-    )
-  }
-}
-
-class RegistrationContainer extends Component {
+class Registration extends Component {
   componentDidMount() {
 
   }
@@ -78,4 +71,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(userActionCreators,dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(RegistrationContainer)
+export default connect(null, mapDispatchToProps)(Registration)
