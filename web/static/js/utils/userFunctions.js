@@ -38,3 +38,18 @@ export async function loginUserAPI({ data }) {
       return JSON.parse(error)
   }
 }
+
+export async function currentUserAPI() {
+  try {
+    const authToken = sessionStorage.getItem('phoenixAuthToken')
+    const response = axios.get("/api/v1/current_user",
+      { headers: {
+        'Authorization': authToken,
+        'Content-Type': 'application/json'
+
+        }
+    )
+  } catch {
+
+  }
+}

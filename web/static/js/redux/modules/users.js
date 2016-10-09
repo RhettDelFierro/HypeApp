@@ -1,6 +1,6 @@
 import { fromJS, Map } from 'immutable'
-import { registerUserAPI } from 'utils/userFunctions'
-import { push, goBack } from 'react-router-redux'
+import { registerUserAPI, loginUserAPI, currentUserAPI } from 'utils/userFunctions'
+import { push, go } from 'react-router-redux'
 
 const REGISTER_USER = 'REGISTER_USER'
 const LOGIN_ERROR = 'LOGIN_ERROR'
@@ -49,7 +49,7 @@ export function registerUser({ data }) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
     try {
-      const user = await registerUserAPI({ data })
+      const currentUser = await registerUserAPI({ data })
       dispatch(fetchingUserSuccess({ currentUser }))
       dispatch(push('/'))
     } catch (errorObject) {
@@ -62,11 +62,23 @@ export function loginUser({data}) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
     try {
-      const user = await loginUserAPI({data,})
+      const currentUser = await loginUserAPI({data,})
       dispatch(fetchingUserSuccess({ currentUser }))
       dispatch(push('/'))
     } catch (errorObject) {
       dispatch(errorRegisterHandler(errorObject))
+    }
+  }
+}
+
+export function currentUser() {
+  return async (dispatch,getState) => {
+    try {
+      const currentUser = await currentUserAPI()
+      dispatch(fetchingUserSuccess({ currentUser }))
+    } catch (errorObject) {
+      console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', errorObject)
+      dispatch(push('/sign_in'))
     }
   }
 }
