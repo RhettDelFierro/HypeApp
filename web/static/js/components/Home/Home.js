@@ -1,11 +1,28 @@
 import React, { PropTypes, Component} from "react"
-import { homeContainer } from './styles.css'
+import { homeContainer, mapPlace, userSection } from './styles.css'
 
 
 const Home = (props) => {
         return (
             <div className={homeContainer}>
-              {'Hi!'}
+              <div className={mapPlace}>
+                {'yo!'}
+              </div>
+              <div className={userSection}>
+                {'review realtime'}
+              </div>
+              <div className={userSection}>
+                {'review realtime'}
+              </div>
+              <div className={userSection}>
+                {'review realtime'}
+              </div>
+              <div className={userSection}>
+                {'review realtime'}
+              </div>
+              <div className={userSection}>
+                {'review realtime'}
+              </div>
             </div>
         )
 }

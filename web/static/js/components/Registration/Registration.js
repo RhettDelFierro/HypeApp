@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
-import validate from './validate'
 import { renderErrorsFor } from 'utils/userFunctions'
 import { registrationContainer, field, error, submitRegistration } from './styles.css'
 import { Field } from 'components'
@@ -55,7 +54,7 @@ class Registration extends Component {
             </div>
             <button type={submitRegistration}>Sign up</button>
         </form>
-        <Link to="/sign_in">{'Sign in'}</Link>
+        <Link to="/sign_in">{'Sign In'}</Link>
       </div>
     )
     }
@@ -63,7 +62,7 @@ class Registration extends Component {
 
 const mapStateToProps = ({ users }) => {
   return {
-    errors: users.get('errorObject')
+    errors: users.get('errorRegisterObject')
   }
 }
 

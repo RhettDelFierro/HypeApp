@@ -111,8 +111,10 @@ const initialState = fromJS({
     isFetching: false,
     error: false,
     currentUser: {},
-    errorObject: {},
-    socket: null
+    socket: null,
+    //instead of DRY, could maybe make a reducer for errors.
+    errorRegisterObject: {},
+    errorLoginObject: {}
 })
 
 export default function users(state = initialState, action) {
@@ -131,19 +133,21 @@ export default function users(state = initialState, action) {
             return state.merge({
                 isFetching: false,
                 error: false,
+                erorRegisterObject: {},
+                errorLoginObject: {},
                 currentUser: action.currentUser
             })
         case REGISTRATION_ERROR:
             return state.merge({
               isFetching: false,
               error: true,
-              errorObject: action.errorObject
+              errorRegisterObject: action.errorObject
             })
         case LOGIN_ERROR:
             return state.merge({
               isFetching: false,
               error: true,
-              errorObject: action.errorObject
+              errorLoginObject: action.errorObject
             })
         case SET_LAST_ROUTE:
             return state.merge({
