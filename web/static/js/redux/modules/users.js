@@ -48,26 +48,26 @@ export function fetchingUser() {
 export function registerUser({ data }) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
-    const user = await registerUserAPI(
-    {
-      data,
-      errorCallBack: (errorObject) => dispatch(errorRegisterHandler(errorObject))
-    })
-    dispatch(fetchingUserSuccess({ currentUser }))
-    dispatch(push('/'))
+    try {
+      const user = await registerUserAPI({ data })
+      dispatch(fetchingUserSuccess({ currentUser }))
+      dispatch(push('/'))
+    } catch (errorObject) {
+        dispatch(errorRegisterHandler(errorObject))
+      }
   }
 }
 
 export function loginUser({data}) {
   return async (dispatch,getState) => {
     dispatch(fetchingUser())
-    const user = await loginUserAPI(
-      {
-      data,
-      errorCallBack: (errorObject) => dispatch(errorLoginHandler(errorObject))
-      })
-    dispatch(fetchingUserSuccess({ currentUser }))
-    dispatch(push('/'))
+    try {
+      const user = await loginUserAPI({data,})
+      dispatch(fetchingUserSuccess({ currentUser }))
+      dispatch(push('/'))
+    } catch (errorObject) {
+      dispatch(errorRegisterHandler(errorObject))
+    }
   }
 }
 
