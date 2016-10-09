@@ -26,14 +26,18 @@ export const history = syncHistoryWithStore(browserHistory, store)
 
 //these arguments are what react-router will give to this function when it sees the onEnter prop.
 function authCheck(nextState, replace) {
-    // if (store.getState().users.get('isFetching') === true) {
-    //     return
-    // }
-    // const authed = store.getState().users.get('isAuthed')
-    // const nextPathName = nextState.location.pathname
-    if (authed !== true) {
-        store.dispatch(setLastRoute({ lastRoute: nextPathName }))
-        replace('/login')
+    if (store.getState().users.get('isFetching') === true) {
+        return
+    }
+    const authed = store.getState().users.get('isAuthed')
+    const nextPathName = nextState.location.pathname
+    const phoenixAuthToken = sessionStorage.getItem('phoenixAuthToken');
+    if (phoenixAuthToken && !authed) {
+        store.dispatch(currentUser())
+    } else if (!phoenixAuthToken) {
+      //can always use react-router-redux to go(-2) when their sign-in is successful instead of setLastRoute.
+      store.dispatch(setLastRoute({ lastRoute: nextPathName }))
+      replace('/sign_in')
     }
 }
 

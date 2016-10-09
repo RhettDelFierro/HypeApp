@@ -15,32 +15,26 @@ export function renderErrorsFor(errors, ref) {
   });
 }
 
-export async function registerUserAPI({ data, errorCallBack }) {
+export async function registerUserAPI({ data }) {
   try {
-        const response = axios.post("/api/v1/registrations", {data: {user: data}},
-        {
-            headers: {'Content-Type': 'application/json'},
-            withCredentials: true
-        });
-        window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
-        return response.user
-    } catch (error) {
-        let errorObject = JSON.parse(error)
-        errorCallBack({errorObject: errorObject})
-    }
+    const response = axios.post("/api/v1/registrations",
+    { data: {user: data} },
+    { headers: {'Content-Type': 'application/json'}, withCredentials: true });
+    window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
+    return response.user
+  } catch (error) {
+      return JSON.parse(error)
+  }
 }
 
-export async function loginUserAPI({ data, errorCallBack }) {
+export async function loginUserAPI({ data }) {
   try {
-        const response = axios.post("/api/v1/sessions",{data: {session: data }},
-        {
-          headers: {'Content-Type': 'application/json'},
-          withCredentials: true
-        });
-        window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
-        return response.user
-    } catch (error) {
-        let errorObject = JSON.parse(error)
-        errorCallBack({errorObject: errorObject})
-    }
+    const response = axios.post("/api/v1/sessions",
+    { data: {session: data } },
+    { headers: {'Content-Type': 'application/json'}, withCredentials: true });
+    window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
+    return response.user
+  } catch (error) {
+      return JSON.parse(error)
+  }
 }

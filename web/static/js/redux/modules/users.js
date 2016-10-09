@@ -86,6 +86,13 @@ export function logout(){
     }
 }
 
+export function setLastRoute({ lastRoute }) {
+    return {
+        type: SET_LAST_ROUTE,
+        lastRoute
+    }
+}
+
 const userInitialState = fromJS({
     info: {
         username: '',
@@ -131,7 +138,7 @@ export default function users(state = initialState, action) {
             return state.merge({
                 isFetching: false,
                 error: false,
-                erorRegisterObject: {},
+                errorRegisterObject: {},
                 errorLoginObject: {},
                 currentUser: action.currentUser
             })
