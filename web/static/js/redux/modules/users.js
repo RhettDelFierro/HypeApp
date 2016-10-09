@@ -10,8 +10,6 @@ const UNAUTH_USER = 'UNAUTH_USER'
 const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const LOGOUT_USER = 'LOGOUT_USER'
-const SPOTIFY_AUTH = 'SPOTIFY_AUTH'
-const FORM_LOGIN = 'FORM_LOGIN'
 const SET_LAST_ROUTE = 'SET_LAST_ROUTE'
 
 export function authUser({ currentUser }) {
@@ -156,10 +154,7 @@ export default function users(state = initialState, action) {
         case LOGOUT_USER:
             return state.merge({
                 isAuthed: false,
-                isFetching: false,
-                authId: '',
-                spotifyAuthed: false,
-                appLogin: false
+                isFetching: false
             })
         default:
             return state
