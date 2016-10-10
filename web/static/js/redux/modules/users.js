@@ -1,5 +1,5 @@
 import { fromJS, Map } from 'immutable'
-import { registerUserAPI, loginUserAPI, currentUserAPI } from 'utils/userFunctions'
+import { registerUserAPI, loginUserAPI, currentUserAPI, logoutAPI } from 'utils/userFunctions'
 import { push, go } from 'react-router-redux'
 
 const REGISTER_USER = 'REGISTER_USER'
@@ -92,9 +92,12 @@ export function fetchingUserSuccess({ currentUser }) {
 
 export function logout(){
     return async function (dispatch) {
-        let response = await logoutUser()
-        console.log(response)
+      try{
+        let response = await logoutAPI()
         dispatch({type: LOGOUT_USER})
+      } catch (error){
+      console.log(error)
+      }
     }
 }
 
@@ -173,7 +176,8 @@ export default function users(state = initialState, action) {
         case LOGOUT_USER:
             return state.merge({
                 isAuthed: false,
-                isFetching: false
+                isFetching: false,
+                currentUser: new Map({})
             })
         default:
             return state

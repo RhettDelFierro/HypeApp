@@ -17,7 +17,7 @@ export function renderErrorsFor(errors, ref) {
 
 export async function registerUserAPI({ data }) {
   try {
-    const response = axios.post("/api/v1/registrations",
+    const response = await axios.post("/api/v1/registrations",
     { data: {user: data} },
     { headers: {'Content-Type': 'application/json'}, withCredentials: true });
     window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
@@ -29,7 +29,7 @@ export async function registerUserAPI({ data }) {
 
 export async function loginUserAPI({ data }) {
   try {
-    const response = axios.post("/api/v1/sessions",
+    const response = await axios.post("/api/v1/sessions",
     { data: {session: data } },
     { headers: {'Content-Type': 'application/json'}, withCredentials: true });
     window.sessionStorage.setItem('phoenixAuthToken', response.jwt)
@@ -42,14 +42,31 @@ export async function loginUserAPI({ data }) {
 export async function currentUserAPI() {
   try {
     const authToken = sessionStorage.getItem('phoenixAuthToken')
-    const response = axios.get("/api/v1/current_user",
+    const response = await axios.get("/api/v1/current_user",
       { headers: {
         'Authorization': authToken,
         'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    })
+  } catch (error) {
+      return error
+  }
+}
 
-        }
-    )
-  } catch {
-
+export async function logoutAPI() {
+  try {
+    const authToken = sessionStorage.getItem('phoenixAuthToken')
+    const response = axtion.delete('/api/v1/sessions',
+    { headers: {
+      'Authorization': authToken,
+      'Content-Type': 'application/json'
+      },
+    withCredentials: true
+    })
+    sessionStorage.removeItem('phoenixAuthToken')
+    return response
+  } catch (error) {
+    return error
   }
 }
