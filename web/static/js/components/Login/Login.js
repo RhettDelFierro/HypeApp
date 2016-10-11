@@ -19,7 +19,8 @@ class Login extends Component {
       email: this.emailNode.value,
       password: this.passwordNode.value,
     };
-    this.props.loginUser({data})
+
+    this.props.loginUser({ data })
   }
 
   _renderError() {
@@ -37,14 +38,14 @@ class Login extends Component {
   render() {
   return (
     <div className={loginContainer}>
-      <form className={loginForm} onSubmit={this._handleSubmit}>
+      <form className={loginForm} onSubmit={(event) => this._handleSubmit(event)}>
           {this._renderError()}
           <div className={field}>
-            <Field inputRef={node => this.firstNameNode = node} placeholder="Email" typeOf="text"/>
+            <Field inputRef={node => this.emailNode = node} placeholder="Email" typeOf="text"/>
             {renderErrorsFor(this.props.errors, 'first_name')}
           </div>
           <div className={field}>
-          <Field inputRef={node => this.lastNameNode = node} placeholder="Password" typeOf="password"/>
+          <Field inputRef={node => this.passwordNode = node} placeholder="Password" typeOf="password"/>
             {renderErrorsFor(this.props.errors, 'last_name')}
           </div>
           <button type={submitLogin}>Sign In</button>

@@ -18,12 +18,6 @@ defmodule Hypeapp.Router do
     plug Guardian.Plug.LoadResource
   end
 
-  scope "/", Hypeapp do
-    pipe_through :browser # Use the default browser stack
-
-    get "*path", PageController, :index
-  end
-
   scope "/api", Hypeapp do
     pipe_through :api
 
@@ -38,5 +32,11 @@ defmodule Hypeapp.Router do
       #POST requests to api/v1/sessions and /api/v1/sessions/:id respectively.
       resources "/sessions", SessionController, only: [:create, :delete]
     end
+  end
+
+  scope "/", Hypeapp do
+    pipe_through :browser # Use the default browser stack
+
+    get "/*path", PageController, :index
   end
 end

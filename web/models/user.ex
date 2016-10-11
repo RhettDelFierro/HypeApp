@@ -24,15 +24,18 @@ defmodule Hypeapp.User do
     |> validate_format(:email, ~r/@/)
     |> validate_length(:first_name, min: 1, max: 20)
     |> validate_length(:last_name, min: 1, max: 20)
-    |> validate_length(:password, min: 5)
-    |> validate_confirmation(:password, message: "Password does not match")
-    |> validate_required([:first_name, :last_name, :email, :password])
+    |> validate_required([:first_name, :last_name, :email])
     |> unique_constraint(:email, message: "Email already taken")
-    |> generate_encrypted_password
   end
 
-  def registration_changeset(model, params \\ %{}) do
-
+  def registration_changeset(model, params) do
+    model
+    |> changeset(params)
+    |> cast(params, [:password])
+    |> validate_required([:password])
+    |> validate_length(:password, min: 6, max: 100)
+    |> validate_confirmation(:password, message: "Password does not match")
+    |> generate_encrypted_password()
   end
 
   defp generate_encrypted_password(current_changeset) do

@@ -16,22 +16,21 @@ class Registration extends Component {
   _handleSubmit(e) {
     e.preventDefault();
 
-    const { dispatch } = this.props;
-
     const data = {
       first_name: this.firstNameNode.value,
       last_name: this.lastNameNode.value,
       email: this.emailNode.value,
       password: this.passwordNode.value,
       password_confirmation: this.passwordConfirmationNode.value,
-    };
+    }
+    
     this.props.registerUser({data})
   }
     //could also user handleSubmit(() => register)
     render() {
     return (
       <div className={registrationContainer}>
-        <form onSubmit={this._handleSubmit}>
+        <form onSubmit={(event) => this._handleSubmit(event)}>
             <div className={field}>
               <Field inputRef={node => this.firstNameNode = node} placeholder="First Name" typeOf="text"/>
               {renderErrorsFor(this.props.errors, 'first_name')}
@@ -45,7 +44,7 @@ class Registration extends Component {
               {renderErrorsFor(this.props.errors, 'email')}
             </div>
             <div className={field}>
-              <Field inputRef={node => this.passWordNode = node} typeOf="password" placeholder="Password" />
+              <Field inputRef={node => this.passwordNode = node} typeOf="password" placeholder="Password" />
               {renderErrorsFor(this.props.errors, 'password')}
             </div>
             <div className={field}>

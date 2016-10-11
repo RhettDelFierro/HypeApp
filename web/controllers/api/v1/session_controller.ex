@@ -17,11 +17,12 @@ defmodule Hypeapp.SessionController do
 
   # Routes to /api/v1/sessions -> POST request to sign-in.
   def create(conn, %{"session" => session_params}) do
-
+    #IO.puts(session_params)
     #check helper: user is authenticated, send back jwt if they are.
     case Hypeapp.Session.authenticate(session_params) do
       {:ok, user} ->
-        {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
+        {:ok, jwt, _full_claims} = user
+        |> Guardian.encode_and_sign(:token)
 
         conn
         |> put_status(:created)
@@ -32,6 +33,17 @@ defmodule Hypeapp.SessionController do
         |> put_status(:unprocessable_entity)
         |> render("error.json")
     end
+  end
+  #user has logged out.
+  def delete(conn, _) do
+    {:ok, claims} = Guardian.Plug.claims(conn)
+
+    conn
+    |> Guardian.Plug.current_token
+    |> Guardian.revoke!(claims)
+
+    conn
+    |> render("delete.json")
   end
 
   def unauthenticated(conn, _params) do

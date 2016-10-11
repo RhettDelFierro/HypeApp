@@ -7,7 +7,7 @@ defmodule Hypeapp.Session do
   # for SessionController :create
   def authenticate(%{"email" => email, "password" => password}) do
     user = Repo.get_by(User, email: String.downcase(email))
-
+    IO.inspect(email)
     case check_password(user, password) do
       true -> {:ok, user}
       _ -> :error
@@ -16,7 +16,7 @@ defmodule Hypeapp.Session do
 
   defp check_password(user, password) do
     case user do
-      nil -> false
+      nil -> Comeonin.Bcrypt.dummy_checkpw()
       _ -> Comeonin.Bcrypt.checkpw(password, user.encrypted_password)
     end
   end

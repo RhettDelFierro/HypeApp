@@ -4,7 +4,7 @@ import { MainContainer, HomeContainer, AuthenticatedContainer,
   BoardsShowViewContainer, SessionsNewContainer } from 'containers'
 import { Login, Registration } from 'components'
 
-function routes(authCheck, history,render) {
+function routes(authCheck, history, render) {
     return (
         <Router history={history} render={render}>
             <Route path="/" component={MainContainer}>

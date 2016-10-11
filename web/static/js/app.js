@@ -34,7 +34,7 @@ function authCheck(nextState, replace) {
     const phoenixAuthToken = sessionStorage.getItem('phoenixAuthToken');
     if (phoenixAuthToken && !authed) {
       //sign the user back in.
-      store.dispatch(currentUser())
+    //  store.dispatch(currentUser())
     } else if (!phoenixAuthToken) {
       //can always use react-router-redux to go(-2) when their sign-in is successful instead of setLastRoute.
       store.dispatch(setLastRoute({ lastRoute: nextPathName }))
