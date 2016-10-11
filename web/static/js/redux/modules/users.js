@@ -1,13 +1,12 @@
-import {
-    fromJS,
-    Map
-} from 'immutable'
+import { fromJS, Map } from 'immutable'
+
 import {
     registerUserAPI,
     loginUserAPI,
     getCurrentUserAPI,
     logoutAPI
 } from 'utils/userFunctions'
+
 import {
     push,
     go
@@ -23,9 +22,7 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const LOGOUT_USER = 'LOGOUT_USER'
 const SET_LAST_ROUTE = 'SET_LAST_ROUTE'
 
-export function authUser({
-    currentUser
-}) {
+export function authUser({ currentUser }) {
     return {
         type: AUTH_USER,
         currentUser
@@ -78,7 +75,7 @@ export function loginUser({ data }) {
         dispatch(fetchingUser())
         try {
             const currentUser = await loginUserAPI({ data })
-            dispatch(fetchingUserSuccess({currentUser}))
+            dispatch(fetchingUserSuccess({ currentUser }))
             dispatch(push('/'))
         } catch (errorObject) {
             dispatch(errorLoginHandler(errorObject))
@@ -90,9 +87,7 @@ export function getCurrentUser() {
     return async(dispatch, getState) => {
         try {
             const currentUser = await getCurrentUserAPI()
-            dispatch(fetchingUserSuccess({
-                currentUser
-            }))
+            dispatch(fetchingUserSuccess({ currentUser }))
         } catch (errorObject) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', errorObject)
             dispatch(push('/sign_in'))
