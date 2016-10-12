@@ -31,6 +31,8 @@ defmodule Hypeapp.Router do
       post "/registrations", RegistrationController, :create
       #POST requests to api/v1/sessions and /api/v1/sessions/:id respectively.
       resources "/sessions", SessionController, only: [:create, :delete]
+      #Here on out:
+      resources "/places", PlaceController, except: [:new, :edit]
     end
   end
 

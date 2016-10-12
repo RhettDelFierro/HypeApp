@@ -86,7 +86,7 @@ export function loginUser({ data }) {
 export function getCurrentUser() {
     return async(dispatch, getState) => {
         try {
-            const currentUser = await getCurrentUserAPI()
+            const current_user = await getCurrentUserAPI()
             dispatch(fetchingUserSuccess({ current_user }))
         } catch (error_object) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error_object)
