@@ -33,6 +33,7 @@ defmodule Hypeapp.Router do
       resources "/sessions", SessionController, only: [:create, :delete]
       #Here on out:
       resources "/places", PlaceController, except: [:new, :edit]
+      resources "/reviews", ReviewController, except: [:new, :edit]
     end
   end
 

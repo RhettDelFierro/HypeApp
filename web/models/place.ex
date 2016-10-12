@@ -2,6 +2,8 @@ defmodule Hypeapp.Place do
   use Hypeapp.Web, :model
 
   schema "places" do
+    has_many :reviews, Hypeapp.Review
+
     field :yelp_id, :string
     field :name, :string
 
