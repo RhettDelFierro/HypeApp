@@ -67,6 +67,22 @@
     }
   }
 
+  place: {
+    info: {
+      place_id: 0,
+      yelp_url: '',
+      google_url: '',
+      image_url: '',
+      yelp_id: ''.
+      google_id: '',
+      avgYelpRating: 0,
+      avgGoogleRating: 0,
+      avg_rating: 0,
+      location: {},
+      trending: false
+    }
+  }
+
   places: {
     [place_id]: {
       socket: null,
