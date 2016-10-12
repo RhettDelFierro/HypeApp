@@ -58,7 +58,7 @@ class Login extends Component {
 
 const mapStateToProps = ({ users }) => {
   return {
-    errors: users.get('errorLoginObject')
+    errors: users.get('error_login_object')
   }
 }
 

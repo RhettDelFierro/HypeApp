@@ -11,14 +11,14 @@ const SET_PLACES_LOCATION      = 'SET_PLACES_LOCATION'
 
 
 
-const iniitialLocationState = fromJS({
+const iniitial_location_state = fromJS({
   location: {
     long: 0,
     lat: 0
   }
 })
 
-export default function location(state = initialLocationState, action) {
+function location(state = initial_location_state, action) {
     switch (action.type) {
         default:
             return state
@@ -26,15 +26,15 @@ export default function location(state = initialLocationState, action) {
 }
 
 
-const initialState = fromJS({
-    isFetching: false,
+const initial_state = fromJS({
+    is_fetching: false,
     error: false,
     socket: null,
-    radius: 10;
-    errorLocationObject: {}
+    radius: 10,
+    error_location_object: {}
 })
 
-export default function locations(state = initialState, action) {
+export default function locations(state = initial_state, action) {
     switch (action.type) {
         default:
             return state

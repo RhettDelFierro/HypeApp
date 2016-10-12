@@ -4,19 +4,19 @@ import { fromJS } from 'immutable'
 
 //
 
-const initialState = fromJS({
+const initial_state = fromJS({
     rating: false,
-    upVotes: 0,
-    downVotes: 0,
+    up_votes: 0,
+    down_votes: 0,
     reviews: [],
-    isFetching: false,
+    is_fetching: false,
     socket: null,
-    errorPlacesObject: {},
+    error_places_object: {},
     trending: false,
-    userVoted: false
+    user_voted: false
 })
 
-export default function places(state = initialState, action) {
+export default function places(state = initial_state, action) {
     switch (action.type) {
         default:
             return state

@@ -18,7 +18,6 @@ defmodule Hypeapp.RegistrationController  do
     #Check the changeset being built with the user params and User.changeset/2
     case Repo.insert(changeset) do
       {:ok, user} ->
-        IO.inspect(user)
         # encode_and_sign/2 dishes out the jwt and sends it through request body
         {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user, :token)
 

@@ -5,7 +5,7 @@ import { push } from 'react-router-redux'
 
 class AuthenticatedContainer extends Component {
   componentDidMount() {
-    const { dispatch, currentUser } = this.props;
+    const { dispatch, current_user } = this.props;
 
     if (sessionStorage.getItem('phoenixAuthToken')) {
       //something here.
@@ -21,7 +21,7 @@ class AuthenticatedContainer extends Component {
 
 const mapStateToProps = ({}) => {
   return {
-    currentUser: .get('currentUser')
+    current_user: .get('current_user')
   }
 };
 
@@ -34,5 +34,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
-
-container

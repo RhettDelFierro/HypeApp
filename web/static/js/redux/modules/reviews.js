@@ -11,14 +11,14 @@ const SET_PLACES_LOCATION      = 'SET_PLACES_LOCATION'
 
 
 
-const iniitialLocationState = fromJS({
+const iniitial_location_state = fromJS({
   location: {
     long: 0,
     lat: 0
   }
 })
 
-export default function review(state = initialLocationState, action) {
+function review(state = initial_location_state, action) {
     switch (action.type) {
         default:
             return state
@@ -26,18 +26,18 @@ export default function review(state = initialLocationState, action) {
 }
 
 
-const initialState = fromJS({
-    isFetching: false,
+const initial_state = fromJS({
+    is_fetching: false,
     error: false,
     socket: null,
-    errorLocationObject: {},
-    currentLocation: {
+    error_location_object: {},
+    current_location: {
         long: 0,
         lat: 0
     }
 })
 
-export default function reviews(state = initialState, action) {
+export default function reviews(state = initial_state, action) {
     switch (action.type) {
         default:
             return state

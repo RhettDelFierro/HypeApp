@@ -10,7 +10,7 @@
 
   followers: {
     [user_id]: {
-      dateFollowed: time.now()
+      date_followed: time.now()
       info: {
 
       }
@@ -19,7 +19,7 @@
 
   following: {
     [user_id]: {
-      dateFollowed: time.now(),
+      date_followed: time.now(),
       info: {
 
       }
@@ -28,19 +28,22 @@
 
   friends: {
     [user_id]: {
-      dateConfirmed: time.now(),
+      date_confirmed: time.now(),
       info: {
 
       }
     }
   }
 
-  hastags: {
-    [hastag_id]: {
+  hashtags: {
+    [hashtag_id]: {
       dateCreated: time.now()
       info: {
         hashtag: '',
-        user_ids: [...user_id]
+        reply_ids: [...reply_ids],
+        review_ids: [...review__id],
+        user_ids: [...user_id],
+        timestamp
       }
     }
   }
@@ -68,10 +71,14 @@
     [place_id]: {
       socket: null,
       newReviewsAvailable: false,
-      newReview_ids: [...review_id]
+      newReview_ids: [...review_id],
       review_ids: [...review_id],
       trending: false,
       info: {
+        homepage: '',
+        image: '',
+        avgYelpRating: 0,
+        avgGoogleRating: 0,
         location: {}
       }
     }
@@ -97,7 +104,7 @@
       date: time.now(),
       info: {
         reviewText: '',
-        user: user_id,
+        user: '',
         hashtag_ids: [...hashtag_id]
       }
     }
@@ -105,6 +112,16 @@
 
   users: {
     info: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      user_id: 0,
+
+    }
+  }
+
+  usersHashtags: {
+    [hashtag_id]: {
 
     }
   }

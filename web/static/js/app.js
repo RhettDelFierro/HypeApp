@@ -26,10 +26,10 @@ export const history = syncHistoryWithStore(browserHistory, store)
 
 //these arguments are what react-router will give to this function when it sees the onEnter prop.
 function authCheck(nextState, replace) {
-    if (store.getState().users.get('isFetching') === true) {
+    if (store.getState().users.get('is_fetching') === true) {
       return
     }
-    const authed = store.getState().users.get('isAuthed')
+    const authed = store.getState().users.get('is_authed')
     const nextPathName = nextState.location.pathname
     const phoenixAuthToken = sessionStorage.getItem('phoenixAuthToken');
     if (phoenixAuthToken && !authed) {

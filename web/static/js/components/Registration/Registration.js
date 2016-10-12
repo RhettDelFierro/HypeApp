@@ -23,8 +23,8 @@ class Registration extends Component {
       password: this.passwordNode.value,
       password_confirmation: this.passwordConfirmationNode.value,
     }
-    
-    this.props.registerUser({data})
+
+    this.props.registerUser({ data })
   }
     //could also user handleSubmit(() => register)
     render() {
@@ -61,7 +61,7 @@ class Registration extends Component {
 
 const mapStateToProps = ({ users }) => {
   return {
-    errors: users.get('errorRegisterObject')
+    errors: users.get('error_register_object')
   }
 }
 

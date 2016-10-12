@@ -22,10 +22,10 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const LOGOUT_USER = 'LOGOUT_USER'
 const SET_LAST_ROUTE = 'SET_LAST_ROUTE'
 
-export function authUser({ currentUser }) {
+export function authUser({ current_user }) {
     return {
         type: AUTH_USER,
-        currentUser
+        current_user
     }
 }
 
@@ -35,19 +35,19 @@ function unauthUser() {
     }
 }
 
-function errorRegisterHandler(errorObject) {
-    console.log('register: heres error object:', errorObject)
+function errorRegisterHandler(error_oject) {
+    console.log('register: heres error object:', error_object)
     return {
         type: REGISTRATION_ERROR,
-        errorObject
+        error_object
     }
 }
 
-function errorLoginHandler(errorObject) {
-    console.log('login: heres error object:', errorObject)
+function errorLoginHandler(error_object) {
+    console.log('login: heres error object:', error_object)
     return {
         type: LOGIN_ERROR,
-        errorObject
+        error_object
     }
 }
 
@@ -61,11 +61,11 @@ export function registerUser({ data }) {
     return async(dispatch, getState) => {
         dispatch(fetchingUser())
         try {
-            const currentUser = await registerUserAPI({ data })
-            dispatch(fetchingUserSuccess({ currentUser }))
+            const current_user = await registerUserAPI({ data })
+            dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
-        } catch (errorObject) {
-            dispatch(errorRegisterHandler(errorObject))
+        } catch (error_object) {
+            dispatch(errorRegisterHandler(error_object))
         }
     }
 }
@@ -74,11 +74,11 @@ export function loginUser({ data }) {
     return async function(dispatch, getState) {
         dispatch(fetchingUser())
         try {
-            const currentUser = await loginUserAPI({ data })
-            dispatch(fetchingUserSuccess({ currentUser }))
+            const current_user = await loginUserAPI({ data })
+            dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
-        } catch (errorObject) {
-            dispatch(errorLoginHandler(errorObject))
+        } catch (error_object) {
+            dispatch(errorLoginHandler(error_object))
         }
     }
 }
@@ -87,18 +87,18 @@ export function getCurrentUser() {
     return async(dispatch, getState) => {
         try {
             const currentUser = await getCurrentUserAPI()
-            dispatch(fetchingUserSuccess({ currentUser }))
-        } catch (errorObject) {
-            console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', errorObject)
+            dispatch(fetchingUserSuccess({ current_user }))
+        } catch (error_object) {
+            console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error_object)
             dispatch(push('/sign_in'))
         }
     }
 }
 
-export function fetchingUserSuccess({ currentUser }) {
+export function fetchingUserSuccess({ current_user }) {
     return {
         type: FETCHING_USER_SUCCESS,
-        currentUser
+        current_user
     }
 }
 
@@ -115,14 +115,14 @@ export function logout() {
     }
 }
 
-export function setLastRoute({lastRoute }) {
+export function setLastRoute({ last_route }) {
     return {
         type: SET_LAST_ROUTE,
-        lastRoute
+        last_route
     }
 }
 
-const userInitialState = fromJS({
+const user_initial_state = fromJS({
     info: {
         username: '',
         user_id: '',
@@ -130,7 +130,7 @@ const userInitialState = fromJS({
     }
 })
 
-function user(state = userInitialState, action) {
+function user(state = user_initial_state, action) {
     switch (action.type) {
         case FETCHING_USER_SUCCESS:
             return state.merge({
@@ -140,68 +140,59 @@ function user(state = userInitialState, action) {
 }
 
 
-const initialState = fromJS({
-    isAuthed: false,
-    isFetching: false,
+const initial_state = fromJS({
+    is_authed: false,
+    is_fetching: false,
     error: false,
-    currentUser: {},
+    current_user: {},
     socket: null,
     //instead of DRY, could maybe make a reducer for errors.
-    errorRegisterObject: {},
-    errorLoginObject: {},
-
-    currentLocation: {
-        long: 0,
-        lat: 0
-    },
-
-    friendsList: [],
-    follows: [],
-    followers: []
+    error_register_object: {},
+    error_login_object: {}
 })
 
-export default function users(state = initialState, action) {
+export default function users(state = initial_state, action) {
     switch (action.type) {
         case AUTH_USER:
             return state.merge({
-                isAuthed: true,
-                currentUser: action.currentUser
+                is_authed: true,
+                current_user: action.current_user
             })
         case FETCHING_USER:
             {
                 return state.merge({
-                    isFetching: true
+                    is_fetching: true
                 })
             }
         case FETCHING_USER_SUCCESS:
             return state.merge({
-                isFetching: false,
+                is_fetching: false,
                 error: false,
-                errorRegisterObject: {},
-                errorLoginObject: {},
-                currentUser: action.currentUser
+                error_register_object: {},
+                error_login_object: {},
+                current_user: action.current_user
             })
         case REGISTRATION_ERROR:
             return state.merge({
-                isFetching: false,
+                is_fetching: false,
                 error: true,
-                errorRegisterObject: action.errorObject
+                error_register_object: action.error_object
             })
         case LOGIN_ERROR:
             return state.merge({
-                isFetching: false,
+                is_fetching: false,
                 error: true,
-                errorLoginObject: action.errorObject
+                error_login_object: action.error_object
             })
         case SET_LAST_ROUTE:
             return state.merge({
-                lastRoute: action.lastRoute
+                last_route: action.last_route
             })
         case LOGOUT_USER:
             return state.merge({
-                isAuthed: false,
-                isFetching: false,
-                currentUser: new Map({})
+                is_authed: false,
+                is_fetching: false,
+                current_user: new Map({})
             })
         default:
             return state
