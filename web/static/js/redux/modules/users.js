@@ -148,7 +148,16 @@ const initialState = fromJS({
     socket: null,
     //instead of DRY, could maybe make a reducer for errors.
     errorRegisterObject: {},
-    errorLoginObject: {}
+    errorLoginObject: {},
+
+    currentLocation: {
+        long: 0,
+        lat: 0
+    },
+
+    friendsList: [],
+    follows: [],
+    followers: []
 })
 
 export default function users(state = initialState, action) {

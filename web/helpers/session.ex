@@ -7,7 +7,6 @@ defmodule Hypeapp.Session do
   # for SessionController :create
   def authenticate(%{"email" => email, "password" => password}) do
     user = Repo.get_by(User, email: String.downcase(email))
-    IO.inspect(email)
     case check_password(user, password) do
       true -> {:ok, user}
       _ -> :error
