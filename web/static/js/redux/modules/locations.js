@@ -30,11 +30,8 @@ const initialState = fromJS({
     isFetching: false,
     error: false,
     socket: null,
-    errorLocationObject: {},
-    currentLocation: {
-        long: 0,
-        lat: 0
-    }
+    radius: 10;
+    errorLocationObject: {}
 })
 
 export default function locations(state = initialState, action) {
