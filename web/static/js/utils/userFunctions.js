@@ -90,7 +90,7 @@ export async function logoutAPI() {
     }
 }
 
-export function userChannelAPI() {
+export function userConnectionAPI({ callback, errorCallback }) {
   // build a new socket connection and pass in the path ('/socket') where
   // the server is listening along with the jwt token and a logger as option params:
   const socket = new Socket('/socket', {
@@ -100,7 +100,8 @@ export function userChannelAPI() {
   });
 
   //connect it.
-  socket.onError(() => console.log('Error in userChannelAPI'))
+  socket.onError(() => errorCallback(socket))
   socket.onClose(() => console.log('The connection was closed.'))
   socket.connect();
+
 }

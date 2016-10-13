@@ -159,11 +159,9 @@ export default function users(state = initial_state, action) {
                 current_user: action.current_user
             })
         case FETCHING_USER:
-            {
-                return state.merge({
-                    is_fetching: true
-                })
-            }
+            return state.merge({
+                is_fetching: true
+            })
         case FETCHING_USER_SUCCESS:
             return state.merge({
                 is_fetching: false,

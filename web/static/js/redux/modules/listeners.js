@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import { userChannelAPI } from 'utils/userFunctions'
+import { userConnectionAPI } from 'utils/userFunctions'
 
 const SET_USER_CONNECTION   = 'SET_USER_CONNECTION'
 const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
@@ -8,7 +8,7 @@ const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
 
 export function setupSocketConnection() {
   return (dispatch,getState) => {
-    userChannelAPI({
+    userConnectionAPI({
       callback: (connection_info) => dispatch(setUserConnection(connection_info)),
       errorCallback: (error) => dispatch(setConnectionError(error))})
   }
@@ -35,18 +35,21 @@ const initial_state = fromJS({
   places_channel: null,
   votes_channel: null,
   reviews_channel: null,
-  replies_channel: null
+  replies_channel: null,
+  error: null
 })
 
 export default function listeners(state = initial_state, action) {
     switch (action.type) {
       case SET_USER_CONNECTION:
-      return state.merge({
-        users_socket: connection_info.users_socket,
-        users_channel: connection_info.users_channel
-      })
+        return state.merge({
+          users_socket: connection_info.users_socket,
+          users_channel: connection_info.users_channel
+        })
       case SET_CONNECTION_ERROR:
-
+        return state.merge({
+          error
+        })
         default:
             return state
     }
