@@ -1,9 +1,8 @@
-defmodule Hypeapp.Review do
+defmodule Hypeapp.Votes do
   use Hypeapp.Web, :model
 
-  schema "reviews" do
-    field :review, :string
-    belongs_to :user, Hypeapp.User
+  schema "votes" do
+    belongs_to :vote_type, Hypeapp.VoteType
 
     timestamps()
   end
@@ -13,7 +12,7 @@ defmodule Hypeapp.Review do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:review])
-    |> validate_required([:review])
+    |> cast(params, [])
+    |> validate_required([])
   end
 end

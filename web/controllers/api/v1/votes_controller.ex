@@ -1,22 +1,22 @@
-defmodule Hypeapp.PlaceController do
+defmodule Hypeapp.VotesController do
   use Hypeapp.Web, :controller
 
-  alias Hypeapp.Place
+  alias Hypeapp.Votes
 
   def index(conn, _params) do
-    places = Repo.all(Place)
-    render(conn, "index.json", places: places)
+    votes = Repo.all(Votes)
+    render(conn, "index.json", votes: votes)
   end
 
-  def create(conn, %{"place" => place_params}) do
-    changeset = Place.changeset(%Place{}, place_params)
+  def create(conn, %{"votes" => votes_params}) do
+    changeset = Votes.changeset(%Votes{}, votes_params)
 
     case Repo.insert(changeset) do
-      {:ok, place} ->
+      {:ok, votes} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", place_path(conn, :show, place))
-        |> render("show.json", place: place)
+        |> put_resp_header("location", votes_path(conn, :show, votes))
+        |> render("show.json", votes: votes)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -25,17 +25,17 @@ defmodule Hypeapp.PlaceController do
   end
 
   def show(conn, %{"id" => id}) do
-    place = Repo.get!(Place, id)
-    render(conn, "show.json", place: place)
+    votes = Repo.get!(Votes, id)
+    render(conn, "show.json", votes: votes)
   end
 
-  def update(conn, %{"id" => id, "place" => place_params}) do
-    place = Repo.get!(Place, id)
-    changeset = Place.changeset(place, place_params)
+  def update(conn, %{"id" => id, "votes" => votes_params}) do
+    votes = Repo.get!(Votes, id)
+    changeset = Votes.changeset(votes, votes_params)
 
     case Repo.update(changeset) do
-      {:ok, place} ->
-        render(conn, "show.json", place: place)
+      {:ok, votes} ->
+        render(conn, "show.json", votes: votes)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -44,11 +44,11 @@ defmodule Hypeapp.PlaceController do
   end
 
   def delete(conn, %{"id" => id}) do
-    place = Repo.get!(Place, id)
+    votes = Repo.get!(Votes, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
-    Repo.delete!(place)
+    Repo.delete!(votes)
 
     send_resp(conn, :no_content, "")
   end

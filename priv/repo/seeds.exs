@@ -12,7 +12,7 @@
 
 
 #DUMMMMMMY DATA. If you want more we can add more to the list.:
-alias Hypeapp.{Repo, User}
+alias Hypeapp.{Repo, User, VoteType}
 
 # Note the pipe operators. This entry will get piped as the first argument
 # into Enum.map/2. The shorthand notation means some the element (a changeset)
@@ -20,21 +20,29 @@ alias Hypeapp.{Repo, User}
 # once that Enum.map is done, the whoel thing will go to Enum.each
 # where again one element (individual changeset) at a
 # time goes into repo.insert. See below:
+# [
+#   %{
+#     first_name: "Some",
+#     last_name: "User",
+#     email: "someuser@hypeapp.com",
+#     password: "someuserpassword"
+#   },
+#   %{
+#     first_name: "Some",
+#     last_name: "User2",
+#     email: "someuser2@hypeapp.com",
+#     password: "someuserpassword2"
+#   },
+# ]
+# # Shorthand for: Enum.map(structs, fn struct -> User.changeset(%User{}, struct) end
+# |> Enum.map(&User.changeset(%User{}, &1))
+# # Shorthand for: Enum.each(structs, fn struct -> Repo.insert(%User{}, struct) end
+# |> Enum.each(&Repo.insert!(&1))
+
 [
-  %{
-    first_name: "Some",
-    last_name: "User",
-    email: "someuser@hypeapp.com",
-    password: "someuserpassword"
-  },
-  %{
-    first_name: "Some",
-    last_name: "User2",
-    email: "someuser2@hypeapp.com",
-    password: "someuserpassword2"
-  },
+  %{vote_type: "review upvote"}, %{vote_type: "review downvote"},
+  %{vote_type: "reply upvote"}, %{vote_type: "reply downvote"},
+  %{vote_type: "place upvote"},%{vote_type: "place downvote"}
 ]
-# Shorthand for: Enum.map(structs, fn struct -> User.changeset(%User{}, struct) end
-|> Enum.map(&User.changeset(%User{}, &1))
-# Shorthand for: Enum.each(structs, fn struct -> Repo.insert(%User{}, struct) end
+|> Enum.map(&VoteType.changeset(%VoteType{}, &1))
 |> Enum.each(&Repo.insert!(&1))

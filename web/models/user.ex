@@ -6,6 +6,8 @@ defmodule Hypeapp.User do
   @derive {Poison.Encoder, only: [:id, :first_name, :last_name, :email]}
 
   schema "users" do
+    has_many :reviews, Hypeapp.Review
+
     field :first_name, :string
     field :last_name, :string
     field :email, :string
