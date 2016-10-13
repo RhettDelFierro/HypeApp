@@ -18,9 +18,10 @@ class NavbarContainer extends React.Component {
   }
 }
 
-function mapStateToProps({ users, listeners }) {
+function mapStateToProps({ users, listeners, post }) {
   return {
     is_authed: users.get('is_authed')
+    is_posting: post.get('is_posting')
   }
 }
 

@@ -43,12 +43,12 @@ export default function listeners(state = initial_state, action) {
     switch (action.type) {
       case SET_USER_CONNECTION:
         return state.merge({
-          users_socket: connection_info.users_socket,
-          users_channel: connection_info.users_channel
+          users_socket: action.connection_info.users_socket,
+          users_channel: action.connection_info.users_channel
         })
       case SET_CONNECTION_ERROR:
         return state.merge({
-          error
+          error: action.error
         })
         default:
             return state

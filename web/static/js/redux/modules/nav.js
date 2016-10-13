@@ -16,17 +16,12 @@ export function close_form() {
 }
 
 const initial_state = fromJS({
-  show_discussion: true,
+  show_feed: true,
   show_login: false,
 })
 
 export default function places(state = initial_state, action) {
     switch (action.type) {
-      case OPEN_SIGN_IN {
-        return state.merge({
-          
-        })
-      }
         default:
             return state
     }

@@ -12,14 +12,15 @@ class CheckPlaceContainer extends React.Component {
 
   render() {
     return (
-      <CheckPlace />
+      <CheckPlace {...this.props} />
     )
   }
 }
 
-function mapStateToProps({}) {
+function mapStateToProps({ users, post }) {
   return {
-
+    is_authed:  users.get('is_authed')
+    is_posting: post.get('is_posting')
   }
 }
 

@@ -8,7 +8,7 @@ const initialState = fromJS({
 export default function routing(state = initialState, action) {
     switch (action.type) {
         case LOCATION_CHANGE:
-            return state.set('routing', {locationBeforeTransitions: action.payload})
+            return state.set('routing', {locationBeforeTransitions: action.payload} )
         default:
             return state
     }

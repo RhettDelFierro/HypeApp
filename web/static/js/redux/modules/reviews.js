@@ -25,8 +25,8 @@ function review(state = initial_location_state, action) {
     }
 }
 
-
 const initial_state = fromJS({
+    is_user: false,
     is_fetching: false,
     error: false,
     socket: null,

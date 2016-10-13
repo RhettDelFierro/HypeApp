@@ -14,7 +14,8 @@ const Navbar = ({is_authed }) => {
 
 const { bool } = PropTypes
 Navbar.propTypes = {
-  is_authed: bool.isRequired
+  is_authed: bool.isRequired,
+  is_posting: bool.isRequired
 }
 
 export default Navbar
