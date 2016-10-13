@@ -1,18 +1,18 @@
-defmodule Hypeapp.VotesTest do
+defmodule Hypeapp.VoteTest do
   use Hypeapp.ModelCase
 
-  alias Hypeapp.Votes
+  alias Hypeapp.Vote
 
-  @valid_attrs %{}
+  @valid_attrs %{yelp_id: "some content"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
-    changeset = Votes.changeset(%Votes{}, @valid_attrs)
+    changeset = Vote.changeset(%Vote{}, @valid_attrs)
     assert changeset.valid?
   end
 
   test "changeset with invalid attributes" do
-    changeset = Votes.changeset(%Votes{}, @invalid_attrs)
+    changeset = Vote.changeset(%Vote{}, @invalid_attrs)
     refute changeset.valid?
   end
 end

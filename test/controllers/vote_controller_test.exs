@@ -1,8 +1,8 @@
-defmodule Hypeapp.VotesControllerTest do
+defmodule Hypeapp.VoteControllerTest do
   use Hypeapp.ConnCase
 
-  alias Hypeapp.Votes
-  @valid_attrs %{}
+  alias Hypeapp.Vote
+  @valid_attrs %{yelp_id: "some content"}
   @invalid_attrs %{}
 
   setup %{conn: conn} do
@@ -10,51 +10,52 @@ defmodule Hypeapp.VotesControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get conn, votes_path(conn, :index)
+    conn = get conn, vote_path(conn, :index)
     assert json_response(conn, 200)["data"] == []
   end
 
   test "shows chosen resource", %{conn: conn} do
-    votes = Repo.insert! %Votes{}
-    conn = get conn, votes_path(conn, :show, votes)
-    assert json_response(conn, 200)["data"] == %{"id" => votes.id,
-      "vote_type_id" => votes.vote_type_id}
+    vote = Repo.insert! %Vote{}
+    conn = get conn, vote_path(conn, :show, vote)
+    assert json_response(conn, 200)["data"] == %{"id" => vote.id,
+      "vote_type_id" => vote.vote_type_id,
+      "yelp_id" => vote.yelp_id}
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get conn, votes_path(conn, :show, -1)
+      get conn, vote_path(conn, :show, -1)
     end
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
-    conn = post conn, votes_path(conn, :create), votes: @valid_attrs
+    conn = post conn, vote_path(conn, :create), vote: @valid_attrs
     assert json_response(conn, 201)["data"]["id"]
-    assert Repo.get_by(Votes, @valid_attrs)
+    assert Repo.get_by(Vote, @valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, votes_path(conn, :create), votes: @invalid_attrs
+    conn = post conn, vote_path(conn, :create), vote: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    votes = Repo.insert! %Votes{}
-    conn = put conn, votes_path(conn, :update, votes), votes: @valid_attrs
+    vote = Repo.insert! %Vote{}
+    conn = put conn, vote_path(conn, :update, vote), vote: @valid_attrs
     assert json_response(conn, 200)["data"]["id"]
-    assert Repo.get_by(Votes, @valid_attrs)
+    assert Repo.get_by(Vote, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    votes = Repo.insert! %Votes{}
-    conn = put conn, votes_path(conn, :update, votes), votes: @invalid_attrs
+    vote = Repo.insert! %Vote{}
+    conn = put conn, vote_path(conn, :update, vote), vote: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    votes = Repo.insert! %Votes{}
-    conn = delete conn, votes_path(conn, :delete, votes)
+    vote = Repo.insert! %Vote{}
+    conn = delete conn, vote_path(conn, :delete, vote)
     assert response(conn, 204)
-    refute Repo.get(Votes, votes.id)
+    refute Repo.get(Vote, vote.id)
   end
 end

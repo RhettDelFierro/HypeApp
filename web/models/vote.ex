@@ -1,7 +1,8 @@
-defmodule Hypeapp.Votes do
+defmodule Hypeapp.Vote do
   use Hypeapp.Web, :model
 
   schema "votes" do
+    field :yelp_id, :string, null: false
     belongs_to :vote_type, Hypeapp.VoteType
 
     timestamps()
@@ -12,7 +13,7 @@ defmodule Hypeapp.Votes do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [])
-    |> validate_required([])
+    |> cast(params, [:yelp_id])
+    |> validate_required([:yelp_id])
   end
 end

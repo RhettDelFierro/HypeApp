@@ -1,22 +1,22 @@
-defmodule Hypeapp.VotesController do
+defmodule Hypeapp.VoteController do
   use Hypeapp.Web, :controller
 
-  alias Hypeapp.Votes
+  alias Hypeapp.Vote
 
   def index(conn, _params) do
-    votes = Repo.all(Votes)
+    votes = Repo.all(Vote)
     render(conn, "index.json", votes: votes)
   end
 
-  def create(conn, %{"votes" => votes_params}) do
-    changeset = Votes.changeset(%Votes{}, votes_params)
+  def create(conn, %{"vote" => vote_params}) do
+    changeset = Vote.changeset(%Vote{}, vote_params)
 
     case Repo.insert(changeset) do
-      {:ok, votes} ->
+      {:ok, vote} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", votes_path(conn, :show, votes))
-        |> render("show.json", votes: votes)
+        |> put_resp_header("location", vote_path(conn, :show, vote))
+        |> render("show.json", vote: vote)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -25,17 +25,17 @@ defmodule Hypeapp.VotesController do
   end
 
   def show(conn, %{"id" => id}) do
-    votes = Repo.get!(Votes, id)
-    render(conn, "show.json", votes: votes)
+    vote = Repo.get!(Vote, id)
+    render(conn, "show.json", vote: vote)
   end
 
-  def update(conn, %{"id" => id, "votes" => votes_params}) do
-    votes = Repo.get!(Votes, id)
-    changeset = Votes.changeset(votes, votes_params)
+  def update(conn, %{"id" => id, "vote" => vote_params}) do
+    vote = Repo.get!(Vote, id)
+    changeset = Vote.changeset(vote, vote_params)
 
     case Repo.update(changeset) do
-      {:ok, votes} ->
-        render(conn, "show.json", votes: votes)
+      {:ok, vote} ->
+        render(conn, "show.json", vote: vote)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -44,11 +44,11 @@ defmodule Hypeapp.VotesController do
   end
 
   def delete(conn, %{"id" => id}) do
-    votes = Repo.get!(Votes, id)
+    vote = Repo.get!(Vote, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
-    Repo.delete!(votes)
+    Repo.delete!(vote)
 
     send_resp(conn, :no_content, "")
   end
