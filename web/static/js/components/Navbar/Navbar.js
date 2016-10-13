@@ -4,9 +4,13 @@ import { navbarContainer } from './styles.css'
 const Navbar = (props) => {
         return (
             <div className={navbarContainer}>
-              {'the navbar'}
+              
             </div>
         )
+}
+
+Navbar.propTypes = {
+
 }
 
 export default Navbar

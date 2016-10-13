@@ -20,7 +20,7 @@ class MainContainer extends React.Component {
   }
 }
 
-function mapStateToProps({}) {
+function mapStateToProps({ users, listeners }) {
   return {
 
   }

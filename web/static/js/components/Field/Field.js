@@ -12,4 +12,8 @@ class Field extends Component {
   }
 }
 
+Field.propTypes = {
+
+}
+
 export default Field

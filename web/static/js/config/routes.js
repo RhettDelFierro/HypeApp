@@ -1,7 +1,7 @@
 import React from "react"
 import { Router, Route, IndexRoute } from "react-router"
 import { MainContainer, HomeContainer, AuthenticatedContainer,
-  PlaceContainer, SessionsNewContainer } from 'containers'
+  CheckPlaceContainer, SessionsNewContainer } from 'containers'
 import { Login, Registration } from 'components'
 
 function routes(authCheck, history, render) {
@@ -12,7 +12,7 @@ function routes(authCheck, history, render) {
                 <Route path="/sign_up" component={Registration} />
                 <Route path="/sign_in" component={Login} />
                 <Route path="/auth" component={AuthenticatedContainer} onEnter={authCheck} />
-                <Route path="/places" component={PlaceContainer} />
+                <Route path="/places" component={CheckPlaceContainer} />
                 // <Route path="/places/:id" component={PlaceContainer} /> <----what it should be.
             </Route>
         </Router>
