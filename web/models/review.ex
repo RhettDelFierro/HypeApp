@@ -3,7 +3,7 @@ defmodule Hypeapp.Review do
 
   schema "reviews" do
     field :review, :string
-    belongs_to :user, Hypeapp.User #remove this, and reference the vote_id.
+    belongs_to :user, Hypeapp.User
 
     timestamps()
   end

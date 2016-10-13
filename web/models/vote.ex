@@ -3,6 +3,7 @@ defmodule Hypeapp.Vote do
 
   schema "votes" do
     field :yelp_id, :string, null: false
+    field :user_id, :int, null: false
     belongs_to :vote_type, Hypeapp.VoteType
 
     timestamps()
