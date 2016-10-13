@@ -1,0 +1,20 @@
+.button {
+  color: white;
+  border-radius: 5px;
+  border: 1px;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
+  font-size: 1em;
+  align-self: center;
+  outline: none;
+}
+
+.primary {
+  composes: button;
+  background: rgb(239, 95, 78);
+}
+
+.postTrigger {
+  composes: primary;
+  background-color: yellow;
+}
