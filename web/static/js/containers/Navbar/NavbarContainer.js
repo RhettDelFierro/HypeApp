@@ -1,21 +1,19 @@
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-// import * as ActionCreators from 'redux/modules/whatever'
-import { NavbarContainer } from 'containers'
-import { mainContainer } from './styles.css'
+import * as userActionCreators from 'redux/modules/users'
+import * as listenerActionCreators from 'redux/modules/listeners'
+import * as navActionCreators from 'redux/modules/nav'
+import { Navbar } from 'components'
 
-class MainContainer extends React.Component {
+class NavbarContainer extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <div className={mainContainer}>
-        <Navbar />
-        {this.props.children}
-      </div>
+      <Navbar />
     )
   }
 }
@@ -30,4 +28,4 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators(ActionCreators, dispatch)
 }
 
-export default MainContainer
+export default connect(mapStateToProps, mapDispatchToProps)(NavbarContainer)

@@ -5,6 +5,7 @@ import { MainContainer, HomeContainer, AuthenticatedContainer,
 import { Login, Registration } from 'components'
 
 function routes(authCheck, history, render) {
+  // <Route path="/places/:id" component={PlaceContainer} /> <----what it should be.
     return (
         <Router history={history} render={render}>
             <Route path="/" component={MainContainer}>
@@ -13,7 +14,6 @@ function routes(authCheck, history, render) {
                 <Route path="/sign_in" component={Login} />
                 <Route path="/auth" component={AuthenticatedContainer} onEnter={authCheck} />
                 <Route path="/places" component={CheckPlaceContainer} />
-                // <Route path="/places/:id" component={PlaceContainer} /> <----what it should be.
             </Route>
         </Router>
     )

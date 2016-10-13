@@ -1,3 +1,11 @@
-.placeContainer {
-  
+@media screen and (max-width: 740px) {
+  .placeContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 100%;
+    background-color: blue;
+  }
 }

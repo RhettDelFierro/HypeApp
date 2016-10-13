@@ -1,17 +1,17 @@
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as feedActionCreators from 'redux/modules/feed'
-import { Review } from 'components'
+import * as listenerActionCreators from 'redux/modules/listeners'
+import { Feed } from 'components'
 
-class ReviewContainer extends React.Component {
+class FeedContainer extends React.Component {
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <Review />
+      <Feed />
     )
   }
 }
@@ -23,7 +23,7 @@ function mapStateToProps({}) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators(feedActionCreators, dispatch)
+    return bindActionCreators(ActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReviewContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(FeedContainer)

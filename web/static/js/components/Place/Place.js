@@ -5,7 +5,7 @@ import { placeContainer } from './styles.css'
 const Place = (props) => {
         return (
             <div className={placeContainer}>
-              {'hihi'}
+              {'PLACE'}
             </div>
         )
 }

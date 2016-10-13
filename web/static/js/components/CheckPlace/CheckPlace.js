@@ -3,7 +3,7 @@ import { PlaceContainer, DiscussionContainer } from 'containers'
 import { checkPlaceContainer } from './styles.css'
 
 
-const CheckPlace = ({}) => {
+const CheckPlace = (props) => {
         return (
             <div className={checkPlaceContainer}>
 

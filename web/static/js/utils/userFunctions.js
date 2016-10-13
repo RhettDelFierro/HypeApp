@@ -96,7 +96,7 @@ export function userConnectionAPI({ callback, errorCallback }) {
   const socket = new Socket('/socket', {
     // this is all getting passed to Hypeapp.UserSocket.connect/2
     params: { token: window.sessionStorage.getItem('phoenixAuthToken') },
-    logger: {kind,msg,data} => { console.log(`${kind}: ${msg}`, data) }
+    logger: ({ kind,msg,data }) => { console.log(`${kind}: ${msg}`, data) }
   });
 
   //connect it.
