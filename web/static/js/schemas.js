@@ -48,6 +48,10 @@
     }
   }
 
+  listeners: {
+    userChannel: false,
+  }
+
   //for the map:
   //will only render in the current scope of the map:
   locations: {
