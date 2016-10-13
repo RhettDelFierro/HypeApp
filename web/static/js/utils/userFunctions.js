@@ -69,16 +69,16 @@ export async function getCurrentUserAPI() {
             withCredentials: true
         })
     } catch (error) {
-        return error
+        console.log(error)
     }
 }
 
 export async function logoutAPI() {
     try {
-        const authToken = sessionStorage.getItem('phoenixAuthToken')
-        const response = axtion.delete('/api/v1/sessions', {
+        const response = axios.delete('/api/v1/sessions', {
             headers: {
-                'Authorization': authToken,
+              // make another function to get the auth token instead?
+                'Authorization': window.sessionStorage.getItem('phoenixAuthToken'),
                 'Content-Type': 'application/json'
             },
             withCredentials: true
@@ -86,7 +86,7 @@ export async function logoutAPI() {
         sessionStorage.removeItem('phoenixAuthToken')
         return response
     } catch (error) {
-        return error
+        console.log(error)
     }
 }
 
@@ -103,14 +103,4 @@ export function userChannelAPI() {
   socket.onError(() => console.log('Error in userChannelAPI'))
   socket.onClose(() => console.log('The connection was closed.'))
   socket.connect();
-
-  const channel = socket.channel(`users:${user.id}`);
-
-  channel.join().receive('ok', () => {
-    dispatch({
-        type: Constants.SOCKET_CONNECTED,
-        socket: socket,
-        channel: channel,
-      });
-  });
 }
