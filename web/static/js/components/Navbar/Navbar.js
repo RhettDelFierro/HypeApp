@@ -1,13 +1,13 @@
 import React, { PropTypes, Component} from "react"
+import { Link } from 'react-router'
 import { navbarContainer } from './styles.css'
 
 const Navbar = ({is_authed }) => {
         return (
             <div className={navbarContainer}>
-              {is_authed
-                ? <Post />
-                : <button>{'Sign In'}</button>
-              }
+              
+                <Link to={'/places'}>{'Sign In'}</Link>
+
             </div>
         )
 }

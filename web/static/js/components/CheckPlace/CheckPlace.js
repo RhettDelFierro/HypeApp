@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from "react"
-import { PlaceContainer, DiscussionContainer } from 'containers'
+import { PlaceContainer, PostContainer, FeedContainer } from 'containers'
 import { checkPlaceContainer } from './styles.css'
 
 

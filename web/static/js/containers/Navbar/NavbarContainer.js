@@ -13,20 +13,23 @@ class NavbarContainer extends React.Component {
 
   render() {
     return (
-      <Navbar />
+      <Navbar {...this.props} />
     )
   }
 }
 
 function mapStateToProps({ users, listeners, post }) {
   return {
-    is_authed: users.get('is_authed')
+    is_authed: users.get('is_authed'),
     is_posting: post.get('is_posting')
   }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators(ActionCreators, dispatch)
+    return bindActionCreators(
+      {
+        ...userActionCreators, ...listenerActionCreators, ...navActionCreators
+      }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavbarContainer)

@@ -164,6 +164,7 @@ export default function users(state = initial_state, action) {
             })
         case FETCHING_USER_SUCCESS:
             return state.merge({
+                is_authed: true,
                 is_fetching: false,
                 error: false,
                 error_register_object: {},

@@ -6,7 +6,7 @@ import { Post } from 'components'
 
 function mapStateToProps({ users, post }) {
   return {
-    user_id: users.getIn(['current_user','info','user_id'),
+    user_id: users.getIn(['current_user','id']),
     post_text: post.get('post_text')
   }
 }

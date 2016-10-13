@@ -18,14 +18,14 @@ class HomeContainer extends React.Component {
   }
 }
 
-function mapStateToProps({}) {
-  return {
-
-  }
-}
-
-function mapDispatchToProps(dispatch){
-    return bindActionCreators(ActionCreators, dispatch)
-}
+// function mapStateToProps({}) {
+//   return {
+//
+//   }
+// }
+//
+// function mapDispatchToProps(dispatch){
+//     return bindActionCreators(ActionCreators, dispatch)
+// }
 
 export default HomeContainer

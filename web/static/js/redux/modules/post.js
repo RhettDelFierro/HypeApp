@@ -6,7 +6,21 @@ const UPDATE_POST_TEXT = 'UPDATE_POST_TEXT'
 
 export const open_post  = () => { type: OPEN_POST }
 export const close_post = () => { type: CLOSE_POST }
-export const update_post_text = ({ text }) => { type: UPDATE_POST_TEXT, post_text}
+
+export function update_post_text (post_text) {
+  return {
+   type: UPDATE_POST_TEXT,
+    post_text
+  }
+}
+
+export const submit_post = () => {
+  return (dispatch,getState) => {
+    //update channel
+    //update DB (review controller route.)
+    dispatch(close_post())
+  }
+}
 
 const initial_state = fromJS({
     is_posting: false,
@@ -21,11 +35,12 @@ export default function post(state = initial_state, action) {
         })
       case CLOSE_POST:
         return state.merge({
+          post_text: '',
           is_posting: false
         })
       case UPDATE_POST_TEXT:
           return state.merge({
-            post_text: action.text
+            post_text: action.post_text
           })
       default:
           return state
