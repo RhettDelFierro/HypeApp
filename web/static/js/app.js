@@ -15,7 +15,7 @@ const routermiddle = routerMiddleware(browserHistory)
 const render = applyRouterMiddleware(useScroll())
 
 const store = createStore(
-    combineReducers({...reducers, routing: routerReducer, form: formReducer}),
+    combineReducers({...reducers, routing: routerReducer}),
     compose(
         applyMiddleware(routermiddle, thunk),
         window.devToolsExtension ? window.devToolsExtension() : (f) => f

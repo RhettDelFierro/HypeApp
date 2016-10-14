@@ -4,15 +4,10 @@ const OPEN_POST   = 'OPEN_POST'
 const CLOSE_POST  = 'CLOSE_POST'
 const UPDATE_POST_TEXT = 'UPDATE_POST_TEXT'
 
-export const open_post  = () => { type: OPEN_POST }
-export const close_post = () => { type: CLOSE_POST }
-
-export function update_post_text (post_text) {
-  return {
-   type: UPDATE_POST_TEXT,
-    post_text
-  }
-}
+export const open_post  = () => ({ type: OPEN_POST })
+export const close_post = () => ({ type: CLOSE_POST })
+export const update_post_text = (post_text) => (
+  { type: UPDATE_POST_TEXT, post_text })
 
 export const submit_post = () => {
   return (dispatch,getState) => {

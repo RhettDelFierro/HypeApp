@@ -10,6 +10,7 @@ class PlaceContainer extends Component {
   constructor(props) {
     super(props)
     this.handleOpenPost = this.handleOpenPost.bind(this)
+    console.log(this.props)
   }
 
   handleOpenPost() {
