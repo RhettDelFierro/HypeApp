@@ -31,7 +31,7 @@ function authCheck(nextState, replace) {
     }
     const authed = store.getState().users.get('is_authed')
     const nextPathName = nextState.location.pathname
-    const phoenixAuthToken = sessionStorage.getItem('phoenixAuthToken');
+    const phoenixAuthToken = window.sessionStorage.getItem('phoenixAuthToken');
     if (phoenixAuthToken && !authed) {
       //sign the user back in.
     //  store.dispatch(currentUser())

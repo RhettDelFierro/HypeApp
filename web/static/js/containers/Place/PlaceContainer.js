@@ -5,15 +5,18 @@ import * as userActionCreators from 'redux/modules/users'
 import * as listenerActionCreators from 'redux/modules/listeners'
 import * as postActionCreators from 'redux/modules/post'
 import { Place } from 'components'
+import { push } from 'react-router-redux'
 
 class PlaceContainer extends Component {
   constructor(props) {
     super(props)
     this.handleOpenPost = this.handleOpenPost.bind(this)
-    console.log(this.props)
   }
 
   handleOpenPost() {
+    if (!this.props.is_authed) {
+      return this.props.change_route('/sign_in')
+    }
      this.props.open_post()
   }
 
@@ -32,7 +35,12 @@ function mapStateToProps({ users, post }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...userActionCreators,...listenerActionCreators, ...postActionCreators}, dispatch)
+    return bindActionCreators({
+      ...userActionCreators,
+      ...listenerActionCreators,
+      ...postActionCreators,
+      change_route: (url) => push(url),
+    },dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceContainer)
