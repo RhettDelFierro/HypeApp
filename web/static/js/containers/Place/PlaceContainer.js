@@ -10,22 +10,22 @@ import { push } from 'react-router-redux'
 class PlaceContainer extends Component {
   constructor(props) {
     super(props)
-    this.handleOpenPost = this.handleOpenPost.bind(this)
+    //this.handleOpenPost = this.handleOpenPost.bind(this)
   }
 
   handleOpenPost() {
-    const authToken = window.sessionStorage.getItem('phoenixAuthToken')
-    if (!this.props.is_authed && authToken) {
-      this.props.getCurrentUser();
-    } else if (!authToken) {
-      return this.props.change_route('/sign_in')
-    }
+    // const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+    // if (!this.props.is_authed && authToken) {
+    //   this.props.getCurrentUser();
+    // } else if (!authToken) {
+    //   return this.props.change_route('/sign_in')
+    // }
      this.props.open_post()
   }
 
   render() {
     return (
-      <Place onOpenPost={this.handleOpenPost}/>
+      <Place {...this.props} />
     )
   }
 }

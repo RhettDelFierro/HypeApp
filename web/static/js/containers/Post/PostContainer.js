@@ -1,8 +1,43 @@
 import React, { PropTypes, Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import * as userActionCreators from 'redux/modules/users'
 import * as postActionCreators from 'redux/modules/post'
 import { Post } from 'components'
+
+class PostContainer extends Component {
+  constructor() {
+    super()
+  }
+
+  componentWillMount() {
+    console.log(this.props)
+    const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+    if (!this.props.is_authed && authToken) {
+      this.props.getCurrentUser();
+    } else if (!authToken) {
+      this.props.change_route('/sign_in')
+      return
+    }
+  }
+
+  componentWillUpdate(newProps) {
+    const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+    if (!newProps.is_authed && authToken) {
+      this.props.getCurrentUser();
+    } else if (!authToken) {
+      this.props.change_route('/sign_in')
+      return
+    }
+  }
+
+  render() {
+    return (
+      <Post {...this.props} />
+    )
+  }
+
+}
 
 function mapStateToProps({ users, post }) {
   return {
@@ -15,4 +50,4 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators(postActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Post)
+export default connect(mapStateToProps, mapDispatchToProps)(PostContainer)

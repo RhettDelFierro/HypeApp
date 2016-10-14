@@ -4,9 +4,10 @@ import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
 
-export default function (WrappedComponent) {
+export default function Authenticate(WrappedComponent) {
   class AuthenticatedContainer extends Component {
     componentWillMount() {
+      console.log(this.props)
       const authToken = window.sessionStorage.getItem('phoenixAuthToken')
       if (!this.props.is_authed && authToken) {
         this.props.getCurrentUser();
@@ -49,5 +50,5 @@ export default function (WrappedComponent) {
       )
   }
 
-  export default connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
+  return connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
 }

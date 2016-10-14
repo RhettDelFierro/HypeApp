@@ -10,7 +10,7 @@ class MainContainer extends React.Component {
     super(props)
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getCurrentUser()
   }
 
@@ -34,4 +34,4 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators(userActionCreators, dispatch)
 }
 
-export default MainContainer
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)

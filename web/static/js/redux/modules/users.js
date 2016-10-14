@@ -84,7 +84,7 @@ export function loginUser({ data }) {
 }
 
 export function getCurrentUser() {
-    return async(dispatch, getState) => {
+    return async (dispatch, getState) => {
         try {
             const current_user = await getCurrentUserAPI()
             dispatch(fetchingUserSuccess({ current_user }))

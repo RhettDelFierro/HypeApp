@@ -3,17 +3,17 @@ import { Button } from 'components'
 import { placeContainer } from './styles.css'
 
 
-const Place = ({ onOpenPost }) => {
+const Place = ({ open_post }) => {
         return (
             <div className={placeContainer}>
-              <Button onClick={onOpenPost} styling='postTrigger' text='Write a Review!' />
+              <Button onClick={open_post} styling='postTrigger' text='Write a Review!' />
             </div>
         )
 }
 
 const { func } = PropTypes
 Place.propTypes = {
-  onOpenPost: func.isRequired
+  open_post: func.isRequired
 }
 
 export default Place
