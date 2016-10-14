@@ -54,7 +54,6 @@ export async function loginUserAPI({ data }) {
         return response.data.user
     } catch (error) {
         console.log(error)
-            //return JSON.parse(error)
     }
 }
 
@@ -68,6 +67,7 @@ export async function getCurrentUserAPI() {
             },
             withCredentials: true
         })
+        return response.data.user
     } catch (error) {
         console.log(error)
     }
