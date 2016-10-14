@@ -20,7 +20,7 @@ defmodule Hypeapp.RegistrationController  do
       {:ok, user} ->
         # encode_and_sign/2 dishes out the jwt and sends it through request body
         {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user, :token)
-
+        # Going to also log them on in registration went through (changeset was valid)
         conn
         |> put_status(:created)
         |> render(Hypeapp.SessionView, "show.json", jwt: jwt, user: user)

@@ -7,15 +7,7 @@ export function renderErrorsFor(errors, ref) {
 
     return errors.map((error, i) => {
         if (error[ref]) {
-            return ( <
-                div key = {
-                    i
-                }
-                className = "error" > {
-                    error[ref]
-                } <
-                /div>
-            );
+            return <div key={i} className = "error" > { error[ref]} </div>;
         }
     });
 }
@@ -33,8 +25,8 @@ export async function registerUserAPI({ data }) {
 
         window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
         return response.data.user
-    } catch (error) {
-        console.log(error)
+    } catch (error_object) {
+      return error_object
     }
 }
 
@@ -50,7 +42,6 @@ export async function loginUserAPI({ data }) {
         });
 
         window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
-        console.log('no error!:', response)
         return response.data.user
     } catch (error) {
         console.log(error)

@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
-import { renderErrorsFor } from 'utils/userFunctions'
-import { registrationContainer, field, error, submitRegistration } from './styles.css'
+//import { renderErrorsFor } from 'utils/userFunctions'
+import { registrationContainer, field, errorStyle, submitRegistration } from './styles.css'
 import { Field } from 'components'
 
 class Registration extends Component {
@@ -26,6 +26,17 @@ class Registration extends Component {
 
     this.props.registerUser({ data })
   }
+
+  _renderErrorsFor(errors, ref) {
+    if (!errors) return false;
+
+    return errors.map((error, i) => {
+        if (error[ref]) {
+            return <div key={i} className = {errorStyle} > {error[ref]} </div>
+        }
+    });
+  }
+
     //could also user handleSubmit(() => register)
     render() {
     return (
@@ -33,23 +44,23 @@ class Registration extends Component {
         <form onSubmit={(event) => this._handleSubmit(event)}>
             <div className={field}>
               <Field inputRef={node => this.firstNameNode = node} placeholder="First Name" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'first_name')}
+              {this._renderErrorsFor(this.props.errors, 'first_name')}
             </div>
             <div className={field}>
             <Field inputRef={node => this.lastNameNode = node} placeholder="Last Name" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'last_name')}
+              {this._renderErrorsFor(this.props.errors, 'last_name')}
             </div>
             <div className={field}>
             <Field inputRef={node => this.emailNode = node} placeholder="Email" typeOf="text"/>
-              {renderErrorsFor(this.props.errors, 'email')}
+              {this._renderErrorsFor(this.props.errors, 'email')}
             </div>
             <div className={field}>
               <Field inputRef={node => this.passwordNode = node} typeOf="password" placeholder="Password" />
-              {renderErrorsFor(this.props.errors, 'password')}
+              {this._renderErrorsFor(this.props.errors, 'password')}
             </div>
             <div className={field}>
               <Field inputRef={node => this.passwordConfirmationNode = node} placeholder="Confirm Password" typeOf="password"/>
-              {renderErrorsFor(this.props.errors, 'password_confirmation')}
+              {this._renderErrorsFor(this.props.errors, 'password_confirmation')}
             </div>
             <button type={submitRegistration}>Sign up</button>
         </form>

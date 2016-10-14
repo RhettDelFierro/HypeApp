@@ -10,9 +10,9 @@
 }
 
 .field > input {
-  border: 1px solid darkgray;
+  border: 1px solid darkgray; 
 }
 
-.error {
+.errorStyle {
   color: red;
 }

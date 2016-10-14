@@ -1,10 +1,11 @@
 import React, { PropTypes, Component} from "react"
-import { postTrigger } from './styles.css'
+import { postTrigger, user } from './styles.css'
 
 
 const Button = ({ onClick, styling, text }) => {
   const style = {
-    'postTrigger': postTrigger
+    'postTrigger': postTrigger,
+    'user': user
   }
         return (
             <button className={style[styling]} onClick={onClick} >

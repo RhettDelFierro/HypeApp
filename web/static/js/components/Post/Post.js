@@ -19,7 +19,7 @@ const Post = ({ post_text, update_post_text, submit_post, user_id }) => {
 
 const { number, func, string } = PropTypes
 Post.propTypes = {
-  user_id: number.isRequired,
+  user_id: number,
   post_text: string,
   update_post_text: func.isRequired,
   submit_post: func.isRequired

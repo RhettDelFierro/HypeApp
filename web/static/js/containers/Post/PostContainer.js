@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
 import * as postActionCreators from 'redux/modules/post'
 import { Post } from 'components'
+import { push } from 'react-router-redux'
 
 class PostContainer extends Component {
   constructor() {
@@ -11,7 +12,6 @@ class PostContainer extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props)
     const authToken = window.sessionStorage.getItem('phoenixAuthToken')
     if (!this.props.is_authed && authToken) {
       this.props.getCurrentUser();
@@ -47,7 +47,11 @@ function mapStateToProps({ users, post }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators(postActionCreators, dispatch)
+    return bindActionCreators({
+      ...userActionCreators,
+      ...postActionCreators,
+      change_route: (url) => push(url),
+    }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostContainer)

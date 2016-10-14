@@ -18,3 +18,7 @@
   composes: primary;
   background-color: yellow;
 }
+
+.user {
+  composes: primary;
+}

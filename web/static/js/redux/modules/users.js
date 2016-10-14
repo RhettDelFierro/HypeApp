@@ -58,7 +58,7 @@ export function fetchingUser() {
 }
 
 export function registerUser({ data }) {
-    return async(dispatch, getState) => {
+    return async function (dispatch, getState) {
         dispatch(fetchingUser())
         try {
             const current_user = await registerUserAPI({ data })
