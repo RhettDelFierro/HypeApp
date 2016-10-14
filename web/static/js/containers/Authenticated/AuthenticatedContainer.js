@@ -1,36 +1,53 @@
 import React {Proptypes, Component}      from 'react';
 import { connect }  from 'react-redux';
 import { bindActionCreators } from 'redux'
+import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
 
-class AuthenticatedContainer extends Component {
-  componentDidMount() {
-    const { dispatch, current_user } = this.props;
-
-    if (sessionStorage.getItem('phoenixAuthToken')) {
-      //something here.
-    } else {
-      this.props.changeRoute.push('/sign_up');
+export default function (WrappedComponent) {
+  class AuthenticatedContainer extends Component {
+    componentWillMount() {
+      const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+      if (!this.props.is_authed && authToken) {
+        this.props.getCurrentUser();
+      } else if (!authToken) {
+        this.props.change_route('/sign_in')
+        return
+      }
     }
+
+    componentWillUpdate(newProps) {
+      const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+      if (!newProps.is_authed && authToken) {
+        this.props.getCurrentUser();
+      } else if (!authToken) {
+        this.props.change_route('/sign_in')
+        return
+      }
+    }
+
+    render() {
+      return <WrappedComponent {...this.props} />
+    }
+
   }
 
-  render() {
-    //..
-  }
-}
-
-const mapStateToProps = ({}) => {
-  return {
-    current_user: .get('current_user')
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-    //return bindActionCreators({...actionCreators, changeRoute: (url) => dispatch(push(url)) },dispatch)
+  const mapStateToProps = ({ users }) => {
     return {
-      changeRoute: (url) => dispatch(push(url)),
-      dispatch
+      is_authed: users.get('is_authed'),
+      current_user: users.get('current_user')
     }
-}
+  };
 
-export default connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
+  const mapDispatchToProps = (dispatch) => {
+      return bindActionCreators(
+      {
+        ...userActionCreators,
+        changeRoute: (url) => dispatch(push(url))
+      }
+        ,dispatch
+      )
+  }
+
+  export default connect(mapStateToProps,mapDispatchToProps)(AuthenticatedContainer);
+}

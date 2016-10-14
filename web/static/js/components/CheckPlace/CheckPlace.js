@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from "react"
-import { PlaceContainer, PostContainer, FeedContainer } from 'containers'
+import { PlaceContainer, PostContainer, FeedContainer, AuthenticatedContainer } from 'containers'
 import { checkPlaceContainer } from './styles.css'
 
 
@@ -8,7 +8,7 @@ const CheckPlace = ({ is_authed, is_posting }) => {
             <div className={checkPlaceContainer}>
               <PlaceContainer />
               {is_authed && is_posting
-                ? <PostContainer />
+                ? AuthenticatedContainer(PostContainer)
                 : <FeedContainer />
               }
             </div>

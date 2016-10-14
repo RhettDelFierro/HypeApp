@@ -14,7 +14,10 @@ class PlaceContainer extends Component {
   }
 
   handleOpenPost() {
-    if (!this.props.is_authed) {
+    const authToken = window.sessionStorage.getItem('phoenixAuthToken')
+    if (!this.props.is_authed && authToken) {
+      this.props.getCurrentUser();
+    } else if (!authToken) {
       return this.props.change_route('/sign_in')
     }
      this.props.open_post()

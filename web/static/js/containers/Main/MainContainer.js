@@ -10,6 +10,10 @@ class MainContainer extends React.Component {
     super(props)
   }
 
+  componentDidMount() {
+    this.props.getCurrentUser()
+  }
+
   render() {
     return (
       <div className={mainContainer}>
