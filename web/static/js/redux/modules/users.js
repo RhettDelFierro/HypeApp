@@ -73,9 +73,9 @@ export function loginUser({ data }) {
     return async function(dispatch, getState) {
         dispatch(fetchingUser())
         try {
-            const response = await loginUserAPI({ data })
+            const current_user = await loginUserAPI({ data })
             dispatch(fetchingUserSuccess({ current_user }))
-            dispatch(push('/'))
+            dispatch(push('/')) //maybe not push to home route, but where they were instead.
         } catch (error) {
             dispatch(errorLoginHandler(error.response.error))
         }
@@ -89,6 +89,7 @@ export function getCurrentUser() {
             dispatch(fetchingUserSuccess({ current_user }))
         } catch (error) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error)
+            dispatch(push('/'))
         }
     }
 }

@@ -75,7 +75,8 @@ export async function getCurrentUserAPI() {
         })
         return response.data.user
     } catch (error) {
-        console.log(error)
+      const error_object = checkStatus(error)
+      return error_object.response
     }
 }
 
