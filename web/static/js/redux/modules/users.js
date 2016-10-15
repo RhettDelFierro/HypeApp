@@ -36,7 +36,7 @@ function unauthUser() {
     }
 }
 
-function errorRegisterHandler(error_oject) {
+function errorRegisterHandler(error_object) {
     console.log('register: heres error object:', error_object)
     return {
         type: REGISTRATION_ERROR,
@@ -65,8 +65,8 @@ export function registerUser({ data }) {
             const current_user = await registerUserAPI({ data })
             dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
-        } catch (error_object) {
-            dispatch(errorRegisterHandler(error_object))
+        } catch (error) { 
+            dispatch(errorRegisterHandler(error.response))
         }
     }
 }
@@ -75,7 +75,7 @@ export function loginUser({ data }) {
     return async function(dispatch, getState) {
         dispatch(fetchingUser())
         try {
-            const current_user = await loginUserAPI({ data })
+            const response = await loginUserAPI({ data })
             dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
         } catch (error_object) {

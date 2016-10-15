@@ -16,8 +16,9 @@ export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else {
+    console.log('response in checkStatus', response)
     const error = new Error(response.statusText);
-    error.response = response;
+    error.response = response.response.data.errors;
     throw error;
   }
 }
@@ -32,14 +33,15 @@ export async function registerUserAPI({ data }) {
             },
             withCredentials: true
         });
-
-        //we send back 422 if something went wrong, but 422 isn't an error.
-        //The catch block won't fire unless we handle it as an error.
-        window.sessionStorage.setItem('phoenixAuthToken', check.data.jwt)
-        //return response.data.user
-        return check
+        window.sessionStorage.setItem('phoenixAuthToken', reponse.data.jwt)
+        return response.data.user
     } catch (error) {
-      console.log(error)
+      //we send back 422 on the server if something went wrong,
+      //but 422 isn't an error.
+      //The catch block in the thunk won't fire
+      //unless we handle it as an error.
+      const error_object = checkStatus(error)
+      return error_object.response
     }
 }
 

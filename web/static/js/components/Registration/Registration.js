@@ -9,8 +9,16 @@ import { registrationContainer, field, errorStyle, submitRegistration } from './
 import { Field } from 'components'
 
 class Registration extends Component {
+  constructor() {
+    super()
+  }
+
   componentDidMount() {
 
+  }
+
+  comonentWillReceiveProps(newProps) {
+    console.log('new errors', newProps)
   }
 
   _handleSubmit(e) {
@@ -31,8 +39,8 @@ class Registration extends Component {
     if (!errors) return false;
 
     return errors.map((error, i) => {
-        if (error[ref]) {
-            return <div key={i} className = {errorStyle} > {error[ref]} </div>
+        if (error.get(ref)) {
+            return <div key={i} className={errorStyle} >{error.get(ref)}</div>
         }
     });
   }
@@ -80,4 +88,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(userActionCreators,dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(Registration)
+export default connect(mapStateToProps, mapDispatchToProps)(Registration)
