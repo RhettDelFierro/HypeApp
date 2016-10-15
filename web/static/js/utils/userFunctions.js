@@ -2,14 +2,24 @@ import axios from 'axios'
 import { Socket } from 'phoenix'
 
 //will use to render errors on form.
-export function renderErrorsFor(errors, ref) {
-    if (!errors) return false;
+// export function renderErrorsFor(errors, ref) {
+//     if (!errors) return false;
+//
+//     return errors.map((error, i) => {
+//         if (error[ref]) {
+//             return <div key={i} className = "error" > { error[ref]} </div>;
+//         }
+//     });
+// }
 
-    return errors.map((error, i) => {
-        if (error[ref]) {
-            return <div key={i} className = "error" > { error[ref]} </div>;
-        }
-    });
+export function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
 }
 
 export async function registerUserAPI({ data }) {
@@ -23,10 +33,13 @@ export async function registerUserAPI({ data }) {
             withCredentials: true
         });
 
-        window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
-        return response.data.user
-    } catch (error_object) {
-      return error_object
+        //we send back 422 if something went wrong, but 422 isn't an error.
+        //The catch block won't fire unless we handle it as an error.
+        window.sessionStorage.setItem('phoenixAuthToken', check.data.jwt)
+        //return response.data.user
+        return check
+    } catch (error) {
+      console.log(error)
     }
 }
 

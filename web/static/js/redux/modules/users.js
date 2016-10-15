@@ -4,7 +4,8 @@ import {
     registerUserAPI,
     loginUserAPI,
     getCurrentUserAPI,
-    logoutAPI
+    logoutAPI,
+    checkStatus
 } from 'utils/userFunctions'
 
 import {
