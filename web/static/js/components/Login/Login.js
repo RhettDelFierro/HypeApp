@@ -4,9 +4,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as userActionCreators from 'redux/modules/users'
 import { push } from 'react-router-redux'
-import { renderErrorsFor } from 'utils/userFunctions'
 import { Field } from 'components'
-import { loginContainer, loginForm, field, error, submitLogin } from './styles.css'
+import { loginContainer, loginForm, field, loginError, submitLogin } from './styles.css'
 
 class Login extends Component {
 
@@ -29,7 +28,7 @@ class Login extends Component {
     if (!error) return false;
 
     return (
-      <div className="error">
+      <div className={loginError}>
         {error}
       </div>
     );
@@ -42,11 +41,9 @@ class Login extends Component {
           {this._renderError()}
           <div className={field}>
             <Field inputRef={node => this.emailNode = node} placeholder="Email" typeOf="text"/>
-            {renderErrorsFor(this.props.errors, 'first_name')}
           </div>
           <div className={field}>
           <Field inputRef={node => this.passwordNode = node} placeholder="Password" typeOf="password"/>
-            {renderErrorsFor(this.props.errors, 'last_name')}
           </div>
           <button type={submitLogin}>Sign In</button>
       </form>
@@ -58,7 +55,7 @@ class Login extends Component {
 
 const mapStateToProps = ({ users }) => {
   return {
-    errors: users.get('error_login_object')
+    error: users.get('error_login')
   }
 }
 
@@ -66,4 +63,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(userActionCreators,dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

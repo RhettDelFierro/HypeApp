@@ -37,18 +37,16 @@ function unauthUser() {
 }
 
 function errorRegisterHandler(error_object) {
-    console.log('register: heres error object:', error_object)
     return {
         type: REGISTRATION_ERROR,
         error_object
     }
 }
 
-function errorLoginHandler(error_object) {
-    console.log('login: heres error object:', error_object)
+function errorLoginHandler(error) {
     return {
         type: LOGIN_ERROR,
-        error_object
+        error
     }
 }
 
@@ -65,8 +63,8 @@ export function registerUser({ data }) {
             const current_user = await registerUserAPI({ data })
             dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
-        } catch (error) { 
-            dispatch(errorRegisterHandler(error.response))
+        } catch (error) {
+            dispatch(errorRegisterHandler(error.response.errors))
         }
     }
 }
@@ -78,8 +76,8 @@ export function loginUser({ data }) {
             const response = await loginUserAPI({ data })
             dispatch(fetchingUserSuccess({ current_user }))
             dispatch(push('/'))
-        } catch (error_object) {
-            dispatch(errorLoginHandler(error_object))
+        } catch (error) {
+            dispatch(errorLoginHandler(error.response.error))
         }
     }
 }
@@ -89,9 +87,8 @@ export function getCurrentUser() {
         try {
             const current_user = await getCurrentUserAPI()
             dispatch(fetchingUserSuccess({ current_user }))
-        } catch (error_object) {
-            console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error_object)
-            dispatch(push('/sign_in'))
+        } catch (error) {
+            console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error)
         }
     }
 }
@@ -149,7 +146,7 @@ const initial_state = fromJS({
     socket: null,
     //instead of DRY, could maybe make a reducer for errors.
     error_register_object: {},
-    error_login_object: {}
+    error_login: ''
 })
 
 export default function users(state = initial_state, action) {
@@ -168,8 +165,8 @@ export default function users(state = initial_state, action) {
                 is_authed: true,
                 is_fetching: false,
                 error: false,
-                error_register_object: {},
-                error_login_object: {},
+                error_register_object: new Map({}),
+                error_login: '',
                 current_user: action.current_user
             })
         case REGISTRATION_ERROR:
@@ -182,7 +179,7 @@ export default function users(state = initial_state, action) {
             return state.merge({
                 is_fetching: false,
                 error: true,
-                error_login_object: action.error_object
+                error_login: action.error
             })
         case SET_LAST_ROUTE:
             return state.merge({

@@ -6,8 +6,8 @@ import { Socket } from 'phoenix'
 //     if (!errors) return false;
 //
 //     return errors.map((error, i) => {
-//         if (error[ref]) {
-//             return <div key={i} className = "error" > { error[ref]} </div>;
+//         if (error.get(ref)) {
+//             return <div key={i} className = "error" > {error.get(ref)} </div>;
 //         }
 //     });
 // }
@@ -16,9 +16,8 @@ export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else {
-    console.log('response in checkStatus', response)
     const error = new Error(response.statusText);
-    error.response = response.response.data.errors;
+    error.response = response.response.data;
     throw error;
   }
 }
@@ -59,7 +58,8 @@ export async function loginUserAPI({ data }) {
         window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
         return response.data.user
     } catch (error) {
-        console.log(error)
+      const error_object = checkStatus(error)
+      return error_object.response
     }
 }
 
