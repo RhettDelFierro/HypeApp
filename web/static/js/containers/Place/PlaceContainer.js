@@ -2,7 +2,7 @@ import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
-import * as listenerActionCreators from 'redux/modules/listeners'
+import * as connectionsActionCreators from 'redux/modules/connections'
 import * as postActionCreators from 'redux/modules/post'
 import { Place } from 'components'
 import { push } from 'react-router-redux'
@@ -40,7 +40,7 @@ function mapStateToProps({ users, post }) {
 function mapDispatchToProps(dispatch){
     return bindActionCreators({
       ...userActionCreators,
-      ...listenerActionCreators,
+      ...connectionsActionCreators,
       ...postActionCreators,
       change_route: (url) => push(url),
     },dispatch)

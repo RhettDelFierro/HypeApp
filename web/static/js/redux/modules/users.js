@@ -1,17 +1,8 @@
 import { fromJS, Map } from 'immutable'
-
-import {
-    registerUserAPI,
-    loginUserAPI,
-    getCurrentUserAPI,
-    logoutAPI,
-    checkStatus
-} from 'utils/userFunctions'
-
-import {
-    push,
-    go
-} from 'react-router-redux'
+import { setupUserSocketConnection } from 'redux/modules/connections'
+import { registerUserAPI, loginUserAPI,getCurrentUserAPI,
+          logoutAPI, checkStatus } from 'utils/userFunctions'
+import { push, go } from 'react-router-redux'
 
 const REGISTER_USER = 'REGISTER_USER'
 const LOGIN_ERROR = 'LOGIN_ERROR'
@@ -61,7 +52,10 @@ export function registerUser({ data }) {
         dispatch(fetchingUser())
         try {
             const current_user = await registerUserAPI({ data })
+            //DRY (SEE loginUser and getCurrentUser also)
+            const user_id = current_user.id
             dispatch(fetchingUserSuccess({ current_user }))
+            dispatch(setupUserSocketConnection({ user_id }))
             dispatch(push('/'))
         } catch (error) {
             dispatch(errorRegisterHandler(error.response.errors))
@@ -74,7 +68,9 @@ export function loginUser({ data }) {
         dispatch(fetchingUser())
         try {
             const current_user = await loginUserAPI({ data })
+            const user_id = current_user.id
             dispatch(fetchingUserSuccess({ current_user }))
+            dispatch(setupUserSocketConnection({ user_id }))
             dispatch(push('/')) //maybe not push to home route, but where they were instead.
         } catch (error) {
             dispatch(errorLoginHandler(error.response.error))
@@ -86,7 +82,9 @@ export function getCurrentUser() {
     return async (dispatch, getState) => {
         try {
             const current_user = await getCurrentUserAPI()
+            const user_id = current_user.id
             dispatch(fetchingUserSuccess({ current_user }))
+            dispatch(setupUserSocketConnection({ user_id }))
         } catch (error) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error)
         }
@@ -104,9 +102,7 @@ export function logout() {
     return async function(dispatch) {
         try {
             let response = await logoutAPI()
-            dispatch({
-                type: LOGOUT_USER
-            })
+            dispatch({ type: LOGOUT_USER })
         } catch (error) {
             console.log(error)
         }

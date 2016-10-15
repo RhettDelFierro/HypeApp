@@ -2,7 +2,7 @@ import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
-import * as listenerActionCreators from 'redux/modules/listeners'
+import * as connectionsActionCreators from 'redux/modules/connections'
 import { CheckPlace } from 'components'
 
 class CheckPlaceContainer extends React.Component {
@@ -25,7 +25,7 @@ function mapStateToProps({ users, post }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...userActionCreators, ...listenerActionCreators}, dispatch)
+    return bindActionCreators({...userActionCreators, ...connectionsActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckPlaceContainer)

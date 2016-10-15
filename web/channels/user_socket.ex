@@ -15,6 +15,7 @@ defmodule Hypeapp.UserSocket do
 
   #Pattern match: When there is a token being sent:
   def connect(%{"token" => token}, socket) do
+    IO.inspect token
     #If this all passes, only autheted users can connect through socket to
     #the app
     case Guardian.decode_and_verify(token) do

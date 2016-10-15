@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Socket } from 'phoenix'
+import { Socket } from 'phoenix.js'
 
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -57,7 +57,6 @@ export async function loginUserAPI({ data }) {
             withCredentials: true
         });
         setToken({ token: response.data.jwt })
-        console.log(response)
         //window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
         return response.data.user
     } catch (error) {
@@ -69,7 +68,7 @@ export async function loginUserAPI({ data }) {
 
 export async function getCurrentUserAPI() {
     try {
-        const authToken = getToken()
+        const authToken = getToken('phoenixAuthToken')
         const response = await axios.get("/api/v1/current_user", {
             headers: {
                 'Authorization': authToken,
@@ -89,7 +88,7 @@ export async function logoutAPI() {
         const response = axios.delete('/api/v1/sessions', {
             headers: {
               // make another function to get the auth token instead?
-                'Authorization': getToken(),
+                'Authorization': getToken('phoenixAuthToken'),
                 'Content-Type': 'application/json'
             },
             withCredentials: true
@@ -102,25 +101,27 @@ export async function logoutAPI() {
     }
 }
 
-export function userConnectionAPI({ user, callback, errorCallback }) {
+export function userConnectionAPI({ user_id, callback, errorCallback }) {
   // build a new socket connection and pass in the path ('/socket') where
   // the server is listening along with the jwt token and a logger as option params:
   const socket = new Socket('/socket', {
     // this is all getting passed to Hypeapp.UserSocket.connect/2
-    params: { token: getToken() },
-    logger: ({ kind,msg,data }) => { console.log(`${kind}: ${msg}`, data) }
+    logger: (kind, msg, data) => {
+    console.log(`${kind}: ${msg}`, data)
+  },
+  // Passed to MyApp.UserSocket.connect/2
+  params: { token: getToken('phoenixAuthToken') }
   });
-
+  console.log(socket)
   //connect it.
-  socket.onError(() => errorCallback('user socket connection error' }))
+  socket.onError((error) => errorCallback('user socket connection error'))
   socket.onClose(() => console.log('The user socket connection was closed.'))
   socket.connect();
 
   //channel variable with the topic we want to subscribe to (users) and
   //also it's subtopic (our user's id)
-  const channel = socket.channel(`users:${user.get('id')}`)
+  const channel = socket.channel(`users:${user_id}`)
   channel.join() //join the channel.
-  .receive('ok', callback({ user: { socket, channel } }))
-  })
+  .receive('ok', callback({ user_conn: { socket, channel } }))
   .receive('error', errorCallback('user channel connection error'))
 }

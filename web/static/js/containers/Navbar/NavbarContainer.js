@@ -2,7 +2,7 @@ import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
-import * as listenerActionCreators from 'redux/modules/listeners'
+import * as connectionsActionCreators from 'redux/modules/connections'
 import * as navActionCreators from 'redux/modules/nav'
 import { Navbar } from 'components'
 import { push } from 'react-router-redux'
@@ -32,7 +32,7 @@ function mapDispatchToProps(dispatch){
       {
 
         ...userActionCreators,
-        ...listenerActionCreators,
+        ...connectionsActionCreators,
         ...navActionCreators,
         changeRoute: (url) => push(url)
 

@@ -2,7 +2,7 @@ import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as feedActionCreators from 'redux/modules/feed'
-import * as listenerActionCreators from 'redux/modules/listeners'
+import * as connectionsActionCreators from 'redux/modules/connections'
 import { Feed } from 'components'
 
 class FeedContainer extends React.Component {
@@ -25,7 +25,7 @@ function mapStateToProps({ users, post }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...feedActionCreators, ...listenerActionCreators}, dispatch)
+    return bindActionCreators({...feedActionCreators, ...connectionsActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedContainer)
