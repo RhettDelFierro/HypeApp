@@ -89,7 +89,7 @@ export function getCurrentUser() {
             dispatch(fetchingUserSuccess({ current_user }))
         } catch (error) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error)
-            dispatch(push('/'))
+            // dispatch(push('/'))
         }
     }
 }
