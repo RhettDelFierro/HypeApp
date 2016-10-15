@@ -9,28 +9,48 @@ const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
 export function setupSocketConnection() {
   return (dispatch,getState) => {
     userConnectionAPI({
-      callback: (connection_info) => dispatch(setUserConnection(connection_info)),
-      errorCallback: (error) => dispatch(setConnectionError(error))})
+      user: getState().users.get('current_user'),
+      callback: ({ user }) => {
+        return dispatch(setUserConnection({ user }))
+      },
+      errorCallback: (error) => dispatch(setConnectionError(error))
+    )
   }
 }
 
-export function setUserConnection({ connection_info }) {
+export function setUserConnection({ user }) {
   return {
     type: SET_USER_CONNECTION,
-    connection_info
+    user
   }
 }
 
-export function setConnectionError({ error }) {
+export function setConnectionError(error) {
   return {
     type: SET_CONNECTION_ERROR,
     error
   }
 }
 
+const initial_user_connection_state = fromJS({
+  socket: null,
+  channel: null
+})
+
+function user_connection(state = initial_user_connection_state, action) {
+  switch (action.type) {
+    case SET_USER_CONNECTION:
+      return state.merge({
+        user_socket: fromJS(action.user.socket),
+        user_channel: fromJS(action.user.channel)
+      })
+    default:
+        return state
+  }
+}
+
 const initial_state = fromJS({
-  users_socket: null,
-  users_channel: null,
+  user_connection: {}
   location_channel: null,
   places_channel: null,
   votes_channel: null,
@@ -39,12 +59,11 @@ const initial_state = fromJS({
   error: null
 })
 
-export default function listeners(state = initial_state, action) {
+export default function connections(state = initial_state, action) {
     switch (action.type) {
       case SET_USER_CONNECTION:
         return state.merge({
-          users_socket: action.connection_info.users_socket,
-          users_channel: action.connection_info.users_channel
+          user_connection: user_connection(state.get('user_connection'),action)
         })
       case SET_CONNECTION_ERROR:
         return state.merge({

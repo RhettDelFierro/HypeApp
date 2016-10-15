@@ -1,17 +1,6 @@
 import axios from 'axios'
 import { Socket } from 'phoenix'
 
-//will use to render errors on form.
-// export function renderErrorsFor(errors, ref) {
-//     if (!errors) return false;
-//
-//     return errors.map((error, i) => {
-//         if (error.get(ref)) {
-//             return <div key={i} className = "error" > {error.get(ref)} </div>;
-//         }
-//     });
-// }
-
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -20,6 +9,18 @@ export function checkStatus(response) {
     error.response = response.response.data;
     throw error;
   }
+}
+
+export function setToken({ token_name = 'phoenixAuthToken', token}) {
+  window.sessionStorage.setItem(token_name, token)
+}
+
+export function getToken({ token_name = 'phoenixAuthToken' }) {
+  return window.sessionStorage.getItem(token_name)
+}
+
+export function removeToken({ token_name = 'phoenixAuthToken', token}) {
+  window.sessionStorage.removeItem(token_name)
 }
 
 export async function registerUserAPI({ data }) {
@@ -32,7 +33,8 @@ export async function registerUserAPI({ data }) {
             },
             withCredentials: true
         });
-        window.sessionStorage.setItem('phoenixAuthToken', reponse.data.jwt)
+        setToken({token: response.data.jwt})
+        //window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
         return response.data.user
     } catch (error) {
       //we send back 422 on the server if something went wrong,
@@ -54,10 +56,12 @@ export async function loginUserAPI({ data }) {
             },
             withCredentials: true
         });
-
-        window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
+        setToken({ token: response.data.jwt })
+        console.log(response)
+        //window.sessionStorage.setItem('phoenixAuthToken', response.data.jwt)
         return response.data.user
     } catch (error) {
+      console.log(error)
       const error_object = checkStatus(error)
       return error_object.response
     }
@@ -65,7 +69,7 @@ export async function loginUserAPI({ data }) {
 
 export async function getCurrentUserAPI() {
     try {
-        const authToken = sessionStorage.getItem('phoenixAuthToken')
+        const authToken = getToken()
         const response = await axios.get("/api/v1/current_user", {
             headers: {
                 'Authorization': authToken,
@@ -85,30 +89,38 @@ export async function logoutAPI() {
         const response = axios.delete('/api/v1/sessions', {
             headers: {
               // make another function to get the auth token instead?
-                'Authorization': window.sessionStorage.getItem('phoenixAuthToken'),
+                'Authorization': getToken(),
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         })
-        sessionStorage.removeItem('phoenixAuthToken')
+        //sessionStorage.removeItem('phoenixAuthToken')
+        removeToken()
         return response
     } catch (error) {
         console.log(error)
     }
 }
 
-export function userConnectionAPI({ callback, errorCallback }) {
+export function userConnectionAPI({ user, callback, errorCallback }) {
   // build a new socket connection and pass in the path ('/socket') where
   // the server is listening along with the jwt token and a logger as option params:
   const socket = new Socket('/socket', {
     // this is all getting passed to Hypeapp.UserSocket.connect/2
-    params: { token: window.sessionStorage.getItem('phoenixAuthToken') },
+    params: { token: getToken() },
     logger: ({ kind,msg,data }) => { console.log(`${kind}: ${msg}`, data) }
   });
 
   //connect it.
-  socket.onError(() => errorCallback(socket))
-  socket.onClose(() => console.log('The connection was closed.'))
+  socket.onError(() => errorCallback('user socket connection error' }))
+  socket.onClose(() => console.log('The user socket connection was closed.'))
   socket.connect();
 
+  //channel variable with the topic we want to subscribe to (users) and
+  //also it's subtopic (our user's id)
+  const channel = socket.channel(`users:${user.get('id')}`)
+  channel.join() //join the channel.
+  .receive('ok', callback({ user: { socket, channel } }))
+  })
+  .receive('error', errorCallback('user channel connection error'))
 }
