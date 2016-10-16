@@ -28,12 +28,13 @@ defmodule Yelp do
   @doc """
     Return a new transformed client (that's being passed in) with the token.
   """
-  def get_token(client) do
-    client
-      |> put_param(:client_secret, client.client_secret)
-      |> put_param(:client_id, client.client_id)
-      |> put_param(:grant_type, "client_credentials")
-      |> AuthCode.get_token(params,headers)
+  def get_token(client,params) do
+    ClientCredentials.get_token(client(),%{:auth_scheme, "request_body"})
+    # client
+    #   |> put_param(:client_secret, client.client_secret)
+    #   |> put_param(:client_id, client.client_id)
+    #   |> put_param(:grant_type, "client_credentials")
+    #   |> ClientCredentials.get_token(params,headers)
   end
 
   #Now do the searching in the controller. Render in the view.
