@@ -40,3 +40,7 @@ config :hypeapp, Hypeapp.Repo,
   database: "hypeapp_dev",
   hostname: "localhost",
   pool_size: 10
+
+  config :hypeapp, Yelp,
+    client_id: System.get_env("YELP_APP_ID"),
+    client_secret: System.get_env("YELP_APP_SECRET")
