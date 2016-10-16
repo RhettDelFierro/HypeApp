@@ -69,6 +69,7 @@ defmodule Hypeapp.Web do
       import Ecto
       import Ecto.Query
       import Hypeapp.Gettext
+      import Hypeapp.ChannelHelpers # to get our channel helpers in every function of type :channel
     end
   end
 

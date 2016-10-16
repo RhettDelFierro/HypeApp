@@ -1,8 +1,9 @@
-defmodule Hypeapp.PlaceChannel do
+defmodule Hypeapp.UserChannel do
   use Hypeapp.Web, :channel
   require Logger
 
-  def join("place:" <> place_id, payload, socket) do
+  # user_id is passed in through socket.channel() in usersFunctions.js
+  def join("user:" <> user_id, payload, socket) do
     authorize(payload, fn ->
       {:ok, socket}
     end)
@@ -15,7 +16,7 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (place:lobby).
+  # broadcast to everyone in the current topic (user:lobby).
   def handle_in("shout", payload, socket) do
     Logger.debug "#{inspect payload}"
     broadcast socket, "shout", payload
