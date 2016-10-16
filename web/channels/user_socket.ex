@@ -3,7 +3,7 @@ defmodule Hypeapp.UserSocket do
 
   alias Hypeapp.{GuardianSerializer}
 
-  channel "places:*", Hypeapp.PlaceChannel
+  channel "place:*", Hypeapp.PlaceChannel
   channel "users:*", Hypeapp.UserChannel
 
   ## Channels

@@ -1,7 +1,8 @@
 defmodule Hypeapp.PlaceChannel do
   use Hypeapp.Web, :channel
+  require Logger
 
-  def join("place:lobby", payload, socket) do
+  def join("place:" <> place_id, payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else
