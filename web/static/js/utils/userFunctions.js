@@ -94,7 +94,7 @@ export async function logoutAPI() {
             withCredentials: true
         })
         //sessionStorage.removeItem('phoenixAuthToken')
-        removeToken()
+        removeToken('phoenixAuthToken')
         return response
     } catch (error) {
         console.log(error)
@@ -112,7 +112,6 @@ export function userConnectionAPI({ user_id, callback, errorCallback }) {
   // Passed to MyApp.UserSocket.connect/2
   params: { token: getToken('phoenixAuthToken') }
   });
-  console.log(socket)
   //connect it.
   socket.onError((error) => errorCallback('user socket connection error'))
   socket.onClose(() => console.log('The user socket connection was closed.'))

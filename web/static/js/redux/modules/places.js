@@ -1,8 +1,12 @@
 import { fromJS } from 'immutable'
 
 //action creators:
+export const getPlace = ({  }) => {
+  return async (dispatch,getState) => {
+    //make call to help
+  }
+}
 
-//
 
 const initial_state = fromJS({
     rating: false,

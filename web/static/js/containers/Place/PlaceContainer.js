@@ -13,13 +13,18 @@ class PlaceContainer extends Component {
     //this.handleOpenPost = this.handleOpenPost.bind(this)
   }
 
+  componentDidMount() {
+    //set-up the review feed on this smart component.
+    //will make an AJAX call (thunk) to yelp from this container.
+    //for now, just use dummy data.
+    this.props.getPlace()
+  }
+
+  componentWillUnmount() {
+    this.props.leavePlace()
+  }
+
   handleOpenPost() {
-    // const authToken = window.sessionStorage.getItem('phoenixAuthToken')
-    // if (!this.props.is_authed && authToken) {
-    //   this.props.getCurrentUser();
-    // } else if (!authToken) {
-    //   return this.props.change_route('/sign_in')
-    // }
      this.props.open_post()
   }
 

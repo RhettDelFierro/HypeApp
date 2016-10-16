@@ -3,10 +3,17 @@ defmodule Hypeapp.UserChannel do
   require Logger
 
   # user_id is passed in through socket.channel() in usersFunctions.js
-  def join("user:" <> user_id, payload, socket) do
-    authorize(payload, fn ->
-      {:ok, socket}
-    end)
+  def join("users:" <> user_id, payload, socket) do
+    # authorize(payload, fn ->
+    #   {:ok, socket}
+    # end)
+    current_user = socket.assigns.current_user
+
+   if String.to_integer(user_id) == current_user.id do
+     {:ok, socket}
+   else
+     {:error, %{reason: "Invalid user"}}
+   end
   end
 
   # Channels can be used in a request/response fashion
