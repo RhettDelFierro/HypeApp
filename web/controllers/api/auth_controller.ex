@@ -11,6 +11,7 @@ defmodule Hypeapp.AuthController do
     client = get_token!("yelp")
     IO.inspect client
     qURL = getQUrl(parameters)
+
     places = get_places!("yelp", client, qURL)
     IO.inspect places
     json conn, %{places: places}
@@ -40,7 +41,7 @@ defmodule Hypeapp.AuthController do
 
   defp get_places!("yelp", client, qURL) do
     %{body: places} = OAuth2.Client.get!(client, "/v3/businesses/search?term=restaurants&" <> qURL)
-    %{busnesses: places["businesses"]}
+    %{businesses: places}
   end
 
 end

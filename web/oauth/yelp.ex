@@ -23,6 +23,7 @@ defmodule Yelp do
     Application.get_env(:hypeapp, Yelp)
       |> Keyword.merge(config())
       |> OAuth2.Client.new()
+      |> IO.inspect
   end
 
   @doc """
@@ -30,7 +31,10 @@ defmodule Yelp do
   """
   def get_token() do
     #IO.inspect Application.get_env(:hypeapp, Yelp)
-    ClientCredentials.get_token(client(),[auth_scheme: "request_body"], [])
+    client()
+      |> put_header("content-type", "application/x-www-form-urlencoded")
+      |> put_header("Accept", "application/json")
+      |> ClientCredentials.get_token([auth_scheme: "request_body"], [])
   end
 
 end
