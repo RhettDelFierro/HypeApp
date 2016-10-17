@@ -11,7 +11,9 @@ defmodule Hypeapp.AuthController do
     qURL = getQUrl(parameters)
 
     places = get_places!("yelp", client, qURL)
-      |> Enum.filter(&( &1["rating"] >=4 ))
+      |> Enum.filter(&(&1["rating"] >=4))
+      |> Enum.sort(&(&1["review_count"] > &2["review_count"]))
+      
     json conn, %{places: places}
   end
 
