@@ -23,15 +23,21 @@ defmodule Yelp do
     Application.get_env(:hypeapp, Yelp)
       |> Keyword.merge(config())
       |> OAuth2.Client.new()
-      |> IO.inspect
+  end
+
+  def get_token!(params \\ [], headers \\ []) do
+    OAuth2.Client.get_token!(client(), Keyword.merge(params,
+    client_secret: client().client_secret,
+     client_id: client().client_id,
+     grant_type: "client_credentials"), headers)
   end
 
   @doc """
     Return a new transformed client (that's being passed in) with the token.
   """
-  def get_token() do
+  def get_token(client) do
     #IO.inspect Application.get_env(:hypeapp, Yelp)
-    client()
+    client
       |> put_header("content-type", "application/x-www-form-urlencoded")
       |> put_header("Accept", "application/json")
       |> ClientCredentials.get_token([auth_scheme: "request_body"], [])

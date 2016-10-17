@@ -7,13 +7,12 @@ defmodule Hypeapp.AuthController do
   """
   def index(conn, %{"provider" => "yelp"} = parameters) do
     # Just render from here? json whatever
-
     client = get_token!("yelp")
     IO.inspect client
     qURL = getQUrl(parameters)
 
     places = get_places!("yelp", client, qURL)
-    IO.inspect places
+    # IO.inspect places
     json conn, %{places: places}
   end
 
@@ -35,8 +34,7 @@ defmodule Hypeapp.AuthController do
   # def callback(conn, %{"provider" => provider, "code" => code}) do
   #
   # end
-
-  defp get_token!("yelp"), do: Yelp.get_token()
+  defp get_token!("yelp"), do: Yelp.get_token!()
   defp get_token!(_), do: raise "No matching provider available"
 
   defp get_places!("yelp", client, qURL) do
