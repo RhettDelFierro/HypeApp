@@ -1,9 +1,9 @@
 import { fromJS } from 'immutable'
 
 //action creators:
-export const getPlace = ({  }) => {
+export const getPlaces = () => {
   return async (dispatch,getState) => {
-    //make call to help
+    
   }
 }
 

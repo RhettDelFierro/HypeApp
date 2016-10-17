@@ -1,12 +1,19 @@
 import React, { PropTypes,Component } from "react"
-//import { connect } from 'react-redux'
-//import { bindActionCreators } from 'redux'
-//import * as ActionCreators from 'redux/modules/whatever'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as usersActionCreators from 'redux/modules/users'
+import * as locationsActionCreators from 'redux/modules/locations'
+import * as placesActionCreators from 'redux/modules/places'
 import { Home } from 'components'
 
-class HomeContainer extends React.Component {
+class HomeContainer extends Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    this.props.getCurrentLocation()
+    this.props.getLocalPlaces()
   }
 
   render() {
@@ -18,14 +25,19 @@ class HomeContainer extends React.Component {
   }
 }
 
-// function mapStateToProps({}) {
-//   return {
-//
-//   }
-// }
-//
-// function mapDispatchToProps(dispatch){
-//     return bindActionCreators(ActionCreators, dispatch)
-// }
+function mapStateToProps({ users, places }) {
+  return {
+
+  }
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+      ...usersActionCreators,
+      ...placesActionCreators,
+      ...locationsActionCreators},
+      dispatch
+    )
+}
 
 export default HomeContainer

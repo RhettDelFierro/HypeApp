@@ -6,15 +6,6 @@
 
 
 @media screen and (max-width: 740px) {
-  .mapPlace {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-    width: 100%;
-    background-color: gray;
-  }
 
   .userSection {
     border: 1px solid black;
