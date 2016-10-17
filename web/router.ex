@@ -37,6 +37,13 @@ defmodule Hypeapp.Router do
       resources "/reviews", ReviewController, except: [:new, :edit]
       resources "/votes", VoteController, except: [:new, :edit]
     end
+
+    scope "/auth" do
+      # example: "/api/auth/yelp"
+      get "/:provider", AuthController, :index
+      get "/:provider/callback", AuthController, :callback
+      delete "/logout", AuthController, :delete
+    end
   end
 
   scope "/", Hypeapp do

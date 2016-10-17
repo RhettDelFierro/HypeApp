@@ -31,6 +31,12 @@ config :guardian, Guardian,
   secret_key: "QFyoqmOKIFixwEngPcVp50OJ47+KexxM0jaPUNXlHmvZgE8BFSDowEp0xEPkwrZl",
   serializer: Hypeapp.GuardianSerializer
 
+#oauth2 config
+config :oauth2,
+  serializers: %{
+    "application/vnd.api+json" => Poison
+}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

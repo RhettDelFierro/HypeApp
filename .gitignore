@@ -3,6 +3,7 @@
 /db
 /deps
 /*.ez
+dev.env
 
 # Frontend assets
 /priv/static/js
