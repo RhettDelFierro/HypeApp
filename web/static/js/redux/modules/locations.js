@@ -13,7 +13,7 @@ const SET_LOCATION_ERROR       = 'SET_LOCATION_ERROR'
 
 export const setUserLocation = (coordinates) => {
   return {
-    type: SET_USERLOCATION,
+    type: SET_USER_LOCATION,
     coordinates
   }
 }
@@ -50,8 +50,23 @@ function location(state = initial_location_state, action) {
     }
 }
 
+const initial_location_state = fromJS({
+  latitude: 34.0522,
+  longitude: -118.2437
+})
+
+const userLocation = (state = initial_location_state, action) => {
+  switch (action.type) {
+    case SET_USER_LOCATION:
+      return state.merge({
+        longitude: action.coords.longitude,
+        latitude: action.coords.latitude
+      })
+  }
+}
 
 const initial_state = fromJS({
+    current_user_location: {},
     is_fetching: false,
     error: false,
     socket: null,
@@ -61,7 +76,12 @@ const initial_state = fromJS({
 
 export default function locations(state = initial_state, action) {
     switch (action.type) {
-        default:
-            return state
+      case SET_USER_LOCATION:
+        return state.merge({
+          current_user_location: state.set('current_user_location',
+          userLocation(state.get('current_user_location'), action))
+        })
+      default:
+          return state
     }
 }
