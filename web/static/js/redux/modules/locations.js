@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable'
 import { getCurrentLocationHelper } from 'utils/locationsFunctions'
 import { setMapLocation } from 'redux/modules/googlemap'
+import { getPlaces } from 'redux/modules/places'
 
 const SET_USER_LOCATION        = 'SET_USER_LOCATION'
 const SET_FAVORITES_LOCATION   = 'SET_FAVORITES_LOCATION'
@@ -19,6 +20,7 @@ export function getCurrentLocation() {
             //should all be thunks.
             dispatch(setUserLocation(coordinates))
             dispatch(setMapLocation(coordinates))
+            dispatch(getPlaces(coordinates))
             //EVEN THOUGH THEY WILL RENDER ON THE MAP, THE MAP IS SEPARATE FROM THE LOCATION THESE THUNKS WILL NEED.
             //THE MAP (AND EVERYTHING ELSE) ARE PIPELINES OF THEIR OWN.
             //dispatch businesses in the area.

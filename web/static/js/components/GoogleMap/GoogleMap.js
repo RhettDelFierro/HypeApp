@@ -20,13 +20,12 @@ class GoogleMap extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      map: this.createMap()
-    })
+    this.setState({ map: this.createMap() })
     const marker = this.createMarker()
-    this.props.getPlaces()
+    this.getMarkers() // don't think you have to call props.getPlaces this here.
 
-    //google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
+    google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
+    google.maps.event.addListener(map, "drag", this.handleDrag)
   }
   componentWillReceiveProps(newProps) {
     if (newProps.lat !== this.props.lat || newProps.lng !== this.props.lng) {
@@ -54,32 +53,16 @@ class GoogleMap extends React.Component {
 
   }
 
+  handleDrag() {
+
+  }
+
   createMarker() {
 
   }
 
   createInfoWindow() {
 
-  }
-
-  onOnline() {
-    this.loadMaps()
-  }
-
-  onResume() {
-    this.loadMaps()
-  }
-
-  onDeviceReady() {
-    window.addEventListener("online", this.onOnline, false);
-    window.addEventListener("resume", this.onResume, false);
-  }
-
-  loadMaps() {
-    if(navigator.connection.type === Connection.NONE || google.maps) {
-            return;
-        }
-    //$.getScript('https://maps.googleapis.com/maps/api/js?key=API_KEY&sensor=true&callback=onMapsApiLoaded');
   }
 
   handleZoomChange() {
