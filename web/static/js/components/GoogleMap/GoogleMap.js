@@ -21,6 +21,7 @@ class GoogleMap extends React.Component {
 
   componentDidMount() {
     this.map = this.createMap()
+    // this.map = this.createMap()
     //this.createMarker()
     //this.getMarkers() // don't think you have to call props.getPlaces this here.
 
@@ -30,13 +31,28 @@ class GoogleMap extends React.Component {
   //on latitude or longitude change, google maps api should update location.
   componentDidUpdate(prevProps,prevState) {
     if (prevProps.lat != this.props.lat || prevProps.lng != this.props.lng) {
+      //this.map = this.createMap()
       const center = new google.maps.LatLng(this.props.lat, this.props.lng)
       this.map.setCenter(center)
-      console.log(this.props.places)
-      this.createPlaceMarkers(this.props.places)
+      //this.createPlaceMarkers(this.props.places)
       //this.marker.setMap(null) <- might want to run this on everything.
     }
   }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.places != nextProps.places && this.props.places_ready) {
+      this.createPlaceMarkers(nextProps.places)
+    }
+  }
+
+  // componentWillUpdate(nextProps,nextState){
+  //     // console.log('current places props:', this.props.places)
+  //     // console.log('next places props:', nextProps.places)
+  //   if (this.props.places != nextProps.places) {
+  //     this.createPlaceMarkers(nextProps.places)
+  //   }
+  //     // this.createPlaceMarkers(this.props.places)
+  //     //this.createPlaceMarkers(this.props.places)
+  // }
 
   createPlaceMarkers(places) {
     places.forEach((v) => {
@@ -55,6 +71,7 @@ class GoogleMap extends React.Component {
     marker.addListener('click', function() {
       infowindow.open(marker.get('map'), marker);
     });
+    console.log(infowindow)
   }
 
   generateInfoElement(place) {
@@ -122,7 +139,8 @@ function mapStateToProps({ places, locations, googlemap }) {
     lat: googlemap.get('lat'),
     lng: googlemap.get('lng'),
     zoom: googlemap.get('zoom'),
-    places: places.get('places_fetched')
+    places: places.get('places_fetched'),
+    places_ready: places.get('places_ready')
   }
 }
 
