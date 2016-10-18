@@ -12,8 +12,14 @@ class HomeContainer extends Component {
   }
 
   componentWillMount() {
-    this.props.getCurrentLocation()
-    this.props.getLocalPlaces()
+    //subscribe to places:local/city channel?
+  }
+
+  componentDidMount() {
+    //thunk to get places nearby that were set by getCurrentLocation
+    // this.props.getLocalPlaces()
+    // this.props.getLocalReviews()
+    //maybe here join the places:local/city channel/feed?
   }
 
   render() {

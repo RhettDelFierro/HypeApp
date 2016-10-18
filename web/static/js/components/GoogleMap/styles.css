@@ -2,10 +2,15 @@
 
 }
 
+.googleMap {
+  height: 100%;
+  width: 100%;
+}
+
 @media screen and (max-width: 740px) {
   .googleMapContainer {
     height: 300px;
     width: 100%;
-    background-color: gray;
+    z-index: -10;
   }
 }

@@ -1,7 +1,8 @@
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import * as userActionCreators from 'redux/modules/users'
+import * as usersActionCreators from 'redux/modules/users'
+import * as locationsActionCreators from 'redux/modules/locations'
 import { NavbarContainer } from 'containers'
 import { mainContainer } from './styles.css'
 
@@ -11,19 +12,20 @@ class MainContainer extends React.Component {
   }
 
   componentDidMount() {
-    const scriptTag = document.createElement(tag), // create a script tag
-        firstScriptTag = document.getElementsByTagName(tag)[0]; // find the first script tag in the document
-    scriptTag.src = 'your-script.js'; // set the source of the script to your script
-    firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); // append the script to the DOM
-
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?v=3&callback=initGmaps';
-    document.body.appendChild(script);
+    // const scriptTag = document.createElement(tag), // create a script tag
+    //     firstScriptTag = document.getElementsByTagName(tag)[0]; // find the first script tag in the document
+    // scriptTag.src = 'your-script.js'; // set the source of the script to your script
+    // firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); // append the script to the DOM
+    //
+    // var script = document.createElement('script');
+    // script.type = 'text/javascript';
+    // script.src = 'https://maps.googleapis.com/maps/api/js?v=3&callback=initGmaps';
+    // document.body.appendChild(script);
   }
 
   componentWillMount() {
     this.props.getCurrentUser()
+    this.props.getCurrentLocation()
   }
 
   render() {
@@ -43,7 +45,7 @@ function mapStateToProps({ users, listeners }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators(userActionCreators, dispatch)
+    return bindActionCreators({...usersActionCreators, ...locationsActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)

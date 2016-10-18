@@ -44,3 +44,6 @@ config :hypeapp, Hypeapp.Repo,
 config :hypeapp, Yelp,
   client_id: System.get_env("YELP_APP_ID"),
   client_secret: System.get_env("YELP_APP_SECRET")
+
+config :hypeapp, Hypeapp.LayoutView,
+  api_key: System.get_env("GOOGLE_JAVASCRIPT_KEY")

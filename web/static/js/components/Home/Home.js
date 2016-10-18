@@ -1,12 +1,12 @@
 import React, { PropTypes, Component} from "react"
 import { homeContainer, mapPlace, userSection } from './styles.css'
-import { GoogleMapContainer } from 'containers'
+import { GoogleMap } from 'components'
 
 
 const Home = (props) => {
         return (
             <div className={homeContainer}>
-              <GoogleMapContainer />
+              <GoogleMap />
               <div className={userSection}>
                 {'review realtime'}
               </div>

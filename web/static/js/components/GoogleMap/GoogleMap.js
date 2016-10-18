@@ -3,29 +3,49 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as placesActionCreators from 'redux/modules/places'
 import * as locationsActionCreators from 'redux/modules/locations'
-import { googleMapContainer } from './styles.css'
+import * as googleMapActionCreators from 'redux/modules/googlemap'
+import { googleMapContainer, googleMap } from './styles.css'
 
 class GoogleMap extends React.Component {
   constructor(props) {
     super(props)
     this.createMap = this.createMap.bind(this)
     this.createMarker = this.createMarker.bind(this)
-    this.createInfoWindow = this.createInfoWindow.bing(this)
+    // this.createInfoWindow = this.createInfoWindow.bing(this)
+    // this.handleZoomChange = this.handleZoomChange.bind(this)
   }
 
   componentWillMount() {
-    
+
   }
 
   componentDidMount() {
-    this.createMap()
-    this.createMarker()
+    const map = this.createMap()
+    const marker = this.createMarker()
     this.props.getPlaces()
+
+    //google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
   }
 
   createMap() {
     //get your coordinates from Redux.
-    const map = new google.maps.Map(,options)
+    const mapCanvas = this.mapNode
+    const lat = this.props.lat
+    const lng = this.props.lng
+    const mapOptions = {
+        center: new google.maps.LatLng(lat,lng),
+        zoom: this.props.zoom,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    return new google.maps.Map(mapCanvas, mapOptions)
+
+  }
+
+  createMarker() {
+
+  }
+
+  createInfoWindow() {
 
   }
 
@@ -46,22 +66,28 @@ class GoogleMap extends React.Component {
     if(navigator.connection.type === Connection.NONE || google.maps) {
             return;
         }
-    $.getScript('https://maps.googleapis.com/maps/api/js?key=API_KEY&sensor=true&callback=onMapsApiLoaded');
+    //$.getScript('https://maps.googleapis.com/maps/api/js?key=API_KEY&sensor=true&callback=onMapsApiLoaded');
+  }
+
+  handleZoomChange() {
+
   }
 
   render() {
     return (
       <div className={googleMapContainer}>
-        <div mapRef={(ref) => this.mapNode = ref}>
+        <div className={googleMap} ref={(item) => this.mapNode = item}>
         </div>
       </div>
     )
   }
 }
 
-function mapStateToProps({ places, locations}) {
+function mapStateToProps({ places, locations, googlemap }) {
   return {
-    user_location:
+    lat: googlemap.get('lat'),
+    lng: googlemap.get('lng'),
+    zoom: googlemap.get('zoom')
   }
 }
 
