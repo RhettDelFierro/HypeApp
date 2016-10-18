@@ -15,7 +15,7 @@ export const setMapLocation = ({ coords }) => (
 //concat into state (the cheaper operation, adding it to the start).
 export const makeMapMarker = ({ place }) => {}
 //probbaly will be passed through onChange.
-export const setMapZoom = ({ value }) => {}
+export const setMapZoom = ({ value }) => ({ type: SET_MAP_ZOOM, value })
 
 //should take any value. Off the start send it the user value.
 export const setMapOptions = (coordinates) => (

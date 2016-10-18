@@ -20,11 +20,19 @@ class GoogleMap extends React.Component {
   }
 
   componentDidMount() {
-    const map = this.createMap()
+    this.setState({
+      map: this.createMap()
+    })
     const marker = this.createMarker()
     this.props.getPlaces()
 
     //google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
+  }
+  componentWillReceiveProps(newProps) {
+    if (newProps.lat !== this.props.lat || newProps.lng !== this.props.lng) {
+      const center = new google.maps.LatLng(newProps.lat,newProps.lng)
+      this.setState({ map: this.state.map.setCenter(center) })
+    }
   }
 
   createMap() {
@@ -35,7 +43,12 @@ class GoogleMap extends React.Component {
     const mapOptions = {
         center: new google.maps.LatLng(lat,lng),
         zoom: this.props.zoom,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            mapTypeIds: ['roadmap', 'terrain']
+          }
     }
     return new google.maps.Map(mapCanvas, mapOptions)
 
