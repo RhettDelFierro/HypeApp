@@ -13,6 +13,7 @@ class HomeContainer extends Component {
 
   componentWillMount() {
     //subscribe to places:local/city channel?
+    
   }
 
   componentDidMount() {

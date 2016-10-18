@@ -6,7 +6,7 @@ import * as locationsActionCreators from 'redux/modules/locations'
 import * as googleMapActionCreators from 'redux/modules/googlemap'
 import { googleMapContainer, googleMap } from './styles.css'
 
-class GoogleMap extends React.Component {
+class GoogleMap extends Component {
   constructor(props) {
     super(props)
     this.createMap = this.createMap.bind(this)

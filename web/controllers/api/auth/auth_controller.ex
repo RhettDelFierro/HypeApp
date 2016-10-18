@@ -9,12 +9,14 @@ defmodule Hypeapp.AuthController do
   def index(conn, %{"provider" => "yelp"} = parameters) do
     # Just render from here? json whatever
     client = get_token!("yelp")
+    #generate our query string to yelp with the parmeters passed in to this controller.
     qURL = getQUrl(parameters)
 
     places = get_places!("yelp", client, qURL)
       |> Enum.filter(&(&1["rating"] >=4))
       |> Enum.sort(&(&1["review_count"] > &2["review_count"]))
 
+    #maybe create a view to render the json instead? can also do the Enum in that module.
     json conn, %{places: places}
   end
 

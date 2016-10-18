@@ -5,7 +5,7 @@
 
   channel "place:*", Hypeapp.PlaceChannel
   channel "users:*", Hypeapp.UserChannel
-
+  channel "home:*", Hypeapp.HomeChannel
   ## Channels
   # channel "room:*", Hypeapp.RoomChannel
 
