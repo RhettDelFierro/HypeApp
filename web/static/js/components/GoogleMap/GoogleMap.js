@@ -20,17 +20,19 @@ class GoogleMap extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ map: this.createMap() })
-    const marker = this.createMarker()
-    this.getMarkers() // don't think you have to call props.getPlaces this here.
+    this.map = this.createMap()
+    //this.createMarker()
+    //this.getMarkers() // don't think you have to call props.getPlaces this here.
 
-    google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
-    google.maps.event.addListener(map, "drag", this.handleDrag)
+    // google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
+    // google.maps.event.addListener(map, "drag", this.handleDrag)
   }
-  componentWillReceiveProps(newProps) {
-    if (newProps.lat !== this.props.lat || newProps.lng !== this.props.lng) {
-      const center = new google.maps.LatLng(newProps.lat,newProps.lng)
-      this.setState({ map: this.state.map.setCenter(center) })
+  componentDidUpdate(prevProps,prevState) {
+    if (prevProps.lat != this.props.lat || prevProps.lng != this.props.lng) {
+      const center = new google.maps.LatLng(this.props.lat, this.props.lng)
+      this.map.setCenter(center)
+      //this.marker.setMap(null)
+      this.createMarker()
     }
   }
 
@@ -39,6 +41,7 @@ class GoogleMap extends React.Component {
     const mapCanvas = this.mapNode
     const lat = this.props.lat
     const lng = this.props.lng
+    console.log(lat,lng)
     const mapOptions = {
         center: new google.maps.LatLng(lat,lng),
         zoom: this.props.zoom,
@@ -46,7 +49,7 @@ class GoogleMap extends React.Component {
         mapTypeControl: true,
           mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-            mapTypeIds: ['roadmap', 'terrain']
+            mapTypeIds: ['roadmap', 'satellite']
           }
     }
     return new google.maps.Map(mapCanvas, mapOptions)
@@ -58,7 +61,10 @@ class GoogleMap extends React.Component {
   }
 
   createMarker() {
-
+    this.marker = new google.maps.Marker({
+      map: this.map,
+      position: new google.maps.LatLng(this.props.lat,this.props.lng)
+    })
   }
 
   createInfoWindow() {
@@ -88,7 +94,7 @@ function mapStateToProps({ places, locations, googlemap }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...placesActionCreators, ...locationsActionCreators}, dispatch)
+    return bindActionCreators({...placesActionCreators, ...locationsActionCreators, ...googleMapActionCreators}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GoogleMap)

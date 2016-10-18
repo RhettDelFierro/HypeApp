@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable'
 import { googlemapHelper } from 'utils/locationsFunctions'
 
+const SET_MAP = 'SET_MAP'
 const SET_MAP_LOCATION  = 'SET_MAP_LOCATION'
 const SET_MAP_ZOOM      = 'SET_MAP_ZOOM'
 const SET_MAP_ERROR     = 'SET_MAP_ERROR'
@@ -54,11 +55,12 @@ function centerLocation(state = initial_map_state, action) {
 const initial_state = fromJS({
     minZoom: 8,
     maxZoom: 18,
-    zoom: 10,
+    zoom: 14,
     lng: -118.2437,
     lat: 34.0522,
     radius: 10000,
-    map_error: ''
+    map_error: '',
+    google_map: {}
 })
 
 export default function googlemap(state = initial_state, action) {

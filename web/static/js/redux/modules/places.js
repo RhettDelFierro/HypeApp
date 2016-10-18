@@ -4,38 +4,40 @@ import { getPlacesAPI } from 'utils/placesFunctions'
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCES'
 //action creators:
-export const getPlaces = (coordinates) => {
-  return async (dispatch,getState) => {
+export function getPlaces(coordinates) {
+  return async function(dispatch,getState) {
     dispatch(fetchingPlaces())
     try {
-      const places = await getPlacesAPI(coordinates)
-      dispatch(fetchingPlacesSuccess(places))
+      const places_fetched = await getPlacesAPI(coordinates)
+      dispatch(fetchingPlacesSuccess(places_fetched))
     } catch (error) {
-
+        console.log(error)
     }
   }
 }
 
-const fetchingPlaces = () => ({ type: FETCHING_PLACES })
+function fetchingPlaces(){
+  return {
+    type: FETCHING_PLACES
+  }
+}
 
 export function fetchingPlacesSuccess(places) {
   return {
-    type: FETCHING_PLACES_SUCCESS
+    type: FETCHING_PLACES_SUCCESS,
     places
   }
 }
 
 const initial_place_state = fromJS({
-
+  info: {}
 })
 
 function place(state = initial_place_state, action) {
   switch (action.type) {
     case FETCHING_PLACES_SUCCESS:
-      state.merge({
-        info: fromJS({
-                state.set(action.yelp_id, place(state.get(action.yelp_id),action))
-              })
+      return state.merge({
+        //info: fromJS({ action.business })
       })
     default:
         return state
@@ -64,8 +66,8 @@ export default function places(state = initial_state, action) {
         state.merge({
           is_fetching: false,
           error: '',
-          places_fetched: state.setIn(['places_fetched', action.yelp_id],
-                  place(state.getIn(['places_fetched', action.yelp_id], action))
+          places_fetched: state.set('places_fetched',
+                  place(state.get('places_fetched'), action ))
         })
       default:
           return state
