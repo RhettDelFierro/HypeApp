@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import { getPlacesAPI } from 'utils/placesFunctions'
+import { getPlacesAPI, sortPlaces } from 'utils/placesFunctions'
 
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCES'
@@ -8,8 +8,11 @@ export function getPlaces(coordinates) {
   return async function(dispatch,getState) {
     dispatch(fetchingPlaces())
     try {
-      const places_fetched = await getPlacesAPI(coordinates)
-      dispatch(fetchingPlacesSuccess(places_fetched))
+      const places = await getPlacesAPI(coordinates)
+      const sorted_places = sortPlaces(places)
+      //console.log(sorted_places)
+      dispatch(fetchingPlacesSuccess({ sorted_places }))
+      //dispatch(checkID's for reviews function())
     } catch (error) {
         console.log(error)
     }
@@ -22,33 +25,29 @@ function fetchingPlaces(){
   }
 }
 
-export function fetchingPlacesSuccess(places) {
+export function fetchingPlacesSuccess({ sorted_places }) {
+  console.log(sorted_places)
   return {
     type: FETCHING_PLACES_SUCCESS,
-    places
+    sorted_places
   }
 }
 
 const initial_place_state = fromJS({
-  info: {}
-})
+  coordinates: {},
+  id: '',
+  image_url: '',
+  name: '',
+  rating: 5,
+  url: ''
 
-function place(state = initial_place_state, action) {
-  switch (action.type) {
-    case FETCHING_PLACES_SUCCESS:
-      return state.merge({
-        //info: fromJS({ action.business })
-      })
-    default:
-        return state
-  }
-}
+})
 
 const initial_state = fromJS({
     rating: false,
     up_votes: 0,
     down_votes: 0,
-    places_fetched: {},
+    places_fetched: [],
     is_fetching: false,
     socket: null,
     error: '',
@@ -66,8 +65,7 @@ export default function places(state = initial_state, action) {
         state.merge({
           is_fetching: false,
           error: '',
-          places_fetched: state.set('places_fetched',
-                  place(state.get('places_fetched'), action ))
+          places_fetched: state.set('places_fetched', action.sorted_places)
         })
       default:
           return state
