@@ -23,7 +23,7 @@ defmodule Hypeapp.AuthController do
 
   # handle tuples?
   defp get_places!("yelp", client, qURL) do
-    %{body: places} = OAuth2.Client.get!(client, "/v3/businesses/search?term=restaurants,food&radius=30000&sort_by=rating&" <> qURL)
+    %{body: places} = OAuth2.Client.get!(client, "/v3/businesses/search?term=restaurants,food&radius=14000&sort_by=rating&" <> qURL)
     places["businesses"]
   end
 

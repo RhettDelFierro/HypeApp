@@ -11,6 +11,7 @@ class GoogleMap extends React.Component {
     super(props)
     this.createMap = this.createMap.bind(this)
     this.createPlaceMarkers = this.createPlaceMarkers.bind(this)
+    this.highlightReview = this.highlightReview.bind(this)
     // this.createInfoWindow = this.createInfoWindow.bing(this)
     // this.handleZoomChange = this.handleZoomChange.bind(this)
   }
@@ -21,38 +22,27 @@ class GoogleMap extends React.Component {
 
   componentDidMount() {
     this.map = this.createMap()
-    // this.map = this.createMap()
-    //this.createMarker()
     //this.getMarkers() // don't think you have to call props.getPlaces this here.
 
-    // google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange)
-    // google.maps.event.addListener(map, "drag", this.handleDrag)
+    // google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange) <- ask to redo search
+    // google.maps.event.addListener(map, "drag_end", this.handleDrag) <- as to redo search
   }
+
   //on latitude or longitude change, google maps api should update location.
   componentDidUpdate(prevProps,prevState) {
     if (prevProps.lat != this.props.lat || prevProps.lng != this.props.lng) {
       //this.map = this.createMap()
       const center = new google.maps.LatLng(this.props.lat, this.props.lng)
       this.map.setCenter(center)
-      //this.createPlaceMarkers(this.props.places)
-      //this.marker.setMap(null) <- might want to run this on everything.
+      //this.marker.setMap(null) <- might want to run this on everything. Probably the best time for it is when is_fetching == true and places_ready == false
     }
   }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.places != nextProps.places && this.props.places_ready) {
       this.createPlaceMarkers(nextProps.places)
     }
   }
-
-  // componentWillUpdate(nextProps,nextState){
-  //     // console.log('current places props:', this.props.places)
-  //     // console.log('next places props:', nextProps.places)
-  //   if (this.props.places != nextProps.places) {
-  //     this.createPlaceMarkers(nextProps.places)
-  //   }
-  //     // this.createPlaceMarkers(this.props.places)
-  //     //this.createPlaceMarkers(this.props.places)
-  // }
 
   createPlaceMarkers(places) {
     places.forEach((v) => {
@@ -71,17 +61,26 @@ class GoogleMap extends React.Component {
     marker.addListener('click', function() {
       infowindow.open(marker.get('map'), marker);
     });
-    console.log(infowindow)
+    // works right now to hit console log on load, need on click though.
+    // google.maps.event.addDomListener(infowindow,'click', function() { console.log('info window clicked')});
+    // infowindow.addListener('click', google.maps.event.trigger(infowindow,'click'))
   }
 
   generateInfoElement(place) {
     return (
       `<div>
         <p>${place.get('name')}</p>
-        <p>rating ${place.get('rating')}</p>
+        <p>yelp rating ${place.get('rating')}</p>
+        <p>Hype rating: </p>
         <img height=50px width=50px src="${place.get('image_url')}"/>
        </div>`
    )
+  }
+
+  highlightReview(e) {
+    console.log(e)
+    //this function will bring up recent reviews to feed?
+    console.log('highlightReview')
   }
 
   createMap() {
