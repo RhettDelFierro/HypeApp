@@ -30,11 +30,29 @@ class CheckPlaceContainer extends React.Component {
     this.configChannel()
   }
 
+  configChannel() {
+  this.presenceChannel = this.socket.channel(`place:${this.props.id}`)
+    this.presenceChannel.on("presence_state", state => {
+      const presences = Presence.syncState(this.state.presences, state)
+      console.log('Presences after sync: ', presences)
+      this.setState({ presences })
+    })
+    this.presenceChannel.on("presence_diff", state => {
+      const presences = Presence.syncDiff(this.state.presences, state)
+      console.log('Presences after diff: ', presences)
+      this.setState({ presences })
+    })
+    this.presenceChannel.join()
+      .receive("ok", (id) => {
+        console.log('heres id:',id)
+        console.log(`${id} succesfully joined the active_users topic.`)
+      })
+}
   //channel methods should go here:
 
   //I will eventually put the presenceChannel a a redux store then
   //trigger events based on the change in Presence state.
-  configChannel() {
+  configPlaceChannel() {
     this.channel = this.socket.channel(`place:${this.props.id}`)
     this.channel.join()
     .receive("ok", ({ reviews }) => {

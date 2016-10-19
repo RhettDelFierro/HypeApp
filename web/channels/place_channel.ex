@@ -4,7 +4,7 @@ defmodule Hypeapp.PlaceChannel do
   """
   use Hypeapp.Web, :channel
   require Logger
-  alias Phoenix.Presence
+  alias Hypeapp.Presence
 
   # def join("place:" <> place_id, payload, socket) do
   #   authorize(payload, fn ->
@@ -23,14 +23,16 @@ defmodule Hypeapp.PlaceChannel do
 
   def handle_info(:after_join, socket) do
     #handle anon_user logic here and set as metadata?
+    id = socket.assigns.id || socket.assigns.uuid
+    #Track the user with some metadata to indicate when they're online:
+    Presence.track(socket, id, %{
+      online_at: inspect(:os.timestamp()),
+      device: "browser"
+    })
 
     #push the current present state to the user:
     #Presence.list means "give me all the users on this socket's topic (place:place_id)"
     push socket, "presence_state", Presence.list(socket)
-    #Track the user with some metadata to indicate when they're online:
-    Presence.track(socket, socket.assigns.id || socket.assigns.uuid,
-      %{online_at: inspect(:os.timestamp()), device: "browser"}
-    )
     # Don't need a reply:
     {:noreply, socket}
   end

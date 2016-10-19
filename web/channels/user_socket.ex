@@ -51,7 +51,7 @@
   #return value is the id of that connection.
 
   #going to let anonymous users into the channel.
-  #we'll take care of whether they could post or not (based on id vs uuid)
+  #we'll take care of whether they could post or not (bae)
   def id(_socket), do: nil
 
 end
