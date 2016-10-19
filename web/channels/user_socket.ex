@@ -12,6 +12,12 @@
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
+  # no token sent:
+  def connect(%{"anonymous_user" => uuid }, socket) do
+    socket = socket
+      |> assign(:uuid, uuid)
+    {:ok, socket}
+  end
 
   #Pattern match: When there is a token being sent:
   def connect(%{"token" => token}, socket) do
@@ -21,7 +27,12 @@
       {:ok, claims} ->
         case GuardianSerializer.from_token(claims["sub"]) do
           {:ok, user} ->
-            {:ok, assign(socket, :current_user, user)}
+            socket = socket
+              |> assign(:id, user.id)
+              |> assign(:email, user.email)
+              |> assign(:first_name, user.first_name)
+              |> assign(:last_name, user.last_name)
+            {:ok, socket}
           {:error, _reason} ->
             :error
         end
@@ -30,6 +41,9 @@
     end
   end
 
+  #for anonymous users trying to connect to user socket:
+
+
   #Pattern match: No token being sent -> error.
   def connect(_params, _socket), do: :error
 
@@ -37,6 +51,6 @@
   #After a connection is established the id function
   #will be called with the socket's state
   #return value is the id of that connection.
-  def id(socket), do: "users_socket:#{socket.assigns.current_user.id}"
+  def id(socket), do: "users_socket:#{socket.assigns.id}"
 
 end

@@ -7,9 +7,9 @@ defmodule Hypeapp.UserChannel do
     # authorize(payload, fn ->
     #   {:ok, socket}
     # end)
-    current_user = socket.assigns.current_user
+    current_user_id = socket.assigns.id
 
-   if String.to_integer(user_id) == current_user.id do
+   if String.to_integer(user_id) == current_user_id do
      {:ok, socket}
    else
      {:error, %{reason: "Invalid user"}}

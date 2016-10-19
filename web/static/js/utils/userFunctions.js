@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { Socket } from 'phoenix.js'
+import { Socket } from 'phoenix'
 
 export function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else {
-    const error = new Error(response.statusText);
+    const error = new Error(response.statusText)
     error.response = response.response.data;
     throw error;
   }
@@ -102,6 +102,8 @@ export async function logoutAPI() {
 }
 
 export function userConnectionAPI({ user_id, callback, errorCallback }) {
+  const token = getToken('phoenixAuthToken')
+  const params = token ? { token } : { anonymous_user: user_id }
   // build a new socket connection and pass in the path ('/socket') where
   // the server is listening along with the jwt token and a logger as option params:
   const socket = new Socket('/socket', {
@@ -110,7 +112,7 @@ export function userConnectionAPI({ user_id, callback, errorCallback }) {
     console.log(`${kind}: ${msg}`, data)
   },
   // Passed to MyApp.UserSocket.connect/2
-  params: { token: getToken('phoenixAuthToken') }
+  params
   });
   //connect it.
   socket.onError((error) => errorCallback('user socket connection error'))

@@ -7,7 +7,7 @@ const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
 //listeners should be on places, users, votes, reviews, replies
 
 export function setupUserSocketConnection({ user_id }) {
-  return (dispatch,getState) => {
+  return async function (dispatch,getState) {
     console.log('channel action creator:', user_id)
     userConnectionAPI({
       user_id,
