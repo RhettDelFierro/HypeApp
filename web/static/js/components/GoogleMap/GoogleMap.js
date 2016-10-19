@@ -22,19 +22,13 @@ class GoogleMap extends Component {
 
   componentDidMount() {
     this.map = this.createMap()
-    //this.getMarkers() // don't think you have to call props.getPlaces this here.
-
-    // google.maps.event.addListener(map, "zoom_changed", this.handleZoomChange) <- ask to redo search
-    // google.maps.event.addListener(map, "drag_end", this.handleDrag) <- as to redo search
   }
 
   //on latitude or longitude change, google maps api should update location.
   componentDidUpdate(prevProps,prevState) {
     if (prevProps.lat != this.props.lat || prevProps.lng != this.props.lng) {
-      //this.map = this.createMap()
       const center = new google.maps.LatLng(this.props.lat, this.props.lng)
       this.map.setCenter(center)
-      //this.marker.setMap(null) <- might want to run this on everything. Probably the best time for it is when is_fetching == true and places_ready == false
     }
   }
 
@@ -55,12 +49,16 @@ class GoogleMap extends Component {
   }
 
   setInfo(marker,place) {
-    let infowindow = new google.maps.InfoWindow({
-    content: this.generateInfoElement(place)
-    });
+    var div = document.createElement('div');
+        div.innerHTML = this.generateInfoElement(place);
+        div.onclick = () => { console.log('review')};
+    let infowindow = new google.maps.InfoWindow()
+      //content: this.generateInfoElement(place)
+      infowindow.setContent(div)
     marker.addListener('click', function() {
       infowindow.open(marker.get('map'), marker);
     });
+
     // works right now to hit console log on load, need on click though.
     // google.maps.event.addDomListener(infowindow,'click', function() { console.log('info window clicked')});
     // infowindow.addListener('click', google.maps.event.trigger(infowindow,'click'))
@@ -68,7 +66,7 @@ class GoogleMap extends Component {
 
   generateInfoElement(place) {
     return (
-      `<div>
+      `<div onclick="this.highlightReview">
         <p>${place.get('name')}</p>
         <p>yelp rating ${place.get('rating')}</p>
         <p>Hype rating: </p>
@@ -77,10 +75,10 @@ class GoogleMap extends Component {
    )
   }
 
-  highlightReview(e) {
-    console.log(e)
-    //this function will bring up recent reviews to feed?
+  highlightReview() {
     console.log('highlightReview')
+    //this function will bring up recent reviews to feed?
+    //console.log('highlightReview')
   }
 
   createMap() {

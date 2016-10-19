@@ -4,7 +4,7 @@ defmodule Hypeapp.PlaceChannel do
   """
   use Hypeapp.Web, :channel
   require Logger
-  alis Phoenix.Presence
+  alias Phoenix.Presence
 
   # def join("place:" <> place_id, payload, socket) do
   #   authorize(payload, fn ->
@@ -13,7 +13,7 @@ defmodule Hypeapp.PlaceChannel do
   # end
 
   def join("place:" <> place_id, _params, socket) do
-    send self(). :after_join
+    send self(), :after_join
     {:ok, socket}
   end
 

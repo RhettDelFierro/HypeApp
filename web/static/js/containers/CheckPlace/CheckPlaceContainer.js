@@ -10,6 +10,13 @@ class CheckPlaceContainer extends React.Component {
     super(props)
   }
 
+  componentDidMount() {
+
+  }
+
+  //channel methods should go here:
+
+
   render() {
     return (
       <CheckPlace {...this.props} />
@@ -17,10 +24,11 @@ class CheckPlaceContainer extends React.Component {
   }
 }
 
-function mapStateToProps({ users, post }) {
+function mapStateToProps({ users, post, places }) {
   return {
     is_authed:  users.get('is_authed'),
-    is_posting: post.get('is_posting')
+    is_posting: post.get('is_posting'),
+    current_place: places.get('current_place')
   }
 }
 

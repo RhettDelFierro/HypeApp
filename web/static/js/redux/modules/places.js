@@ -3,6 +3,7 @@ import { getPlacesAPI, sortPlaces } from 'utils/placesFunctions'
 
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCESS'
+const SET_CURRENT_PLACE = 'SET_CURRENT_PLACE'
 //action creators:
 export function getPlaces(coordinates) {
   return async function(dispatch,getState) {
@@ -33,6 +34,13 @@ export function fetchingPlacesSuccess(places) {
   }
 }
 
+export function setCurrentPlace(current_place) {
+  return {
+    type: SET_CURRENT_PLACE,
+    current_place
+  }
+}
+
 const initial_place_state = fromJS({
   coordinates: {},
   id: '',
@@ -54,7 +62,8 @@ const initial_state = fromJS({
     error: '',
     trending: false,
     user_voted: false,
-    presence: {}
+    presence: {},
+    current_place: ''
 })
 
 export default function places(state = initial_state, action) {
@@ -71,6 +80,10 @@ export default function places(state = initial_state, action) {
           places_ready: true,
           places_fetched: action.places
         })
+      case SET_CURRENT_PLACE:
+          return state.merge({
+            current_place: action.current_place
+          })
       default:
           return state
     }

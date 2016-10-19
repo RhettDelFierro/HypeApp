@@ -113,7 +113,7 @@ export function userSocketAPI({ user_id, callback, errorCallback }) {
   //connect it.
   socket.onError((error) => errorCallback('user socket connection error'))
   socket.onClose(() => console.log('The user socket connection was closed.'))
-  callback(socket)
+  return socket
 }
 
 export function userConnectionChannelAPI({ socket }){
