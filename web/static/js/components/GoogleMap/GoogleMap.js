@@ -5,13 +5,13 @@ import * as placesActionCreators from 'redux/modules/places'
 import * as locationsActionCreators from 'redux/modules/locations'
 import * as googleMapActionCreators from 'redux/modules/googlemap'
 import { googleMapContainer, googleMap } from './styles.css'
+import { push } from 'react-router-redux'
 
 class GoogleMap extends Component {
   constructor(props) {
     super(props)
     this.createMap = this.createMap.bind(this)
     this.createPlaceMarkers = this.createPlaceMarkers.bind(this)
-    this.highlightReview = this.highlightReview.bind(this)
     // this.createInfoWindow = this.createInfoWindow.bing(this)
     // this.handleZoomChange = this.handleZoomChange.bind(this)
   }
@@ -49,36 +49,25 @@ class GoogleMap extends Component {
   }
 
   setInfo(marker,place) {
-    var div = document.createElement('div');
-        div.innerHTML = this.generateInfoElement(place);
-        div.onclick = () => { console.log('review')};
+    let div = document.createElement('div');
+      div.innerHTML = this.generateInfoElement(place);
+      div.onclick = () => {this.props.changeRoute(`/places/${place.get('id')}`)}
     let infowindow = new google.maps.InfoWindow()
-      //content: this.generateInfoElement(place)
       infowindow.setContent(div)
     marker.addListener('click', function() {
       infowindow.open(marker.get('map'), marker);
     });
-
-    // works right now to hit console log on load, need on click though.
-    // google.maps.event.addDomListener(infowindow,'click', function() { console.log('info window clicked')});
-    // infowindow.addListener('click', google.maps.event.trigger(infowindow,'click'))
   }
 
   generateInfoElement(place) {
     return (
-      `<div onclick="this.highlightReview">
+      `<div>
         <p>${place.get('name')}</p>
         <p>yelp rating ${place.get('rating')}</p>
         <p>Hype rating: </p>
         <img height=50px width=50px src="${place.get('image_url')}"/>
        </div>`
    )
-  }
-
-  highlightReview() {
-    console.log('highlightReview')
-    //this function will bring up recent reviews to feed?
-    //console.log('highlightReview')
   }
 
   createMap() {
@@ -142,7 +131,12 @@ function mapStateToProps({ places, locations, googlemap }) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...placesActionCreators, ...locationsActionCreators, ...googleMapActionCreators}, dispatch)
+    return bindActionCreators({
+      ...placesActionCreators,
+      ...locationsActionCreators,
+      ...googleMapActionCreators,
+      changeRoute: (url) => push(url)
+    }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GoogleMap)

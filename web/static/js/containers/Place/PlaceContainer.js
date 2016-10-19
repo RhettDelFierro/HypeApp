@@ -17,7 +17,9 @@ class PlaceContainer extends Component {
     //set-up the review feed on this smart component.
     //will make an AJAX call (thunk) to yelp from this container.
     //for now, just use dummy data.
-    this.props.getPlace()
+    //this.props.getPlace()
+
+    //set up the socket and the channel methods on the component.
   }
 
   componentWillUnmount() {
@@ -38,7 +40,7 @@ class PlaceContainer extends Component {
 function mapStateToProps({ users, post }) {
   return {
     is_authed:  users.get('is_authed'),
-    is_posting: post.get('is_posting')
+    is_posting: post.get('is_posting'),
   }
 }
 
