@@ -23,12 +23,12 @@ class HomeContainer extends Component {
     // this.props.getLocalReviews()
     //maybe here join the places:local/city channel/feed?
 
-  //   if (!localStorage.hype_uuid) {
-  //    localStorage.hype_uuid = uuid.v4()
-  //  }
-  //
-  //  this.uuid = localStorage.hype_uuid
-  //  this.props.setupUserSocketConnection({ user_id: this.uuid })
+    if (!localStorage.hype_uuid) {
+     localStorage.hype_uuid = uuid.v4()
+   }
+
+   this.uuid = localStorage.hype_uuid
+   this.props.setupAnonUserSocketConnection({ user_id: this.uuid })
   }
 
   render() {

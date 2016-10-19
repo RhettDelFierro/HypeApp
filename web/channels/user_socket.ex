@@ -12,12 +12,6 @@
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
-  # no token sent:
-  def connect(%{"anonymous_user" => uuid }, socket) do
-    socket = socket
-      |> assign(:uuid, uuid)
-    {:ok, socket}
-  end
 
   #Pattern match: When there is a token being sent:
   def connect(%{"token" => token}, socket) do
@@ -41,11 +35,15 @@
     end
   end
 
-  #for anonymous users trying to connect to user socket:
-
+  # no token sent, anonymous user:
+  def connect(%{"anonymous_user" => uuid}, socket) do
+    socket = socket
+      |> assign(:uuid, uuid)
+    {:ok, socket}
+  end
 
   #Pattern match: No token being sent -> error.
-  def connect(_params, _socket), do: :error
+  def connect(_params, socket), do: :error
 
   #used to identify a given connection.
   #After a connection is established the id function

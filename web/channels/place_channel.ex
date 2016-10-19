@@ -1,11 +1,26 @@
 defmodule Hypeapp.PlaceChannel do
   use Hypeapp.Web, :channel
   require Logger
+  alis Phoenix.Presence
 
-  def join("place:" <> place_id, payload, socket) do
-    authorize(payload, fn ->
-      {:ok, socket}
-    end)
+  # def join("place:" <> place_id, payload, socket) do
+  #   authorize(payload, fn ->
+  #     {:ok, socket}
+  #   end)
+  # end
+
+  def join("place:" <> place_id, _params, socket) do
+    send self(). :after_join
+    {:ok, socket}
+  end
+
+  def handle_info(:after_join, socket) do
+    Presence.track(socket, socket.assigns.user_id || socket.assigns.uuid,
+      %{online_at: :os.system_time(:milli_seconds)}
+    )
+
+    push socket, "presence_state", Presence.list(socket)
+    {:noreply, socket}
   end
 
   # Channels can be used in a request/response fashion
