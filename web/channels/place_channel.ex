@@ -1,4 +1,7 @@
 defmodule Hypeapp.PlaceChannel do
+  @moduledoc """
+    In the SPA, each review will have a places:place_id "room".
+  """
   use Hypeapp.Web, :channel
   require Logger
   alis Phoenix.Presence
@@ -14,12 +17,19 @@ defmodule Hypeapp.PlaceChannel do
     {:ok, socket}
   end
 
+  def join(_other, _params) do
+    {:error, "This place does not exist."}
+  end
+
   def handle_info(:after_join, socket) do
+    #push the current present state to the user:
+    push socket, "presence_state", Presence.list(socket)
+
+    #Track the user with some metadata to indicate when they're online:
     Presence.track(socket, socket.assigns.user_id || socket.assigns.uuid,
       %{online_at: :os.system_time(:milli_seconds)}
     )
-
-    push socket, "presence_state", Presence.list(socket)
+    # Don't need a reply:
     {:noreply, socket}
   end
 

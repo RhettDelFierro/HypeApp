@@ -1,28 +1,25 @@
 import { fromJS } from 'immutable'
-import { userConnectionAPI } from 'utils/userFunctions'
+import { userSocketAPI } from 'utils/userFunctions'
 
-const SET_USER_CONNECTION   = 'SET_USER_CONNECTION'
+const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
 
 //listeners should be on places, users, votes, reviews, replies
 
-export function setupUserSocketConnection({ user_id }) {
+export function setupUserSocket({ user_id, params }) {
   return async function (dispatch,getState) {
-    console.log('channel action creator:', user_id)
-    userConnectionAPI({
+    userSocketAPI({
       user_id,
-      callback: ({ user_conn }) => {
-        return dispatch(setUserConnection({ user_conn }))
-      },
+      callback: (socket) => dispatch(setUserSocket(socket)),
       errorCallback: (error) => dispatch(setConnectionError(error))
     })
   }
 }
 
-export function setUserConnection({ user_conn }) {
+export function setUserConnection(socket) {
   return {
-    type: SET_USER_CONNECTION,
-    user_conn
+    type: SET_USER_SOCKET,
+    socket
   }
 }
 
@@ -51,7 +48,7 @@ function user_connection(state = initial_user_connection_state, action) {
 }
 
 const initial_state = fromJS({
-  user_connection: {},
+  user_socket: {},
   location_channel: null,
   places_channel: null,
   votes_channel: null,
@@ -62,9 +59,9 @@ const initial_state = fromJS({
 
 export default function connections(state = initial_state, action) {
     switch (action.type) {
-      case SET_USER_CONNECTION:
+      case SET_USER_SOCKET:
         return state.merge({
-          user_connection: user_connection(state.get('user_connection'),action)
+          user_socket: action.socket
         })
       case SET_CONNECTION_ERROR:
         return state.merge({

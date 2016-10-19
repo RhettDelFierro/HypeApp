@@ -4,6 +4,7 @@
 /deps
 /*.ez
 dev.env
+newplan.js
 
 # Frontend assets
 /priv/static/js

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Socket } from 'phoenix.js'
+import { Socket, Presence } from 'phoenix.js'
 import { fromJS }  from 'immutable'
 
 function buildURL({ coords }) {
@@ -32,4 +32,16 @@ export function sortPlaces(places) {
       }
     )
   })
+}
+
+export function setPlacesConnection({ yelp_id, params }) {
+  //you should not have to do any of the socket connection
+  //set-up for the user and anon users. The data should be in the store.
+
+  //channel variable with the topic we want to subscribe to (users) and
+  //also it's subtopic (our user's id)
+  const channel = socket.channel(`users:${user_id}`)
+  channel.join() //join the channel.
+  .receive('ok', callback({ user_conn: { socket, channel } }))
+  .receive('error', errorCallback('user channel connection error'))
 }

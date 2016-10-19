@@ -24,7 +24,9 @@ class MainContainer extends React.Component {
   }
 
   componentWillMount() {
+    //logs user on automatically and sets socket.
     this.props.getCurrentUser()
+    //current location to get the markers mainly.
     this.props.getCurrentLocation()
   }
 

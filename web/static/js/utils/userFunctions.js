@@ -101,24 +101,22 @@ export async function logoutAPI() {
     }
 }
 
-export function userConnectionAPI({ user_id, callback, errorCallback }) {
+export function userSocketAPI({ user_id, callback, errorCallback }) {
   const token = getToken('phoenixAuthToken')
   const params = token ? { token } : { anonymous_user: user_id }
   // build a new socket connection and pass in the path ('/socket') where
   // the server is listening along with the jwt token and a logger as option params:
   const socket = new Socket('/socket', {
-    // this is all getting passed to Hypeapp.UserSocket.connect/2
-    logger: (kind, msg, data) => {
-    console.log(`${kind}: ${msg}`, data)
-  },
-  // Passed to MyApp.UserSocket.connect/2
-  params
+    logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
+    params
   });
   //connect it.
   socket.onError((error) => errorCallback('user socket connection error'))
   socket.onClose(() => console.log('The user socket connection was closed.'))
-  socket.connect();
+  callback(socket)
+}
 
+export function userConnectionChannelAPI({ socket }){
   //channel variable with the topic we want to subscribe to (users) and
   //also it's subtopic (our user's id)
   const channel = socket.channel(`users:${user_id}`)

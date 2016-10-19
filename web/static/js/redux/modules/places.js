@@ -53,7 +53,8 @@ const initial_state = fromJS({
     socket: null,
     error: '',
     trending: false,
-    user_voted: false
+    user_voted: false,
+    presence: {}
 })
 
 export default function places(state = initial_state, action) {

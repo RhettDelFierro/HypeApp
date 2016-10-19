@@ -1,5 +1,5 @@
 import { fromJS, Map } from 'immutable'
-import { setupUserSocketConnection } from 'redux/modules/connections'
+import { setupUserSocket } from 'redux/modules/connections'
 import { registerUserAPI, loginUserAPI,getCurrentUserAPI,
           logoutAPI, checkStatus } from 'utils/userFunctions'
 import { push, go } from 'react-router-redux'
@@ -78,13 +78,14 @@ export function loginUser({ data }) {
     }
 }
 
+//If user has a token, log them on automatically and set the socket.
 export function getCurrentUser() {
     return async (dispatch, getState) => {
         try {
             const current_user = await getCurrentUserAPI()
             const user_id = current_user.id
             dispatch(fetchingUserSuccess({ current_user }))
-            dispatch(setupUserSocketConnection({ user_id }))
+            dispatch(setupUserSocket({ user_id }))
         } catch (error) {
             console.log('currentUser() error. Maybe no longer a valid token, not really an error though?', error)
         }
