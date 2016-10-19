@@ -49,8 +49,9 @@
   #After a connection is established the id function
   #will be called with the socket's state
   #return value is the id of that connection.
-  def id(socket) do
-   "users_socket:#{socket.assigns.id}" || "users_socket:#{socket.assigns.uuid}"
- end
+
+  #going to let anonymous users into the channel.
+  #we'll take care of whether they could post or not (based on id vs uuid)
+  def id(_socket), do: nil
 
 end

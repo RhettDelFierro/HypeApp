@@ -1,5 +1,4 @@
 import React, { PropTypes,Component } from "react"
-import { Socket, Presence } from 'phoenix'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'

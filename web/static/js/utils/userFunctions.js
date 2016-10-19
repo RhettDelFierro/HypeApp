@@ -1,4 +1,5 @@
 import axios from 'axios'
+import uuid from 'uuid'
 import { Socket } from 'phoenix'
 
 export function checkStatus(response) {
@@ -103,7 +104,7 @@ export async function logoutAPI() {
 
 function makeAnonUser() {
   if (!localStorage.hypeapp_uuid) {
-     localStorage.hypapp_uuid = uuid.v4()
+     localStorage.hypeapp_uuid = uuid.v4()
    }
 
    return localStorage.hypeapp_uuid
@@ -112,6 +113,7 @@ function makeAnonUser() {
 export function socketParams() {
   const token = getToken('phoenixAuthToken')
   const params = token ? { token } : { anonymous_user: makeAnonUser() }
+  console.log('HERE IS THE UUID', params)
   return params
 }
 

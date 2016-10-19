@@ -1,3 +1,4 @@
+import { Socket, Presence } from 'phoenix'
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -19,7 +20,10 @@ class CheckPlaceContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = new Socket('/socket', socketParams())
+    this.socket = new Socket('/socket',{
+      logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
+      params: socketParams()
+    })
     this.socket.onError((error) => console.log(error))
     this.socket.onClose((close) => console.log('I closed the socket to channel', this.channel))
     this.socket.connect()
@@ -27,14 +31,17 @@ class CheckPlaceContainer extends React.Component {
   }
 
   //channel methods should go here:
+
+  //I will eventually put the presenceChannel a a redux store then
+  //trigger events based on the change in Presence state.
   configChannel() {
     this.channel = this.socket.channel(`place:${this.props.id}`)
     this.channel.join()
     .receive("ok", ({ reviews }) => {
       this.props.setCurrentPlace(`place:${this.props.id}`)
-        this.setState({
-          reviews: this.state.reviews.concat([reviews])
-        })
+        // this.setState({
+        //   reviews: this.state.reviews.concat([reviews])
+        // })
       })
     .receive("error", (error) => {
       this.props.setCurrentPlaceError(`error joining place:${this.props.id}`)
@@ -64,7 +71,11 @@ function mapStateToProps({ users, post, places }, ownProps) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({...userActionCreators, ...connectionsActionCreators}, dispatch)
+    return bindActionCreators({
+      ...userActionCreators,
+      ...connectionsActionCreators,
+      ...placesActionCreators
+    }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckPlaceContainer)

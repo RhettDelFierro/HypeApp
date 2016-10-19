@@ -23,8 +23,9 @@ defmodule Hypeapp.PlaceChannel do
 
   def handle_info(:after_join, socket) do
     #handle anon_user logic here and set as metadata?
-    
+
     #push the current present state to the user:
+    #Presence.list means "give me all the users on this socket's topic (place:place_id)"
     push socket, "presence_state", Presence.list(socket)
     #Track the user with some metadata to indicate when they're online:
     Presence.track(socket, socket.assigns.id || socket.assigns.uuid,
@@ -42,9 +43,23 @@ defmodule Hypeapp.PlaceChannel do
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (place:lobby).
-  def handle_in("shout", payload, socket) do
+  def handle_in("review:new", payload, socket) do
     Logger.debug "#{inspect payload}"
-    broadcast socket, "shout", payload
+    broadcast! socket, "review:new", %{
+      user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
+      body: payload,
+      timestamp: :os.timestamp()
+    }
+    {:noreply, socket}
+  end
+
+  def handle_in("vote:new", payload, socket) do
+    Logger.debug "#{inspect payload}"
+    broadcast! socket, "vote:new", %{
+      user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
+      body: payload,
+      timestamp: :os.timestamp()
+    }
     {:noreply, socket}
   end
 
