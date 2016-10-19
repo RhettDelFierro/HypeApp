@@ -1,4 +1,5 @@
 import React, { PropTypes,Component } from "react"
+import { Socket, Presence } from 'phoenix'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as userActionCreators from 'redux/modules/users'
@@ -6,6 +7,7 @@ import * as connectionsActionCreators from 'redux/modules/connections'
 import * as postActionCreators from 'redux/modules/post'
 import { Place } from 'components'
 import { push } from 'react-router-redux'
+import { socketParams } from 'utils/userFunctions'
 
 class PlaceContainer extends Component {
   constructor(props) {
@@ -18,8 +20,6 @@ class PlaceContainer extends Component {
     //will make an AJAX call (thunk) to yelp from this container.
     //for now, just use dummy data.
     //this.props.getPlace()
-
-    //set up the socket and the channel methods on the component.
   }
 
   componentWillUnmount() {
@@ -40,7 +40,7 @@ class PlaceContainer extends Component {
 function mapStateToProps({ users, post }) {
   return {
     is_authed:  users.get('is_authed'),
-    is_posting: post.get('is_posting'),
+    is_posting: post.get('is_posting')
   }
 }
 

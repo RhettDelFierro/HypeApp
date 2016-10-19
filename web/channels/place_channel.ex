@@ -22,12 +22,13 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   def handle_info(:after_join, socket) do
+    #handle anon_user logic here and set as metadata?
+    
     #push the current present state to the user:
     push socket, "presence_state", Presence.list(socket)
-
     #Track the user with some metadata to indicate when they're online:
-    Presence.track(socket, socket.assigns.user_id || socket.assigns.uuid,
-      %{online_at: :os.system_time(:milli_seconds)}
+    Presence.track(socket, socket.assigns.id || socket.assigns.uuid,
+      %{online_at: inspect(:os.timestamp()), device: "browser"}
     )
     # Don't need a reply:
     {:noreply, socket}

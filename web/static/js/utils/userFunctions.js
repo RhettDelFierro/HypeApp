@@ -101,6 +101,20 @@ export async function logoutAPI() {
     }
 }
 
+function makeAnonUser() {
+  if (!localStorage.hypeapp_uuid) {
+     localStorage.hypapp_uuid = uuid.v4()
+   }
+
+   return localStorage.hypeapp_uuid
+}
+
+export function socketParams() {
+  const token = getToken('phoenixAuthToken')
+  const params = token ? { token } : { anonymous_user: makeAnonUser() }
+  return params
+}
+
 export function userSocketAPI({ user_id, callback, errorCallback }) {
   const token = getToken('phoenixAuthToken')
   const params = token ? { token } : { anonymous_user: user_id }

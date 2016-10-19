@@ -14,6 +14,7 @@ class HomeContainer extends Component {
   }
 
   componentWillMount() {
+    this.props.getCurrentLocation()
     //subscribe to places:local/city channel?
   }
 
