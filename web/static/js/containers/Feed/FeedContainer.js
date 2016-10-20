@@ -17,10 +17,11 @@ class FeedContainer extends React.Component {
   }
 }
 
-function mapStateToProps({ users, post }) {
+function mapStateToProps({ users, post, feed }) {
   return {
     is_authed:  users.get('is_authed'),
-    is_posting: post.get('is_posting')
+    is_posting: post.get('is_posting'),
+    feed_elements: feed.get('feed_elements')
   }
 }
 

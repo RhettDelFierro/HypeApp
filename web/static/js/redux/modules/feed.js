@@ -4,6 +4,7 @@ const OPEN_FEED = 'OPEN_FEED'
 const CLOSE_FEED = 'CLOSE_FEED'
 const ADD_REVIEW_TO_FEED = 'ADD_REVIEW_TO_FEED'
 const ADD_VOTE_TO_FEED = 'ADD_VOTE_TO_FEED'
+const RESET_FEED = 'RESET_FEED'
 
 export function open_feed() {
   return {
@@ -31,6 +32,12 @@ export function addVoteToFeed(vote) {
   }
 }
 
+export function resetFeed() {
+  return {
+    type: RESET_FEED
+  }
+}
+
 const initial_state = fromJS({
   feed_open: false,
   feed_elements: []
@@ -51,6 +58,7 @@ export default function feed(state = initial_state, action) {
         return state.merge({
           feed_elements: state.get('feed_elements').concat(action.vote || action.review)
         })
+      case RESET_FEED:
       default:
           return state
     }

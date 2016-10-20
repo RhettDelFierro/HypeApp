@@ -50,7 +50,7 @@ defmodule Hypeapp.PlaceChannel do
     broadcast! socket, "review:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: review,
-      #timestamp: :os.timestamp()
+      timestamp: inspect(:os.timestamp())
     }
     {:noreply, socket}
   end
@@ -58,9 +58,10 @@ defmodule Hypeapp.PlaceChannel do
   def handle_in("vote:new", vote, socket) do
     Logger.debug "#{inspect vote}"
     broadcast! socket, "vote:new", %{
+      id: socket.assigns.id,
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: vote,
-      timestamp: :os.timestamp()
+      timestamp: inspect(:os.timestamp())
     }
     {:noreply, socket}
   end

@@ -4,21 +4,25 @@ import { bindActionCreators } from 'redux'
 import * as feedActionCreators from 'redux/modules/feed'
 import { Review } from 'components'
 
-class ReviewContainer extends React.Component {
-  constructor(props) {
-    super(props)
+class ReviewContainer extends Component {
+  constructor() {
+    super()
   }
 
   render() {
+
     return (
-      <Review />
+      <Review {...this.props} />
     )
   }
 }
 
-function mapStateToProps({}) {
+function mapStateToProps({}, ownProps) {
+    console.log('OWN PROPS', ownProps)
   return {
-
+    user: ownProps.info.user,
+    body: ownProps.info.body,
+    timestamp: ownProps.info.timestamp
   }
 }
 
