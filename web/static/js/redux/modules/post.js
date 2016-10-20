@@ -9,10 +9,10 @@ export const close_post = () => ({ type: CLOSE_POST })
 export const update_post_text = (post_text) => (
   { type: UPDATE_POST_TEXT, post_text })
 
-export const submit_post = () => {
-  return (dispatch,getState) => {
-    //update channel
-    //update DB (review controller route.)
+export function submit_post() {
+  return function (dispatch,getState) {
+    const channel = getState().connections.get('current_place_channel')
+    channel.push('review:new', getState().post.get('post_text'))
     dispatch(close_post())
   }
 }

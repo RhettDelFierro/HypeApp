@@ -50,7 +50,7 @@ defmodule Hypeapp.PlaceChannel do
     broadcast! socket, "review:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: review,
-      timestamp: :os.timestamp()
+      #timestamp: :os.timestamp()
     }
     {:noreply, socket}
   end

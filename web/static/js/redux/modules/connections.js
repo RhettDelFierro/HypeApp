@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
 import { userSocketAPI } from 'utils/userFunctions'
+import { addReviewToFeed, addVoteToFeed } from 'redux/modules/feed'
 
 const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
