@@ -30,6 +30,13 @@ export function setConnectionError(error) {
   }
 }
 
+export function setPlaceChannel(channel) {
+  return {
+    type: SET_PLACE_CHANNEL,
+    channel
+  }
+}
+
 const initial_user_connection_state = fromJS({
   socket: null,
   channel: null
@@ -50,7 +57,7 @@ function user_connection(state = initial_user_connection_state, action) {
 const initial_state = fromJS({
   user_socket: {},
   location_channel: null,
-  places_channel: null,
+  place_channel: null,
   votes_channel: null,
   reviews_channel: null,
   replies_channel: null,
@@ -66,6 +73,10 @@ export default function connections(state = initial_state, action) {
       case SET_CONNECTION_ERROR:
         return state.merge({
           error: action.error
+        })
+      case SET_PLACE_CHANNEL:
+        return state.merge({
+          place_channel: action.channel
         })
         default:
             return state

@@ -1,11 +1,13 @@
 import React, { PropTypes, Component} from "react"
 import { reviewContainer } from './styles.css'
 
-
-const Review = (props) => {
+//the props are going to be the names from the channel's payload.
+const Review = ({ user,body,timestamp }) => {
         return (
             <div className={reviewContainer}>
-              {'Review'}
+              <p>{name}</p>
+              <p>{body}</p>
+              <t>{timestamp}</t>
             </div>
         )
 }

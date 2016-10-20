@@ -1,3 +1,8 @@
-.reviewContainer {
-  
+@media screen and (max-width: 740px) {
+  .reviewContainer {
+    border: 1px solid black;
+    height: 100px;
+    width: 100%;
+    padding: 10px;
+  }
 }

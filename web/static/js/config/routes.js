@@ -13,7 +13,7 @@ function routes(authCheck, history, render) {
                 <Route path="/sign_up" component={Registration} />
                 <Route path="/sign_in" component={Login} />
                 <Route path="/auth" component={AuthenticatedContainer} onEnter={authCheck} />
-                <Route path="/places/:id" component={CheckPlaceContainer} />
+                <Route path="/places/:place_id" component={CheckPlaceContainer} />
             </Route>
         </Router>
     )

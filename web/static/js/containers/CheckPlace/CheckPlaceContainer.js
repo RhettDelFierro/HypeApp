@@ -20,6 +20,7 @@ class CheckPlaceContainer extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setCurrentPlace(this.props.place_id)
     this.socket = new Socket('/socket',{
       logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
       params: socketParams()
@@ -31,7 +32,7 @@ class CheckPlaceContainer extends React.Component {
   }
 
   configChannel() {
-  this.presenceChannel = this.socket.channel(`place:${this.props.id}`)
+  this.presenceChannel = this.socket.channel(`place:${this.props.place_id}`)
     this.presenceChannel.on("presence_state", state => {
       const presences = Presence.syncState(this.state.presences, state)
       console.log('Presences after sync: ', presences)
@@ -53,16 +54,16 @@ class CheckPlaceContainer extends React.Component {
   //I will eventually put the presenceChannel a a redux store then
   //trigger events based on the change in Presence state.
   configPlaceChannel() {
-    this.channel = this.socket.channel(`place:${this.props.id}`)
+    this.channel = this.socket.channel(`place:${this.props.place_id}`)
     this.channel.join()
     .receive("ok", ({ reviews }) => {
-      this.props.setCurrentPlace(`place:${this.props.id}`)
+      this.props.setCurrentPlace(`place:${this.props.place_id}`)
         // this.setState({
         //   reviews: this.state.reviews.concat([reviews])
         // })
       })
     .receive("error", (error) => {
-      this.props.setCurrentPlaceError(`error joining place:${this.props.id}`)
+      this.props.setCurrentPlaceError(`error joining place:${this.props.place_id}`)
       console.log(error)
         this.setState({
           messages,
@@ -84,7 +85,7 @@ function mapStateToProps({ users, post, places }, ownProps) {
     is_authed:  users.get('is_authed'),
     is_posting: post.get('is_posting'),
     current_place: places.get('current_place'),
-    id: ownProps.params.id
+    place_id: ownProps.params.place_id
   }
 }
 
