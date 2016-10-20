@@ -18,7 +18,6 @@ class ReviewContainer extends Component {
 }
 
 function mapStateToProps({}, ownProps) {
-    console.log('OWN PROPS', ownProps)
   return {
     user: ownProps.info.user,
     body: ownProps.info.body,
