@@ -11,49 +11,24 @@ import { socketParams } from 'utils/userFunctions'
 class CheckPlaceContainer extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      presences:{},
-      reviews: []
-    }
-    this.configPresenceChannel = this.configPresenceChannel.bind(this)
-    this.configPlaceChannel = this.configPlaceChannel.bind(this)
+
+    this.opts = {
+        presence: true,
+        presenceOpts: {
+          topic: "place",
+          subtopic: this.props.place_id
+        },
+        topic: "place",
+        subtopic: this.props.place_id
+      }
   }
 
   //socket should also go in redux store?
   componentDidMount() {
-    this.props.setupSocket()
-    this.props.setCurrentPlace(this.props.place_id)
-    // if (!this.props.socket) {
-    //   this.props.setupSocket()
-    // }
-    this.configPresenceChannel()
-    this.configPlaceChannel()
+    if(!this.props.socket) {
+        this.props.setupSocket(this.opts)
+    }
   }
-
-  //I will eventually put the presenceChannel a a redux store
-  configPresenceChannel() {
-    console.log('socket yes or no?', this.props.socket)
-  this.presenceChannel = this.props.socket.channel(`place:${this.props.place_id}`)
-    this.presenceChannel.on("presence_state", state => {
-      const presences = Presence.syncState(this.state.presences, state)
-      console.log('Presences after sync: ', presences)
-      this.setState({ presences })
-    })
-    this.presenceChannel.on("presence_diff", state => {
-      const presences = Presence.syncDiff(this.state.presences, state)
-      console.log('Presences after diff: ', presences)
-      this.setState({ presences })
-    })
-    this.presenceChannel.join()
-      .receive("ok", (id) => {
-        console.log(`${id} succesfully joined the active_users topic.`)
-    })
-  }
-
-  configPlaceChannel() {
-    this.props.setAndJoinPlaceChannel({ place_id: this.props.place_id })
-  }
-
 
   render() {
     return (

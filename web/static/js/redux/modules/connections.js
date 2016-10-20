@@ -7,6 +7,7 @@ const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_SOCKET_ERROR  = 'SET_SOCKET_ERROR'
 const SET_CURRENT_PLACE_CHANNEL = 'SET_CURRENT_PLACE_CHANNEL'
 const SET_HOME_CHANNEL = 'SET_HOME_CHANNEL'
+const SET_PRESENCES = 'SET_PRESENCES'
 
 /*
 opts = {
@@ -23,13 +24,13 @@ opts = {
 */
 
 function switchPresenceChannels({ dispatch, socket, opts }) {
-  switch (presenceOpts.topic) {
+  switch (opts.topic) {
     case "place":
       return dispatch(setAndJoinPresenceChannel({
         socket,
         presence_channel: `${opts.topic}:${opts.subtopic}`
         }))
-    case default:
+    default:
       return dispatch(setSocketError("topic not found. switchChannels()"))
   }
 }
@@ -40,13 +41,12 @@ function switchChannels ({ dispatch, socket, opts }) {
       return dispatch(setAndJoinPlaceChannel({ place_id: opts.subtopic, socket }))
     case "home":
       return dispatch(setAndJoinHomeChannel({ zip_code: opts.subtopic, socket }))
-    case default:
+    default:
       return dispatch(setSocketError("topic not found. switchChannels()"))
   }
 }
 
 export function setupSocket(opts) {
-
   return async function (dispatch,getState) {
     const socket = new Socket('/socket',{
       logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
@@ -55,13 +55,11 @@ export function setupSocket(opts) {
     socket.onError((error) => dispatch(setSocketError(error)))
     socket.onClose((close) => console.log('I closed the socket to channel'))
     socket.connect()
-    dispatch(setUserSocket(socket))
-    if (opts.presence) {
-      switchPresenceChannels({ dispatch, socket, opts })
-    } else {
-      switchChannels({ dispatch, socket, opts })
-    }
 
+    switchPresenceChannels({ dispatch, socket, opts: opts.presenceOpts }) 
+    switchChannels({ dispatch, socket, opts })
+
+    dispatch(setUserSocket(socket))
   }
 }
 
@@ -88,6 +86,7 @@ function setCurrentPlaceChannel(channel) {
 
 export function setAndJoinPlaceChannel({ place_id, socket }) {
   return function (dispatch,getState) {
+    console.log('HERES THE SOCKET AND CHANNEL', place_id, socket)
     //do I want this socket just stored in our state?
     const channel = socket.channel(`place:${place_id}`)
       channel.join()
@@ -156,6 +155,8 @@ const initial_state = fromJS({
   location_channel: null,
   current_place_channel: null,
   home_channels: null,
+  presences: {},
+  presence_channel: null,
   votes_channel: null,
   reviews_channel: null,
   replies_channel: null,
@@ -179,6 +180,11 @@ export default function connections(state = initial_state, action) {
       case SET_HOME_CHANNEL:
         return state.merge({
           home_channels: state.setIn(['home_channel', action.home_channel_name],action.channel)
+        })
+      case SET_PRESENCES:
+        return state.merge({
+          presence_channel: action.presence_channel,
+          presences: action.presences
         })
         default:
             return state
