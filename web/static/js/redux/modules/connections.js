@@ -3,6 +3,7 @@ import { userSocketAPI } from 'utils/userFunctions'
 
 const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
+const SET_PLACE_CHANNEL = 'SET_PLACE_CHANNEL'
 
 //listeners should be on places, users, votes, reviews, replies
 
@@ -30,10 +31,25 @@ export function setConnectionError(error) {
   }
 }
 
-export function setPlaceChannel(channel) {
+function setPlaceChannel(channel) {
   return {
     type: SET_PLACE_CHANNEL,
     channel
+  }
+}
+
+export function setAndJoinPlaceChannel({ socket, place_id }) {
+  return function (dispatch,getState) {
+    const channel = socket.channel(`place:${place_id}`)
+      channel.join()
+      .receive("ok", ({ reviews }) => {
+        dispatch(setChannelPlace(channel))
+        dispatch(updateFeed(reviews))
+      })
+      .receive("error", (error) => {
+        console.log('error in join place:', error)
+        dispatch(setConnectionError(`error joining place:${place_id}`))    
+      })
   }
 }
 

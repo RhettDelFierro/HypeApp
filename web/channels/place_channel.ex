@@ -45,21 +45,21 @@ defmodule Hypeapp.PlaceChannel do
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (place:lobby).
-  def handle_in("review:new", payload, socket) do
+  def handle_in("review:new", review, socket) do
     Logger.debug "#{inspect payload}"
     broadcast! socket, "review:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-      body: payload,
+      body: review,
       timestamp: :os.timestamp()
     }
     {:noreply, socket}
   end
 
-  def handle_in("vote:new", payload, socket) do
+  def handle_in("vote:new", vote, socket) do
     Logger.debug "#{inspect payload}"
     broadcast! socket, "vote:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-      body: payload,
+      body: vote,
       timestamp: :os.timestamp()
     }
     {:noreply, socket}

@@ -16,7 +16,7 @@ class CheckPlaceContainer extends React.Component {
       presences:{},
       reviews: []
     }
-    this.configChannel = this.configChannel.bind(this)
+    this.configPresenceChannel = this.configPresenceChannel.bind(this)
   }
 
   componentDidMount() {
@@ -28,10 +28,11 @@ class CheckPlaceContainer extends React.Component {
     this.socket.onError((error) => console.log(error))
     this.socket.onClose((close) => console.log('I closed the socket to channel', this.channel))
     this.socket.connect()
-    this.configChannel()
+    this.configPresenceChannel()
+    this.configPlaceChannel()
   }
 
-  configChannel() {
+  configPresenceChannel() {
   this.presenceChannel = this.socket.channel(`place:${this.props.place_id}`)
     this.presenceChannel.on("presence_state", state => {
       const presences = Presence.syncState(this.state.presences, state)
@@ -47,13 +48,15 @@ class CheckPlaceContainer extends React.Component {
       .receive("ok", (id) => {
         console.log('heres id:',id)
         console.log(`${id} succesfully joined the active_users topic.`)
-      })
+    })
 }
   //channel methods should go here:
 
   //I will eventually put the presenceChannel a a redux store then
   //trigger events based on the change in Presence state.
   configPlaceChannel() {
+    this.props.setAndJoinPlaceChannel(this.props.place_id)
+
     this.channel = this.socket.channel(`place:${this.props.place_id}`)
     this.channel.join()
     .receive("ok", ({ reviews }) => {
