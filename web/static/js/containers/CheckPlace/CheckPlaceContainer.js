@@ -56,23 +56,6 @@ class CheckPlaceContainer extends React.Component {
   //trigger events based on the change in Presence state.
   configPlaceChannel() {
     this.props.setAndJoinPlaceChannel(this.props.place_id)
-
-    this.channel = this.socket.channel(`place:${this.props.place_id}`)
-    this.channel.join()
-    .receive("ok", ({ reviews }) => {
-      this.props.setCurrentPlace(`place:${this.props.place_id}`)
-        // this.setState({
-        //   reviews: this.state.reviews.concat([reviews])
-        // })
-      })
-    .receive("error", (error) => {
-      this.props.setCurrentPlaceError(`error joining place:${this.props.place_id}`)
-      console.log(error)
-        this.setState({
-          messages,
-          currentRoom: room
-        })
-      })
   }
 
 

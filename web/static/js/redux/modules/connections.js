@@ -3,7 +3,7 @@ import { userSocketAPI } from 'utils/userFunctions'
 
 const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_CONNECTION_ERROR  = 'SET_CONNECTION_ERROR'
-const SET_PLACE_CHANNEL = 'SET_PLACE_CHANNEL'
+const SET_CURRENT_PLACE_CHANNEL = 'SET_CURRENT_PLACE_CHANNEL'
 
 //listeners should be on places, users, votes, reviews, replies
 
@@ -31,9 +31,9 @@ export function setConnectionError(error) {
   }
 }
 
-function setPlaceChannel(channel) {
+function setCurrentPlaceChannel(channel) {
   return {
-    type: SET_PLACE_CHANNEL,
+    type: SET_CURRENT_PLACE_CHANNEL,
     channel
   }
 }
@@ -42,13 +42,19 @@ export function setAndJoinPlaceChannel({ socket, place_id }) {
   return function (dispatch,getState) {
     const channel = socket.channel(`place:${place_id}`)
       channel.join()
-      .receive("ok", ({ reviews }) => {
-        dispatch(setChannelPlace(channel))
-        dispatch(updateFeed(reviews))
+        .receive("ok", () => {
+          dispatch(setCurrentChannelPlace(channel))
+          //dispatch(updateFeed(reviews))
+        })
+        .receive("error", (error) => {
+          console.log('error in join place:', error)
+          dispatch(setConnectionError(`error joining place:${place_id}`))
+        })
+      channel.on("review:new", payload => {
+        dispatch(addReviewToFeed(payload))
       })
-      .receive("error", (error) => {
-        console.log('error in join place:', error)
-        dispatch(setConnectionError(`error joining place:${place_id}`))    
+      channel.on("vote:new", payload =>{
+        dispatch(addVoteToFeed(payload))
       })
   }
 }
@@ -73,7 +79,7 @@ function user_connection(state = initial_user_connection_state, action) {
 const initial_state = fromJS({
   user_socket: {},
   location_channel: null,
-  place_channel: null,
+  current_place_channel: null,
   votes_channel: null,
   reviews_channel: null,
   replies_channel: null,
@@ -90,9 +96,9 @@ export default function connections(state = initial_state, action) {
         return state.merge({
           error: action.error
         })
-      case SET_PLACE_CHANNEL:
+      case SET_CURRENT_PLACE_CHANNEL:
         return state.merge({
-          place_channel: action.channel
+          current_place_channel: action.channel
         })
         default:
             return state
