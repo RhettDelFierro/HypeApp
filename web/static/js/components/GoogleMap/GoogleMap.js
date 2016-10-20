@@ -42,7 +42,8 @@ class GoogleMap extends Component {
     places.forEach((v) => {
       let marker =  new google.maps.Marker({
         map: this.map,
-        position: new google.maps.LatLng(v.getIn(['coordinates','lat']), v.getIn(['coordinates','lng']))
+        position: new google.maps.LatLng(v.getIn(['coordinates','lat']), v.getIn(['coordinates','lng'])),
+        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
       })
       this.setInfo(marker, v)
     })

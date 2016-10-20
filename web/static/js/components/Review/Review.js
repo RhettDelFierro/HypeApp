@@ -5,7 +5,7 @@ import { reviewContainer } from './styles.css'
 const Review = ({ user, body, timestamp }) => {
         return (
             <div className={reviewContainer}>
-              <p>{user}</p>
+              <p><span>{user}</span></p>
               <p>{body}</p>
               <p>{timestamp}</p>
             </div>

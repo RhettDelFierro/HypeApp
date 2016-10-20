@@ -56,7 +56,7 @@ export default function feed(state = initial_state, action) {
       case ADD_REVIEW_TO_FEED:
       case ADD_VOTE_TO_FEED:
         return state.merge({
-          feed_elements: state.get('feed_elements').concat(action.vote || action.review)
+          feed_elements: state.get('feed_elements').unshift(action.vote || action.review)
         })
       case RESET_FEED:
       default:

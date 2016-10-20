@@ -20,6 +20,7 @@ class CheckPlaceContainer extends React.Component {
     this.configPlaceChannel = this.configPlaceChannel.bind(this)
   }
 
+  //socket should also go in redux store?
   componentDidMount() {
     this.props.setCurrentPlace(this.props.place_id)
     this.socket = new Socket('/socket',{
@@ -33,6 +34,7 @@ class CheckPlaceContainer extends React.Component {
     this.configPlaceChannel()
   }
 
+  //I will eventually put the presenceChannel a a redux store
   configPresenceChannel() {
   this.presenceChannel = this.socket.channel(`place:${this.props.place_id}`)
     this.presenceChannel.on("presence_state", state => {
@@ -49,11 +51,8 @@ class CheckPlaceContainer extends React.Component {
       .receive("ok", (id) => {
         console.log(`${id} succesfully joined the active_users topic.`)
     })
-}
-  //channel methods should go here:
+  }
 
-  //I will eventually put the presenceChannel a a redux store then
-  //trigger events based on the change in Presence state.
   configPlaceChannel() {
     this.props.setAndJoinPlaceChannel({ socket: this.socket, place_id: this.props.place_id })
   }
