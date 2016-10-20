@@ -1,4 +1,3 @@
-import { Socket, Presence } from 'phoenix'
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -22,21 +21,19 @@ class CheckPlaceContainer extends React.Component {
 
   //socket should also go in redux store?
   componentDidMount() {
+    this.props.setupSocket()
     this.props.setCurrentPlace(this.props.place_id)
-    this.socket = new Socket('/socket',{
-      logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
-      params: socketParams()
-    })
-    this.socket.onError((error) => console.log(error))
-    this.socket.onClose((close) => console.log('I closed the socket to channel', this.channel))
-    this.socket.connect()
+    // if (!this.props.socket) {
+    //   this.props.setupSocket()
+    // }
     this.configPresenceChannel()
     this.configPlaceChannel()
   }
 
   //I will eventually put the presenceChannel a a redux store
   configPresenceChannel() {
-  this.presenceChannel = this.socket.channel(`place:${this.props.place_id}`)
+    console.log('socket yes or no?', this.props.socket)
+  this.presenceChannel = this.props.socket.channel(`place:${this.props.place_id}`)
     this.presenceChannel.on("presence_state", state => {
       const presences = Presence.syncState(this.state.presences, state)
       console.log('Presences after sync: ', presences)
@@ -54,7 +51,7 @@ class CheckPlaceContainer extends React.Component {
   }
 
   configPlaceChannel() {
-    this.props.setAndJoinPlaceChannel({ socket: this.socket, place_id: this.props.place_id })
+    this.props.setAndJoinPlaceChannel({ place_id: this.props.place_id })
   }
 
 
@@ -65,12 +62,13 @@ class CheckPlaceContainer extends React.Component {
   }
 }
 
-function mapStateToProps({ users, post, places }, ownProps) {
+function mapStateToProps({ users, post, places, connections }, ownProps) {
   return {
     is_authed:  users.get('is_authed'),
     is_posting: post.get('is_posting'),
     current_place: places.get('current_place'),
-    place_id: ownProps.params.place_id
+    place_id: ownProps.params.place_id,
+    socket: connections.get('socket')
   }
 }
 
