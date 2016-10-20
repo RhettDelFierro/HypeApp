@@ -43,7 +43,8 @@ export function setAndJoinPlaceChannel({ socket, place_id }) {
     const channel = socket.channel(`place:${place_id}`)
       channel.join()
         .receive("ok", () => {
-          dispatch(setCurrentChannelPlace(channel))
+          console.log("YESSIR")
+          dispatch(setCurrentPlaceChannel(channel))
           //dispatch(updateFeed(reviews))
         })
         .receive("error", (error) => {

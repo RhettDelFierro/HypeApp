@@ -17,6 +17,7 @@ class CheckPlaceContainer extends React.Component {
       reviews: []
     }
     this.configPresenceChannel = this.configPresenceChannel.bind(this)
+    this.configPlaceChannel = this.configPlaceChannel.bind(this)
   }
 
   componentDidMount() {
@@ -46,7 +47,6 @@ class CheckPlaceContainer extends React.Component {
     })
     this.presenceChannel.join()
       .receive("ok", (id) => {
-        console.log('heres id:',id)
         console.log(`${id} succesfully joined the active_users topic.`)
     })
 }
@@ -55,7 +55,7 @@ class CheckPlaceContainer extends React.Component {
   //I will eventually put the presenceChannel a a redux store then
   //trigger events based on the change in Presence state.
   configPlaceChannel() {
-    this.props.setAndJoinPlaceChannel(this.props.place_id)
+    this.props.setAndJoinPlaceChannel({ socket: this.socket, place_id: this.props.place_id })
   }
 
 

@@ -113,7 +113,6 @@ function makeAnonUser() {
 export function socketParams() {
   const token = getToken('phoenixAuthToken')
   const params = token ? { token } : { anonymous_user: makeAnonUser() }
-  console.log('HERE IS THE UUID', params)
   return params
 }
 
