@@ -14,6 +14,10 @@ defmodule Hypeapp.PlaceChannel do
 
   def join("place:" <> place_id, _params, socket) do
     send self(), :after_join
+    socket
+      |> assign(:count, 0)
+      |> assign(:counter, &(&1 +1))
+
     {:ok, socket}
   end
 
@@ -23,6 +27,7 @@ defmodule Hypeapp.PlaceChannel do
 
   def handle_info(:after_join, socket) do
     #handle anon_user logic here and set as metadata?
+
     id = socket.assigns.id || socket.assigns.uuid
     #Track the user with some metadata to indicate when they're online:
     Presence.track(socket, id, %{
@@ -46,6 +51,16 @@ defmodule Hypeapp.PlaceChannel do
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (place:lobby).
   def handle_in("review:new", review, socket) do
+    # socket.assigns.counter.()
+
+
+    # socket
+    #   |> assign(:count, socket.assigns.counter(socket.assigns.count))
+
+      # give your DB the socket then it can add the count to it's total trend count.
+      # if it hits the trend count, reset the count on the DB.
+
+
     Logger.debug "#{inspect review}"
     broadcast! socket, "review:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",

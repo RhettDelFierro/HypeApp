@@ -5,6 +5,8 @@ const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCESS'
 const SET_CURRENT_PLACE = 'SET_CURRENT_PLACE'
 const SET_CURRENT_PLACE_ERROR = 'SET_CURRENT_PLACE_ERROR'
+const SET_TRENDING_PLACE = 'SET_TRENDING_PLACE'
+const SET_COOLED_PLACE = 'SET_COOLED_PLACE'
 //action creators:
 export function getPlaces(coordinates) {
   return async function(dispatch,getState) {
@@ -42,6 +44,20 @@ export function setCurrentPlace(current_place) {
   }
 }
 
+export function setTrendingPlace(place_id) {
+  return {
+    type: SET_TRENDING_PLACE,
+    place_id
+  }
+}
+
+export function setCooledPlace(place_id) {
+  return {
+    type: SET_COOLED_PLACE,
+    place_id
+  }
+}
+
 export function setCurrentError(error) {
   return {
     type: SET_CURRENT_PLACE_ERROR,
@@ -70,9 +86,10 @@ const initial_state = fromJS({
     error: '',
     trending: false,
     user_voted: false,
-    presence: {},
     current_place: '',
-    current_place_error: ''
+    current_place_error: '',
+    cooled_places: [],
+    trending_places: []
 })
 
 export default function places(state = initial_state, action) {
@@ -96,6 +113,14 @@ export default function places(state = initial_state, action) {
       case SET_CURRENT_PLACE_ERROR:
           return state.merge({
             current_place_error: action.error
+          })
+      case SET_TRENDING_PLACE:
+          return state.merge({
+            trending_places: action.place_id
+          })
+      case SET_COOLED_PLACE:
+          return state.merge({
+            cooled_places: action.place_id
           })
       default:
           return state

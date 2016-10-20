@@ -2,6 +2,7 @@ import { Presence, Socket } from 'phoenix'
 import { fromJS } from 'immutable'
 import { socketParams } from 'utils/userFunctions'
 import { addReviewToFeed, addVoteToFeed } from 'redux/modules/feed'
+import { setTrendingPlace, setCooledPlace } from 'redux/modules/places'
 
 const SET_USER_SOCKET   = 'SET_USER_SOCKET'
 const SET_SOCKET_ERROR  = 'SET_SOCKET_ERROR'
@@ -56,7 +57,7 @@ export function setupSocket(opts) {
     socket.onClose((close) => console.log('I closed the socket to channel'))
     socket.connect()
 
-    switchPresenceChannels({ dispatch, socket, opts: opts.presenceOpts }) 
+    switchPresenceChannels({ dispatch, socket, opts: opts.presenceOpts })
     switchChannels({ dispatch, socket, opts })
 
     dispatch(setUserSocket(socket))
@@ -86,7 +87,6 @@ function setCurrentPlaceChannel(channel) {
 
 export function setAndJoinPlaceChannel({ place_id, socket }) {
   return function (dispatch,getState) {
-    console.log('HERES THE SOCKET AND CHANNEL', place_id, socket)
     //do I want this socket just stored in our state?
     const channel = socket.channel(`place:${place_id}`)
       channel.join()
@@ -118,7 +118,27 @@ function setHomeChannel({ home_channel_name, channel }) {
 
 export function setAndJoinHomeChannel({ zip_code, zipcode }) {
   return function (dispatch,getState) {
-
+    const channel = socket.channel(`home:${zip_code}`)
+      channel.join()
+        .receive("ok", () => {
+          console.log("YESSIR")
+          dispatch(setHomeChannel(channel))
+          //dispatch(updateFeed(reviews))
+        })
+        .receive("error", (error) => {
+          console.log('error in join place:', error)
+          dispatch(setConnectionError(`error joining home:${zip_code}`))
+        })
+      //the payload is the full json object of the trending place_id
+      //render the Place a different marker after it goes to the store.
+      channel.on("trending:new", payload => {
+        dispatch(trendingPlace(payload))
+      })
+      //cooled place is for the place_id that is no longer trending.
+      //cooled is default (regular marker)
+      channel.on("trending:cooled", payload =>{
+        dispatch(cooledPlace(payload))
+      })
   }
 }
 
