@@ -13,6 +13,7 @@ export function getPlaces(coordinates) {
     dispatch(fetchingPlaces())
     try {
       const initial_places = await getPlacesAPI(coordinates)
+      console.log(initial_places)
       const places = sortPlaces(initial_places)
       //console.log(sorted_places)
       dispatch(fetchingPlacesSuccess(places))
