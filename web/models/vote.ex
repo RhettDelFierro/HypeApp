@@ -2,9 +2,9 @@ defmodule Hypeapp.Vote do
   use Hypeapp.Web, :model
   #can use yelp_id and user_id to get
   schema "votes" do
-    field :yelp_id, :string, null: false
     belongs_to :user, Hypeapp.User
     belongs_to :vote_type, Hypeapp.VoteType
+    belongs_to :place, Hypeapp.Place
 
     timestamps()
   end
@@ -14,7 +14,8 @@ defmodule Hypeapp.Vote do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:yelp_id])
-    |> validate_required([:yelp_id])
+      |> cast_assoc(:user)
+      |> cast_assoc(:vote_type)
+      |> cast_assoc(:places)
   end
 end

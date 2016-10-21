@@ -1,7 +1,6 @@
 export users from './users'
 export places from './places'
 export locations from './locations'
-export reviews from './reviews'
 export connections from './connections'
 export routing from './routing'
 export nav from './nav'

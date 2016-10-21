@@ -31,7 +31,7 @@ defmodule Hypeapp.PlaceChannel do
     id = socket.assigns.id || socket.assigns.uuid
     #Track the user with some metadata to indicate when they're online:
     Presence.track(socket, id, %{
-      online_at: inspect(:os.timestamp()),
+      online_at: :os.system_time(:milli_seconds),
       device: "browser"
     })
 
@@ -65,17 +65,28 @@ defmodule Hypeapp.PlaceChannel do
     broadcast! socket, "review:new", %{
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: review,
-      timestamp: inspect(:os.timestamp())
+      timestamp: :os.system_time(:milli_seconds)
     }
     {:noreply, socket}
   end
 
-  def handle_in("vote:new", vote, socket) do
+  def handle_in("vote:up", vote, socket) do
     Logger.debug "#{inspect vote}"
     broadcast! socket, "vote:new", %{
       id: socket.assigns.id,
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-      body: vote,
+      body: "has voted up!",
+      timestamp: :os.system_time(:milli_seconds)
+    }
+    {:noreply, socket}
+  end
+
+  def handle_in("vote:down", vote, socket) do
+    Logger.debug "#{inspect vote}"
+    broadcast! socket, "vote:new", %{
+      id: socket.assigns.id,
+      user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
+      body: "has voted down!",
       timestamp: inspect(:os.timestamp())
     }
     {:noreply, socket}

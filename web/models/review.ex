@@ -4,6 +4,7 @@ defmodule Hypeapp.Review do
   schema "reviews" do
     field :review, :string
     belongs_to :user, Hypeapp.User
+    belongs_to :place, Hypeapp.Place
 
     timestamps()
   end
@@ -15,6 +16,8 @@ defmodule Hypeapp.Review do
     struct
     |> cast(params, [:review])
     |> validate_required([:review])
+    |> cast_assoc(:user)
+    |> cast_assoc(:places)
     |> validate_length(:review, min: 1, max: 140)
   end
 end

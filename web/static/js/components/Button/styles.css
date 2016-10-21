@@ -22,3 +22,8 @@
 .user {
   composes: primary;
 }
+
+.vote {
+  composes: button;
+  background-color: rgb(97,97,97)
+}
