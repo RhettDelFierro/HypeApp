@@ -1,6 +1,6 @@
 defmodule Hypeapp.AuthController do
   use Hypeapp.Web, :controller
-  import Hypeapp.{QueryParameters,SortHelpers}
+  import Hypeapp.{QueryParameters}
   alias Hypeapp.{Place, Repo}
 
   @doc """
@@ -31,7 +31,5 @@ defmodule Hypeapp.AuthController do
     <> qURL)
     places["businesses"]
   end
-
-  
 
 end

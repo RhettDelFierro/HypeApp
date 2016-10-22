@@ -40,6 +40,14 @@ defmodule Hypeapp.User do
     |> generate_encrypted_password()
   end
 
+  # def join_users(query, col) do
+  #    query |> join(:inner, [q], r in Review, q.^col === r.^col)
+  # end
+  def join_users(query, col) do
+    #maybe make it a [h|t] and do the same all join functions.
+     query |> join(:inner, [_,q], u in assoc(q, ^col))
+  end
+
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do
       # All of the above in the changeset() function passed (is valid),

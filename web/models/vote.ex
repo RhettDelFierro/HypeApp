@@ -26,40 +26,43 @@ defmodule Hypeapp.Vote do
      __MODULE__ |> where([v], v.place_id == ^place_id)
   end
 
-  def get_recent_votes(query) do
+  # we'll use this to trend.
+  def get_votes_from(query, num, intv) do
     query
-      |> where([v], v.place_id > ago(-1, "hour"))
+      |> where([v], v.place_id > ago(^num, ^intv))
   end
 
-  def join_votes_and_reviews(place_id) do
-     query |> join(:inner, [v], r in Review, v.place_id === r.place_id)
-  end
+  # def get_votes_from(query, num, intv) do
+  #   query
+  #     |> where([v], v.place_id > ago(-1, "hour"))
+  # end
 
-  def get_votes_and_reviews(query) do
-    query |> order_by([v,r], asc: v.inserted_at) 
-  end
+  # def join_votes_and_reviews(place_id) do
+  #    query |> join(:inner, [v], r in Review, v.place_id === r.place_id)
+  # end
+  #
+  # def get_votes_and_reviews(query) do
+  #   query |> order_by([v,r], asc: v.inserted_at)
+  # end
 
   def get_recent_feed(query) do
-    quer |> select([v,r], {v.user_id, })
+    query
+      |> select([v,r,u], %{
+        first_name: u.first_name,
+        last_name: u.last_name,
+        review: r.review,
+        place_id: v.place_id,
+        timestamp: v.inserted_at
+        })
   end
 
-
-  def recent_feed(place_id) do
-     from v in __MODULE__,
-      join: r in Review, on: v.place_id == ^place_id > ago(-1, "hour")
-      order_by: [dsc: :inserted_at]],
-
-      from c in Comment,
-  join: p in Post, on: c.post_id == p.id,
-  select: {p.title, c.text}
-  end
-
-  def check_trending(place_id) do
-     from v in __MODULE__,
-      where: v.place_id == ^place_id >
-       ago(-1, "hour")
-      select: count(:id)
-  end
+  # returns an int. Not queryable?
+  # def check_trending(place_id) do
+  #    from v in __MODULE__,
+  #     where: v.place_id == ^place_id >
+  #      ago(-1, "hour"),
+  #     select: count(:id)
+  # end
 
     #TEST THIS OUT.
     # def check_tranding(place_id) do
@@ -72,8 +75,7 @@ defmodule Hypeapp.Vote do
         where: v.place_id == ^place_id,
         join: r in Review,
         where: v.place_id == r.place_id,
-        order[by: [asc: :inserted_at]]
-
+        order_by: [asc: :inserted_at]
     end
 
 

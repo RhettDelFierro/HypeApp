@@ -91,6 +91,8 @@ export function setAndJoinPlaceChannel({ place_id, socket }) {
     const channel = socket.channel(`place:${place_id}`)
       channel.join()
         .receive("ok", () => {
+          //remove the console.log and dispatch an action to tell the user they've joined.
+          //maybe like a green light next to the user name.
           console.log("YESSIR")
           dispatch(setCurrentPlaceChannel(channel))
           //dispatch(updateFeed(reviews))
@@ -155,17 +157,15 @@ export function setAndJoinPresenceChannel({ presence_channel, socket}) {
     const presenceChannel = socket.channel(presence_channel)
       presenceChannel.on("presence_state", state => {
         const presences = Presence.syncState(getState().connections.get('presences'), state)
-        console.log('Presences after sync: ', presences)
         dispatch(setPresences({ presence_channel, presences }))
       })
       presenceChannel.on("presence_diff", state => {
         const presences = Presence.syncDiff(getState().connections.get('presences'), state)
-        console.log('Presences after diff: ', presences)
         dispatch(setPresences({ presence_channel, presences }))
       })
       presenceChannel.join()
         .receive("ok", (id) => {
-          console.log(`${id} succesfully joined the active_users topic.`)
+          console.log(`${id} (you) succesfully joined the active_users topic.`)
       })
   }
 }

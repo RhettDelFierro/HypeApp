@@ -9,6 +9,7 @@ defmodule Hypeapp.PlaceChannel do
     Repo,
     Review,
     ReviewView,
+    User,
     Vote,
     VoteView}
 
@@ -22,7 +23,7 @@ defmodule Hypeapp.PlaceChannel do
     socket
       |> assign(:place, place_id)
       |> track_presence
-      |> send_feed
+      |> after_join_feed
 
     send self(), :after_join
     {:ok, socket}
@@ -33,20 +34,10 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   def handle_info(:after_join, socket) do
+    socket
+      |> track_presence
+      |> after_join_feed
 
-
-    id = socket.assigns.id || socket.assigns.uuid
-    #Track the user with some metadata to indicate when they're online:
-    Presence.track(socket, id, %{
-      online_at: :os.system_time(:milli_seconds),
-      device: "browser"
-    })
-
-    #push the current present state to the user:
-    #Presence.list means "give me all the users on this socket's topic (place:place_id)"
-    push socket, "presence_state", Presence.list(socket)
-
-    # Don't need a reply:
     {:noreply, socket}
   end
 
@@ -71,8 +62,7 @@ defmodule Hypeapp.PlaceChannel do
 
     vote = Repo.insert_or_update! %Vote{
       user_id: socket.assigns.id,
-      vote_type_id: 5,
-
+      vote_type_id: 5
     }
 
     broadcast! socket, "vote:new", %{
@@ -92,14 +82,28 @@ defmodule Hypeapp.PlaceChannel do
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: "has voted down!",
       type: "vote",
-      timestamp: inspect(:os.timestamp())
+      timestamp: :os.system_time(:milli_seconds)
     }
     {:noreply, socket}
   end
 
-  def send_feed(socket) do
-     socket.assigns.place
-      |> 
+  def after_join_feed(socket) do
+    # right now sending a list of structs that contain both votes and reviews for a user.
+     feed = socket.topic
+      |> Vote.get_votes
+      |> Review.join_reviews(:place_id)
+      |> User.join_users(:user_id)
+      |> select([v,r,u], %{
+          first_name: u.first_name,
+          last_name: u.last_name,
+          review: r.review,
+          place_id: v.place_id,
+          timestamp: v.inserted_at
+          })
+
+      push socket, "join_feed", %{
+        data: feed
+      }
   end
 
   defp track_presence(socket) do

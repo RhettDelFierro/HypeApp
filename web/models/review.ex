@@ -20,4 +20,11 @@ defmodule Hypeapp.Review do
     |> cast_assoc(:places)
     |> validate_length(:review, min: 1, max: 140)
   end
+
+  # def join_reviews(query, col) do
+  #    query |> join(:inner, [q], r in Review, q.^col === r.^col)
+  # end
+  def join_reviews(query, col) do
+     query |> join(:inner, [q], r in assoc(q, ^col))
+  end
 end
