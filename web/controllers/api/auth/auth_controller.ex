@@ -1,6 +1,7 @@
 defmodule Hypeapp.AuthController do
   use Hypeapp.Web, :controller
-  import Hypeapp.QueryParameters
+  import Hypeapp.{QueryParameters,SortHelpers}
+  alias Hypeapp.{Place, Repo}
 
   @doc """
     Yelp requests does not need callback/redirect urls for authorization.
@@ -25,8 +26,12 @@ defmodule Hypeapp.AuthController do
 
   # handle tuples?
   defp get_places!("yelp", client, qURL) do
-    %{body: places} = OAuth2.Client.get!(client, "/v3/businesses/search?term=restaurants,food&radius=14000&sort_by=rating&" <> qURL)
+    %{body: places} = OAuth2.Client.get!(client,
+    "/v3/businesses/search?term=restaurants,food&radius=14000&sort_by=rating&"
+    <> qURL)
     places["businesses"]
   end
+
+  
 
 end

@@ -18,4 +18,5 @@ defmodule Hypeapp.VoteType do
     |> validate_required([:vote_type])
     |> unique_constraint(:vote_type)
   end
+
 end

@@ -4,7 +4,13 @@ defmodule Hypeapp.PlaceChannel do
   """
   use Hypeapp.Web, :channel
   require Logger
-  alias Hypeapp.Presence
+  alias Hypeapp.{
+    Presence,
+    Repo,
+    Review,
+    ReviewView,
+    Vote,
+    VoteView}
 
   # def join("place:" <> place_id, payload, socket) do
   #   authorize(payload, fn ->
@@ -13,11 +19,12 @@ defmodule Hypeapp.PlaceChannel do
   # end
 
   def join("place:" <> place_id, _params, socket) do
-    send self(), :after_join
     socket
-      |> assign(:count, 0)
-      |> assign(:counter, &(&1 +1))
+      |> assign(:place, place_id)
+      |> track_presence
+      |> send_feed
 
+    send self(), :after_join
     {:ok, socket}
   end
 
@@ -26,7 +33,7 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   def handle_info(:after_join, socket) do
-    #handle anon_user logic here and set as metadata?
+
 
     id = socket.assigns.id || socket.assigns.uuid
     #Track the user with some metadata to indicate when they're online:
@@ -38,44 +45,41 @@ defmodule Hypeapp.PlaceChannel do
     #push the current present state to the user:
     #Presence.list means "give me all the users on this socket's topic (place:place_id)"
     push socket, "presence_state", Presence.list(socket)
+
     # Don't need a reply:
     {:noreply, socket}
-  end
-
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
   end
 
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (place:lobby).
   def handle_in("review:new", review, socket) do
-    # socket.assigns.counter.()
-
-
-    # socket
-    #   |> assign(:count, socket.assigns.counter(socket.assigns.count))
-
-      # give your DB the socket then it can add the count to it's total trend count.
-      # if it hits the trend count, reset the count on the DB.
-
 
     Logger.debug "#{inspect review}"
     broadcast! socket, "review:new", %{
+      id: socket.assigns.id,
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: review,
+      type: "review",
       timestamp: :os.system_time(:milli_seconds)
     }
     {:noreply, socket}
   end
 
+  #Here's the thing, there is a difference between channel callbacks and persistency.
   def handle_in("vote:up", vote, socket) do
     Logger.debug "#{inspect vote}"
+
+    vote = Repo.insert_or_update! %Vote{
+      user_id: socket.assigns.id,
+      vote_type_id: 5,
+
+    }
+
     broadcast! socket, "vote:new", %{
       id: socket.assigns.id,
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: "has voted up!",
+      type: "vote",
       timestamp: :os.system_time(:milli_seconds)
     }
     {:noreply, socket}
@@ -87,9 +91,28 @@ defmodule Hypeapp.PlaceChannel do
       id: socket.assigns.id,
       user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
       body: "has voted down!",
+      type: "vote",
       timestamp: inspect(:os.timestamp())
     }
     {:noreply, socket}
+  end
+
+  def send_feed(socket) do
+     socket.assigns.place
+      |> 
+  end
+
+  defp track_presence(socket) do
+    #handle anon_user logic here and set as metadata?
+    id = socket.assigns.id || socket.assigns.uuid
+    #Track the user with some metadata to indicate when they're online:
+    Presence.track(socket, id, %{
+      online_at: :os.system_time(:milli_seconds),
+      device: "browser"
+    })
+    #push the current present state to the user:
+    #Presence.list means "give me all the users on this socket's topic (place:place_id)"
+    push socket, "presence_state", Presence.list(socket)
   end
 
   # Add authorization logic here as required.
