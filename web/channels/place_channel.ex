@@ -19,13 +19,13 @@ defmodule Hypeapp.PlaceChannel do
   #   end)
   # end
 
-  def join("place:" <> place_id, _params, socket) do
+  def join("place:" <> yelp_id, %{"zip_code" => zip_code}, socket) do
+    send self(), :after_join
+    place_id = check_and_set_place(yelp_id, zip_code)
     socket
-      |> assign(:place, place_id)
+      |> assign(:place_id, place_id)
       |> track_presence
       |> after_join_feed
-
-    send self(), :after_join
     {:ok, socket}
   end
 
@@ -62,7 +62,8 @@ defmodule Hypeapp.PlaceChannel do
 
     vote = Repo.insert_or_update! %Vote{
       user_id: socket.assigns.id,
-      vote_type_id: 5
+      vote_type_id: 5,
+      place_id: socket.assigns.yelp_id
     }
 
     broadcast! socket, "vote:new", %{
@@ -87,23 +88,22 @@ defmodule Hypeapp.PlaceChannel do
     {:noreply, socket}
   end
 
-  def after_join_feed(socket) do
+  defp after_join_feed(socket) do
     # right now sending a list of structs that contain both votes and reviews for a user.
      feed = socket.topic
       |> Vote.get_votes
       |> Review.join_reviews(:place_id)
       |> User.join_users(:user_id)
       |> select([v,r,u], %{
-          first_name: u.first_name,
-          last_name: u.last_name,
+          name: "#{u.first_name} #{u.last_name}",
           review: r.review,
-          place_id: v.place_id,
+          vote_type: v.vote_type_id,
           timestamp: v.inserted_at
           })
+      |> Repo.all
 
-      push socket, "join_feed", %{
-        data: feed
-      }
+      push socket, "join_feed", %{data: feed}
+      socket
   end
 
   defp track_presence(socket) do
@@ -117,7 +117,25 @@ defmodule Hypeapp.PlaceChannel do
     #push the current present state to the user:
     #Presence.list means "give me all the users on this socket's topic (place:place_id)"
     push socket, "presence_state", Presence.list(socket)
+    socket
   end
+
+  defp check_and_set_place(yelp_id, zip_code) do
+    case Repo.get_by!(Place, yelp_id: yelp_id) do
+
+      %{id: id} ->
+        id
+      nil ->
+        changeset = Place.changeset(%Place{}, %{
+              yelp_id: yelp_id,
+              zip_code: zip_code
+            })
+          |> Repo.insert!
+
+        Changeset.get_field(changeset, :id)
+    end
+  end
+
 
   # Add authorization logic here as required.
   defp authorized?(_payload) do

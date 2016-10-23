@@ -46,6 +46,7 @@ defmodule Hypeapp.User do
   def join_users(query, col) do
     #maybe make it a [h|t] and do the same all join functions.
      query |> join(:inner, [_,q], u in assoc(q, ^col))
+     #query |> join(:inner, [q|_], u in assoc(q, ^col)) will this work?
   end
 
   defp generate_encrypted_password(current_changeset) do

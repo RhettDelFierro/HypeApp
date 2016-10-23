@@ -21,4 +21,8 @@ defmodule Hypeapp.Place do
     |> cast_assoc(:review)
     |> unique_constraint(:yelp_id)
   end
+
+  def find_place(query,yelp_id) do
+    query |> where([q], q.yelp_id == ^yelp_id) 
+  end
 end
