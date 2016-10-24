@@ -7,6 +7,7 @@ defmodule Hypeapp.User do
 
   schema "users" do
     has_many :reviews, Hypeapp.Review
+    has_many :votes, Hypeapp.Vote
 
     field :first_name, :string
     field :last_name, :string
@@ -45,7 +46,8 @@ defmodule Hypeapp.User do
   # end
   def join_users(query, col) do
     #maybe make it a [h|t] and do the same all join functions.
-     query |> join(:inner, [_,q], u in assoc(q, ^col))
+
+     query |> join(:inner, [q], u in assoc(q, ^col))
      #query |> join(:inner, [q|_], u in assoc(q, ^col)) will this work?
   end
 

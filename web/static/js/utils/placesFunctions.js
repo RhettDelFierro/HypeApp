@@ -24,6 +24,7 @@ export function sortPlaces(places) {
           lat: v.coordinates.latitude,
           lng: v.coordinates.longitude
         },
+        zip_code: v.location.zip_code,
         id: v.id,
         name: v.name,
         rating: v.rating,

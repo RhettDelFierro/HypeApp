@@ -36,10 +36,10 @@ function switchPresenceChannels({ dispatch, socket, opts }) {
   }
 }
 
-function switchChannels ({ dispatch, socket, opts }) {
+function switchChannels ({ dispatch, socket, opts, zip_code }) {
   switch(opts.topic) {
     case "place":
-      return dispatch(setAndJoinPlaceChannel({ place_id: opts.subtopic, socket }))
+      return dispatch(setAndJoinPlaceChannel({ place_id: opts.subtopic, params: opts.params, socket }))
     case "home":
       return dispatch(setAndJoinHomeChannel({ zip_code: opts.subtopic, socket }))
     default:
@@ -85,15 +85,15 @@ function setCurrentPlaceChannel(channel) {
   }
 }
 
-export function setAndJoinPlaceChannel({ place_id, socket }) {
+export function setAndJoinPlaceChannel({ place_id, socket, params }) {
   return function (dispatch,getState) {
     //do I want this socket just stored in our state?
-    const channel = socket.channel(`place:${place_id}`)
+    const channel = socket.channel(`place:${place_id}`, params)
       channel.join()
-        .receive("ok", () => {
+        .receive("ok", ({ data }) => {
           //remove the console.log and dispatch an action to tell the user they've joined.
           //maybe like a green light next to the user name.
-          console.log("YESSIR")
+          console.log("YESSIR", data)
           dispatch(setCurrentPlaceChannel(channel))
           //dispatch(updateFeed(reviews))
         })
@@ -105,6 +105,11 @@ export function setAndJoinPlaceChannel({ place_id, socket }) {
         dispatch(addReviewToFeed(payload))
       })
       channel.on("vote:new", payload =>{
+        console.log('VOTE:NEW', payload)
+        dispatch(addVoteToFeed(payload))
+      })
+      channel.on("join_feed", payload =>{
+        console.log('JOIN_FEED', payload)
         dispatch(addVoteToFeed(payload))
       })
   }

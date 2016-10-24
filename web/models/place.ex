@@ -17,12 +17,12 @@ defmodule Hypeapp.Place do
     struct
     |> cast(params, [:yelp_id, :zip_code])
     |> validate_required([:yelp_id, :zip_code])
-    |> cast_assoc(:vote)
-    |> cast_assoc(:review)
+    |> cast_assoc(:votes)
+    |> cast_assoc(:reviews)
     |> unique_constraint(:yelp_id)
   end
 
   def find_place(query,yelp_id) do
-    query |> where([q], q.yelp_id == ^yelp_id) 
+    query |> where([q], q.yelp_id == ^yelp_id)
   end
 end

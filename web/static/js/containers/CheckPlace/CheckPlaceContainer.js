@@ -16,10 +16,14 @@ class CheckPlaceContainer extends React.Component {
         presence: true,
         presenceOpts: {
           topic: "place",
-          subtopic: this.props.place_id
+          subtopic: this.props.place_id,
+          zip_code: this.props.zip_code
         },
         topic: "place",
-        subtopic: this.props.place_id
+        subtopic: this.props.place_id,
+        params: {
+            zip_code: this.props.zip_code
+        }
       }
   }
 
@@ -43,7 +47,8 @@ function mapStateToProps({ users, post, places, connections }, ownProps) {
     is_posting: post.get('is_posting'),
     current_place: places.get('current_place'),
     place_id: ownProps.params.place_id,
-    socket: connections.get('socket')
+    socket: connections.get('socket'),
+    zip_code: ownProps.params.zip_code
   }
 }
 

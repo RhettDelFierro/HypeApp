@@ -6,6 +6,7 @@ defmodule Hypeapp.PlaceChannel do
   require Logger
   alias Hypeapp.{
     Presence,
+    Place,
     Repo,
     Review,
     ReviewView,
@@ -21,12 +22,11 @@ defmodule Hypeapp.PlaceChannel do
 
   def join("place:" <> yelp_id, %{"zip_code" => zip_code}, socket) do
     send self(), :after_join
+
     place_id = check_and_set_place(yelp_id, zip_code)
-    socket
-      |> assign(:place_id, place_id)
-      |> track_presence
-      |> after_join_feed
-    {:ok, socket}
+    IO.puts "HERE IS THE ID: #{place_id}"
+
+    {:ok, assign(socket, :place_id, place_id) }
   end
 
   def join(_other, _params) do
@@ -41,9 +41,14 @@ defmodule Hypeapp.PlaceChannel do
     {:noreply, socket}
   end
 
+  def handle_in(event, params, socket) do
+    place = Repo.get_by(Place, socket.assigns.place_id)
+    handle_in(event, params, place, socket)
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (place:lobby).
-  def handle_in("review:new", review, socket) do
+  def handle_in("review:new", review, place, socket) do
 
     Logger.debug "#{inspect review}"
     broadcast! socket, "review:new", %{
@@ -57,48 +62,41 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   #Here's the thing, there is a difference between channel callbacks and persistency.
-  def handle_in("vote:up", vote, socket) do
+  def handle_in("vote:new", vote, place, socket) do
     Logger.debug "#{inspect vote}"
 
-    vote = Repo.insert_or_update! %Vote{
-      user_id: socket.assigns.id,
-      vote_type_id: 5,
-      place_id: socket.assigns.yelp_id
-    }
+    vote = build_assoc(place, :votes)
+    user = Repo.get(User,socket.assigns.id)
+    vote = build_assoc(user, :votes, Map.from_struct vote)
 
-    broadcast! socket, "vote:new", %{
-      id: socket.assigns.id,
-      user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-      body: "has voted up!",
-      type: "vote",
-      timestamp: :os.system_time(:milli_seconds)
-    }
-    {:noreply, socket}
-  end
+    case Repo.insert(vote) do
+       {:ok, vote} ->
+         broadcast! socket, "vote:new", %{
+           user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
+           body: vote.vote_type,
+           type: "vote",
+           timestamp: :os.system_time(:milli_seconds)
+         }
+         {:noreply, socket}
+        {:error, changeset} ->
+          {:reply, {:error, %{errors: changeset}}, socket}
+    end
 
-  def handle_in("vote:down", vote, socket) do
-    Logger.debug "#{inspect vote}"
-    broadcast! socket, "vote:new", %{
-      id: socket.assigns.id,
-      user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-      body: "has voted down!",
-      type: "vote",
-      timestamp: :os.system_time(:milli_seconds)
-    }
-    {:noreply, socket}
   end
 
   defp after_join_feed(socket) do
     # right now sending a list of structs that contain both votes and reviews for a user.
-     feed = socket.topic
+     feed = socket.assigns.place_id
       |> Vote.get_votes
-      |> Review.join_reviews(:place_id)
-      |> User.join_users(:user_id)
-      |> select([v,r,u], %{
-          name: "#{u.first_name} #{u.last_name}",
-          review: r.review,
-          vote_type: v.vote_type_id,
-          timestamp: v.inserted_at
+      |> User.join_users(:user)
+      |> Review.join_reviews(:user)
+      # |> select([v,r,u], %{
+      |> select([v,u,r], %{
+          "first_name" => u.first_name,
+          "last_name" => u.last_name,
+          "review" => r.review,
+          "vote_type" => v.vote_type_id,
+          "timestamp" => v.inserted_at
           })
       |> Repo.all
 
@@ -109,30 +107,29 @@ defmodule Hypeapp.PlaceChannel do
   defp track_presence(socket) do
     #handle anon_user logic here and set as metadata?
     id = socket.assigns.id || socket.assigns.uuid
+    #push the current present state to the user:
+    #Presence.list means "give me all the users on this socket's topic (place:place_id)"
+    push socket, "presence_state", Presence.list(socket)
     #Track the user with some metadata to indicate when they're online:
     Presence.track(socket, id, %{
       online_at: :os.system_time(:milli_seconds),
       device: "browser"
     })
-    #push the current present state to the user:
-    #Presence.list means "give me all the users on this socket's topic (place:place_id)"
-    push socket, "presence_state", Presence.list(socket)
     socket
   end
 
   defp check_and_set_place(yelp_id, zip_code) do
-    case Repo.get_by!(Place, yelp_id: yelp_id) do
 
+    case Repo.get_by(Place, %{yelp_id: yelp_id}) do
       %{id: id} ->
         id
       nil ->
-        changeset = Place.changeset(%Place{}, %{
+        changeset = Place.changeset(%Place{
               yelp_id: yelp_id,
               zip_code: zip_code
             })
           |> Repo.insert!
-
-        Changeset.get_field(changeset, :id)
+        Ecto.Changeset.get_field(changeset, :id)
     end
   end
 
