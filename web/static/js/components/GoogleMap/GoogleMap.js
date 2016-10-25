@@ -52,7 +52,10 @@ class GoogleMap extends Component {
   setInfo(marker,place) {
     let div = document.createElement('div');
       div.innerHTML = this.generateInfoElement(place);
-      div.onclick = () => {this.props.changeRoute(`/places/${place.get('zip_code')}/${place.get('id')}`)}
+      div.onclick = () => {
+        this.props.setCurrentPlace(place)
+        this.props.changeRoute(`/places/${place.get('zip_code')}/${place.get('id')}`)
+      }
     let infowindow = new google.maps.InfoWindow()
       infowindow.setContent(div)
     marker.addListener('click', function() {

@@ -26,27 +26,45 @@ class Vote extends Component {
   }
 
   voteUp() {
-    console.log('vote up!!')
     this.props.current_place_channel.push('vote:up')
+    this.setState({ can_vote: true })
+  }
+
+  vote(type) {
+    this.params = {
+      coordinates:
+      vote_type: type
+    }
+
+    const params =
+
+    this.props.current_place_channel.push('vote:new', {
+      coordinates: {
+        lat: this.props.current_place.getIn(['coordinates', 'lat']),
+        lng: this.props.current_place.getIn(['coordinates', 'lng'])
+      },
+      vote_type: type
+    })
     this.setState({ can_vote: true })
   }
 
   render() {
     return (
       <div className={voteContainer}>
-        <Button styling={"vote"} onClick={this.voteDown}
+        <Button styling={"vote"} onClick={(type) => this.vote(5)}
                 text={"Vote Down"} disabled={this.state.can_vote} />
-        <Button styling={"vote"} onClick={this.voteUp}
+              <Button styling={"vote"} onClick={(type) => this.vote(6)}
           text={"Vote Up"} disabled={this.state.can_vote} />
       </div>
     )
   }
 }
 
-function mapStateToProps({ users, connections }) {
+function mapStateToProps({ users, connections, places }) {
   return {
     is_authed: users.get('is_authed'),
-    current_place_channel: connections.get('current_place_channel')
+    current_place_channel: connections.get('current_place_channel'),
+    current_place: places.get('current_place')
   }
 }
 

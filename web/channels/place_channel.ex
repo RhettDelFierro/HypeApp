@@ -24,9 +24,8 @@ defmodule Hypeapp.PlaceChannel do
     send self(), :after_join
 
     place_id = check_and_set_place(yelp_id, zip_code)
-    IO.puts "HERE IS THE ID: #{place_id}"
 
-    {:ok, assign(socket, :place_id, place_id) }
+    {:ok, assign(socket,:place_id, place_id)}
   end
 
   def join(_other, _params) do
@@ -62,21 +61,29 @@ defmodule Hypeapp.PlaceChannel do
   end
 
   #Here's the thing, there is a difference between channel callbacks and persistency.
-  def handle_in("vote:new", vote, place, socket) do
+  def handle_in("vote:new", payload, place, socket) do
     Logger.debug "#{inspect vote}"
-
-    vote = build_assoc(place, :votes)
-    user = Repo.get(User,socket.assigns.id)
-    vote = build_assoc(user, :votes, Map.from_struct vote)
+    vote = build_vote(place)
 
     case Repo.insert(vote) do
        {:ok, vote} ->
          broadcast! socket, "vote:new", %{
            user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-           body: vote.vote_type,
+           body: payload.vote_type,
            type: "vote",
            timestamp: :os.system_time(:milli_seconds)
          }
+
+         # check for tending.
+         count = get_recent(socket)
+         if count >= 10 do
+           Hypeapp.Endpoint.broadcast! "home:" <> place.zip_code, "trending:new",
+            %{
+             body: payload.coordinates,
+             timestamp: :os.system_time(:milli_seconds)
+            }
+         end
+
          {:noreply, socket}
         {:error, changeset} ->
           {:reply, {:error, %{errors: changeset}}, socket}
@@ -84,10 +91,25 @@ defmodule Hypeapp.PlaceChannel do
 
   end
 
+  defp get_recent(socket) do
+    place = socket.place_id
+      |> Vote.get_full_feed
+      |> Vote.get_votes_from(-1, "hour")
+      |> select([v], count(v.id))
+      |> Repo.aggregate(:count, :id)
+    place
+  end
+
+  defp build_vote(model) do
+    vote = build_assoc(model, :votes)
+    user = Repo.get(User, %{"id" => socket.assigns.id} )
+    build_assoc(user, :votes, Map.from_struct vote)
+  end
+
   defp after_join_feed(socket) do
     # right now sending a list of structs that contain both votes and reviews for a user.
      feed = socket.assigns.place_id
-      |> Vote.get_votes
+      |> Vote.get_full_feed
       |> User.join_users(:user)
       # |> select([v,r,u], %{
       |> select([v,u], %{
@@ -98,19 +120,6 @@ defmodule Hypeapp.PlaceChannel do
           timestamp: v.inserted_at
           })
       |> Repo.all
-
-    # reviews = socket.assign.place_id
-    #     |> Review.get_reviews
-    #     |> User.join_users(:user)
-    #     |> select([v,u], %{
-    #         first_name: u.first_name,
-    #         last_name: u.last_name,
-    #         review: r.review,
-    #         vote_type: v.vote_type_id,
-    #         timestamp: v.inserted_at
-    #         })
-    #     |> Repo.all
-
 
       push socket, "join_feed", %{data: feed}
       socket
@@ -143,6 +152,7 @@ defmodule Hypeapp.PlaceChannel do
           |> Repo.insert!
         Ecto.Changeset.get_field(changeset, :id)
     end
+
   end
 
 

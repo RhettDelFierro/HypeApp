@@ -25,7 +25,7 @@ defmodule Hypeapp.Vote do
       |> assoc_constraint(:vote_type)
   end
 
-  def get_votes(place_id) do
+  def get_full_feed(place_id) do
      __MODULE__ |> where([v], v.place_id == ^place_id)
   end
 
@@ -34,25 +34,5 @@ defmodule Hypeapp.Vote do
     query
       |> where([v], v.place_id > ago(^num, ^intv))
   end
-
-  def get_recent_feed(query) do
-    query
-      |> select([v,r,u], %{
-        first_name: u.first_name,
-        last_name: u.last_name,
-        review: r.review,
-        place_id: v.place_id,
-        timestamp: v.inserted_at
-        })
-  end
-
-    def recent_feed_combine(place_id) do
-       from v in __MODULE__,
-        where: v.place_id == ^place_id,
-        join: r in Review,
-        where: v.place_id == r.place_id,
-        order_by: [asc: :inserted_at]
-    end
-
 
 end
