@@ -20,6 +20,7 @@ opts = {
     }
     topic: "place",
     subtopic: "place_id"
+    zip_code
   }
 }
 */
@@ -123,7 +124,7 @@ function setHomeChannel({ home_channel_name, channel }) {
   }
 }
 
-export function setAndJoinHomeChannel({ zip_code, zipcode }) {
+export function setAndJoinHomeChannel({ zip_code }) {
   return function (dispatch,getState) {
     const channel = socket.channel(`home:${zip_code}`)
       channel.join()

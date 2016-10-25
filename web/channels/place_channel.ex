@@ -69,19 +69,21 @@ defmodule Hypeapp.PlaceChannel do
        {:ok, vote} ->
          broadcast! socket, "vote:new", %{
            user: "#{socket.assigns.first_name} #{socket.assigns.last_name}",
-           body: payload.vote_type,
+           body: payload,
            type: "vote",
            timestamp: :os.system_time(:milli_seconds)
          }
 
          # check for tending.
          count = get_recent(socket)
-         if count >= 10 do
+         if count >= 2 do
            Hypeapp.Endpoint.broadcast! "home:" <> place.zip_code, "trending:new",
             %{
-             body: payload.coordinates,
+             body: payload,
              timestamp: :os.system_time(:milli_seconds)
             }
+
+            #how about when it's cooled?
          end
 
          {:noreply, socket}

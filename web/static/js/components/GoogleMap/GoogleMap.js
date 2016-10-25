@@ -79,7 +79,6 @@ class GoogleMap extends Component {
     const mapCanvas = this.mapNode
     const lat = this.props.lat
     const lng = this.props.lng
-    console.log(lat,lng)
     const mapOptions = {
         center: new google.maps.LatLng(lat,lng),
         zoom: this.props.zoom,

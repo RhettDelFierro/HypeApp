@@ -1,6 +1,7 @@
 import React, { PropTypes,Component } from "react"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { toJS } from 'immutable'
 import * as placesActionCreators from 'redux/modules/places'
 import { Button } from 'components'
 import { voteContainer } from './styles.css'
@@ -9,8 +10,7 @@ class Vote extends Component {
   constructor(props) {
     super(props)
     this.state = { can_vote: false }
-    this.voteUp = this.voteUp.bind(this)
-    this.voteDown = this.voteDown.bind(this)
+    this.vote = this.vote.bind(this)
   }
 
   componentDidMount() {
@@ -20,31 +20,10 @@ class Vote extends Component {
     }
   }
 
-  voteDown() {
-    this.props.current_place_channel.push('vote:down')
-    this.setState({ can_vote: true })
-  }
-
-  voteUp() {
-    this.props.current_place_channel.push('vote:up')
-    this.setState({ can_vote: true })
-  }
-
   vote(type) {
-    this.params = {
-      coordinates:
-      vote_type: type
-    }
-
-    const params =
-
-    this.props.current_place_channel.push('vote:new', {
-      coordinates: {
-        lat: this.props.current_place.getIn(['coordinates', 'lat']),
-        lng: this.props.current_place.getIn(['coordinates', 'lng'])
-      },
-      vote_type: type
-    })
+    const voteParams = this.props.current_place.toJS()
+    voteParams.type = type
+    this.props.current_place_channel.push('vote:new', voteParams)
     this.setState({ can_vote: true })
   }
 

@@ -31,6 +31,12 @@ class CheckPlaceContainer extends React.Component {
   componentDidMount() {
     if(!this.props.socket) {
         this.props.setupSocket(this.opts)
+    } else {
+      this.props.setAndJoinPlaceChannel({
+        place_id: this.props.place_id,
+        socket: this.props.socket,
+        params: this.opts.params
+      })
     }
   }
 
