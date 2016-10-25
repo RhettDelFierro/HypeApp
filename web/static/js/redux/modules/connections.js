@@ -21,6 +21,9 @@ opts = {
     topic: "place",
     subtopic: "place_id"
     zip_code
+
+    topic: "home",
+    subtopics: [zip_codes]
   }
 }
 */
@@ -42,7 +45,7 @@ function switchChannels ({ dispatch, socket, opts, zip_code }) {
     case "place":
       return dispatch(setAndJoinPlaceChannel({ place_id: opts.subtopic, params: opts.params, socket }))
     case "home":
-      return dispatch(setAndJoinHomeChannel({ zip_code: opts.subtopic, socket }))
+      opts.subtopics.forEach((item) => dispatch(setAndJoinHomeChannel({ zip_code: item, socket })))
     default:
       return dispatch(setSocketError("topic not found. switchChannels()"))
   }
@@ -94,7 +97,7 @@ export function setAndJoinPlaceChannel({ place_id, socket, params }) {
         .receive("ok", ({ data }) => {
           //remove the console.log and dispatch an action to tell the user they've joined.
           //maybe like a green light next to the user name.
-          console.log("YESSIR", data)
+          console.log("YESSIR PALCE CHANNEL", data)
           dispatch(setCurrentPlaceChannel(channel))
           //dispatch(updateFeed(reviews))
         })
@@ -124,13 +127,16 @@ function setHomeChannel({ home_channel_name, channel }) {
   }
 }
 
-export function setAndJoinHomeChannel({ zip_code }) {
+export function setAndJoinHomeChannel({ zip_code, socket }) {
   return function (dispatch,getState) {
     const channel = socket.channel(`home:${zip_code}`)
       channel.join()
         .receive("ok", () => {
-          console.log("YESSIR")
-          dispatch(setHomeChannel(channel))
+          console.log("YESSIR HOME CHANNEL")
+          dispatch(setHomeChannel({
+            home_channel_name: `home:${zip_code}`,
+            channel
+          }))
           //dispatch(updateFeed(reviews))
         })
         .receive("error", (error) => {
@@ -180,7 +186,7 @@ const initial_state = fromJS({
   socket: null,
   location_channel: null,
   current_place_channel: null,
-  home_channels: null,
+  home_channels_joined: null,
   presences: {},
   presence_channel: null,
   votes_channel: null,
@@ -205,7 +211,7 @@ export default function connections(state = initial_state, action) {
         })
       case SET_HOME_CHANNEL:
         return state.merge({
-          home_channels: state.setIn(['home_channel', action.home_channel_name],action.channel)
+          home_channels_joined: state.setIn(['home_channels_joined', action.home_channel_name],action.channel)
         })
       case SET_PRESENCES:
         return state.merge({

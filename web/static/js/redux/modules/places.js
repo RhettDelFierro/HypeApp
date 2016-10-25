@@ -1,9 +1,10 @@
 import { fromJS } from 'immutable'
-import { getPlacesAPI, sortPlaces } from 'utils/placesFunctions'
+import { getPlacesAPI, sortPlaces, pullZipCodes } from 'utils/placesFunctions'
 
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCESS'
 const SET_CURRENT_PLACE = 'SET_CURRENT_PLACE'
+const SET_ZIP_CODES = 'SET_ZIP_CODES'
 const SET_CURRENT_PLACE_ERROR = 'SET_CURRENT_PLACE_ERROR'
 const SET_TRENDING_PLACE = 'SET_TRENDING_PLACE'
 const SET_COOLED_PLACE = 'SET_COOLED_PLACE'
@@ -14,8 +15,10 @@ export function getPlaces(coordinates) {
     try {
       const initial_places = await getPlacesAPI(coordinates)
       const places = sortPlaces(initial_places)
+      const zip_codes = pullZipCodes(places)
       //console.log(sorted_places)
       dispatch(fetchingPlacesSuccess(places))
+      dispatch(setZipCodes(zip_codes))
       //dispatch(checkID's for reviews function())
     } catch (error) {
         console.log(error)
@@ -34,6 +37,13 @@ export function fetchingPlacesSuccess(places) {
   return {
     type: FETCHING_PLACES_SUCCESS,
     places
+  }
+}
+
+export function setZipCodes(zip_codes){
+  return {
+    type: SET_ZIP_CODES,
+    zip_codes
   }
 }
 
@@ -89,7 +99,8 @@ const initial_state = fromJS({
     current_place: '',
     current_place_error: '',
     cooled_places: [],
-    trending_places: []
+    trending_places: [],
+    zip_codes: []
 })
 
 export default function places(state = initial_state, action) {
@@ -109,6 +120,10 @@ export default function places(state = initial_state, action) {
       case SET_CURRENT_PLACE:
           return state.merge({
             current_place: action.current_place
+          })
+      case SET_ZIP_CODES:
+          return state.merge({
+            zip_codes: action.zip_codes
           })
       case SET_CURRENT_PLACE_ERROR:
           return state.merge({

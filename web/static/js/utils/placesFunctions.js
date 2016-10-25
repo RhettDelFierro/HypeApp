@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Socket, Presence } from 'phoenix.js'
-import { fromJS }  from 'immutable'
+import { fromJS, toSet }  from 'immutable'
 
 function buildURL({ coords }) {
   return `api/auth/yelp?latitude=${coords.latitude}&longitude=${coords.longitude}`
@@ -33,6 +33,10 @@ export function sortPlaces(places) {
       }
     )
   })
+}
+
+export function pullZipCodes(places) {
+  return places.map((item) => item.get('zip_code')).toSet()
 }
 
 export function setPlacesConnection({ yelp_id, params }) {

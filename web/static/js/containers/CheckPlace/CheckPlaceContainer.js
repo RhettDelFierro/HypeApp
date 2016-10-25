@@ -27,7 +27,6 @@ class CheckPlaceContainer extends React.Component {
       }
   }
 
-  //socket should also go in redux store?
   componentDidMount() {
     if(!this.props.socket) {
         this.props.setupSocket(this.opts)
