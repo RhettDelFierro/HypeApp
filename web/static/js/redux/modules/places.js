@@ -13,12 +13,16 @@ export function getPlaces(coordinates) {
   return async function(dispatch,getState) {
     dispatch(fetchingPlaces())
     try {
+      const socket = getState().connections.get('socket')
       const initial_places = await getPlacesAPI(coordinates)
       const places = sortPlaces(initial_places)
       const zip_codes = pullZipCodes(places)
       //console.log(sorted_places)
       dispatch(fetchingPlacesSuccess(places))
       dispatch(setZipCodes(zip_codes))
+      if (!socket) {
+        dispatch()
+      }
       //dispatch(checkID's for reviews function())
     } catch (error) {
         console.log(error)

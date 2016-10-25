@@ -15,12 +15,28 @@ class HomeContainer extends Component {
 
   componentWillMount() {
     this.props.getCurrentLocation()
-    this.props.setUserSocket()
+    // this.opts = {
+    //     presence: true,
+    //     presenceOpts: {
+    //       topic: "Home",
+    //       subtopic: this.props.place_id, //multiple zipcodes
+    //       zip_code: this.props.zip_code
+    //     },
+    //   }
+    // this.props.setUserSocket()
     //subscribe to places:local/city channel?
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(newProps) {
+    // if (this.props.zip_codes != newProps.zip_codes) {
+    //
+    // }
+  }
 
+  componentDidMount() {
+    if (!this.props.socket) {
+
+    }
   }
 
   render() {

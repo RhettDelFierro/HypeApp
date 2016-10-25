@@ -11,7 +11,9 @@ import { socketParams } from 'utils/userFunctions'
 class CheckPlaceContainer extends React.Component {
   constructor(props) {
     super(props)
+  }
 
+  componentsWillMount() {
     this.opts = {
         presence: true,
         presenceOpts: {
@@ -36,6 +38,11 @@ class CheckPlaceContainer extends React.Component {
         socket: this.props.socket,
         params: this.opts.params
       })
+      this.props.setAndJoinPresenceChannel({
+        socket: this.props.socket,
+        presence_channel:
+        `${this.opts.presenceOpts.topic}:${this.opts.presenceOpts.subtopic}`
+        })
     }
   }
 
