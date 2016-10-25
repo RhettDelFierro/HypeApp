@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
 import { getPlacesAPI, sortPlaces, pullZipCodes } from 'utils/placesFunctions'
+import { setUpSocket } from 'redux/modules/connections'
 
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCESS'
@@ -21,7 +22,13 @@ export function getPlaces(coordinates) {
       dispatch(fetchingPlacesSuccess(places))
       dispatch(setZipCodes(zip_codes))
       if (!socket) {
-        dispatch()
+        dispatch(setUpSocket({
+          topic: "home",
+          subtopics: zip_codes
+          })
+        )
+      } else {
+        zip_codes.forEach((item) => dispatch(setAndJoinHomeChannel({ zip_code: item, socket })))
       }
       //dispatch(checkID's for reviews function())
     } catch (error) {
