@@ -89,16 +89,28 @@ defmodule Hypeapp.PlaceChannel do
      feed = socket.assigns.place_id
       |> Vote.get_votes
       |> User.join_users(:user)
-      |> Review.join_reviews(:user)
       # |> select([v,r,u], %{
-      |> select([v,u,r], %{
-          "first_name" => u.first_name,
-          "last_name" => u.last_name,
-          "review" => r.review,
-          "vote_type" => v.vote_type_id,
-          "timestamp" => v.inserted_at
+      |> select([v,u], %{
+          first_name: u.first_name,
+          last_name: u.last_name,
+          review: v.review,
+          vote_type: v.vote_type_id,
+          timestamp: v.inserted_at
           })
       |> Repo.all
+
+    # reviews = socket.assign.place_id
+    #     |> Review.get_reviews
+    #     |> User.join_users(:user)
+    #     |> select([v,u], %{
+    #         first_name: u.first_name,
+    #         last_name: u.last_name,
+    #         review: r.review,
+    #         vote_type: v.vote_type_id,
+    #         timestamp: v.inserted_at
+    #         })
+    #     |> Repo.all
+
 
       push socket, "join_feed", %{data: feed}
       socket

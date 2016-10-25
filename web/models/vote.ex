@@ -3,6 +3,7 @@ defmodule Hypeapp.Vote do
   #can use yelp_id and user_id to get
   alias Hypeapp.Review
   schema "votes" do
+    field :review, :string
     belongs_to :user, Hypeapp.User
     belongs_to :vote_type, Hypeapp.VoteType
     belongs_to :place, Hypeapp.Place
@@ -17,6 +18,8 @@ defmodule Hypeapp.Vote do
   def changeset(struct, params \\ %{}) do
     struct
       #I do not think cast_assoc is right here. It needs params too.
+      |> cast(params, [:review])
+      |> validate_length(:review, min: 1, max: 140)
       |> assoc_constraint(:places)
       |> assoc_constraint(:users)
       |> assoc_constraint(:vote_type)

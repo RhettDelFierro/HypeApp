@@ -2,7 +2,7 @@ defmodule Hypeapp.VoteType do
   use Hypeapp.Web, :model
 
   schema "vote_types" do
-    has_one :votes, Hypeapp.Vote
+    has_one :vote, Hypeapp.Vote
     field :vote_type, :string
 
 
