@@ -1,6 +1,6 @@
-import { fromJS } from 'immutable'
+import { fromJS, toSet } from 'immutable'
 import { getPlacesAPI, sortPlaces, pullZipCodes } from 'utils/placesFunctions'
-import { setUpSocket } from 'redux/modules/connections'
+import { setupSocket } from 'redux/modules/connections'
 
 const FETCHING_PLACES = 'FETCHING_PLACES'
 const FETCHING_PLACES_SUCCESS = 'FETCHING_PLACES_SUCCESS'
@@ -22,7 +22,7 @@ export function getPlaces(coordinates) {
       dispatch(fetchingPlacesSuccess(places))
       dispatch(setZipCodes(zip_codes))
       if (!socket) {
-        dispatch(setUpSocket({
+        dispatch(setupSocket({
           topic: "home",
           subtopics: zip_codes
           })
@@ -65,17 +65,17 @@ export function setCurrentPlace(current_place) {
   }
 }
 
-export function setTrendingPlace(place_id) {
+export function setTrendingPlace(place) {
   return {
     type: SET_TRENDING_PLACE,
-    place_id
+    place
   }
 }
 
-export function setCooledPlace(place_id) {
+export function setCooledPlace(place) {
   return {
     type: SET_COOLED_PLACE,
-    place_id
+    place
   }
 }
 
@@ -142,7 +142,7 @@ export default function places(state = initial_state, action) {
           })
       case SET_TRENDING_PLACE:
           return state.merge({
-            trending_places: action.place_id
+            trending_places: state.setIn(['trending_places', action.place.get('name')], action.place)
           })
       case SET_COOLED_PLACE:
           return state.merge({

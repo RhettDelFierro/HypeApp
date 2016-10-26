@@ -62,8 +62,8 @@ defmodule Hypeapp.PlaceChannel do
 
   #Here's the thing, there is a difference between channel callbacks and persistency.
   def handle_in("vote:new", payload, place, socket) do
-    Logger.debug "#{inspect vote}"
-    vote = build_vote(place)
+    #Logger.debug "#{inspect payload}"
+    vote = build_vote(place, socket)
 
     case Repo.insert(vote) do
        {:ok, vote} ->
@@ -102,7 +102,7 @@ defmodule Hypeapp.PlaceChannel do
     place
   end
 
-  defp build_vote(model) do
+  defp build_vote(model, socket) do
     vote = build_assoc(model, :votes)
     user = Repo.get(User, %{"id" => socket.assigns.id} )
     build_assoc(user, :votes, Map.from_struct vote)

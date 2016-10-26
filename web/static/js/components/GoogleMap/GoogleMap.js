@@ -36,6 +36,10 @@ class GoogleMap extends Component {
     if (this.props.places != nextProps.places && this.props.places_ready) {
       this.createPlaceMarkers(nextProps.places)
     }
+
+    if (this.props.trending_places != nextProps.trending_places) {
+      this.createPlaceMarkers(nextProps.trending_places)
+    }
   }
 
   createPlaceMarkers(places) {
@@ -43,7 +47,9 @@ class GoogleMap extends Component {
       let marker =  new google.maps.Marker({
         map: this.map,
         position: new google.maps.LatLng(v.getIn(['coordinates','lat']), v.getIn(['coordinates','lng'])),
-        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+        icon: v.get('trending')
+          ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+          : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
       })
       this.setInfo(marker, v)
     })
@@ -129,7 +135,8 @@ function mapStateToProps({ places, locations, googlemap }) {
     lng: googlemap.get('lng'),
     zoom: googlemap.get('zoom'),
     places: places.get('places_fetched'),
-    places_ready: places.get('places_ready')
+    places_ready: places.get('places_ready'),
+    trending_places: places.get('trending_places')
   }
 }
 

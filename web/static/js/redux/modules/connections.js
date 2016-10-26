@@ -61,7 +61,9 @@ export function setupSocket(opts) {
     socket.onClose((close) => console.log('I closed the socket to channel'))
     socket.connect()
 
-    switchPresenceChannels({ dispatch, socket, opts: opts.presenceOpts })
+    if (opts.presence) {
+      switchPresenceChannels({ dispatch, socket, opts: opts.presenceOpts })
+    }
     switchChannels({ dispatch, socket, opts })
 
     dispatch(setUserSocket(socket))
@@ -108,13 +110,13 @@ export function setAndJoinPlaceChannel({ place_id, socket, params }) {
       channel.on("review:new", payload => {
         dispatch(addReviewToFeed(payload))
       })
-      channel.on("vote:new", payload =>{
+      channel.on("vote:new", payload => {
         console.log('VOTE:NEW', payload)
         dispatch(addVoteToFeed(payload))
       })
-      channel.on("join_feed", payload =>{
+      channel.on("join_feed", payload => {
         console.log('JOIN_FEED', payload)
-        dispatch(addVoteToFeed(payload))
+        dispatch(catchUpFeed(payload))
       })
   }
 }
@@ -146,12 +148,13 @@ export function setAndJoinHomeChannel({ zip_code, socket }) {
       //the payload is the full json object of the trending place_id
       //render the Place a different marker after it goes to the store.
       channel.on("trending:new", payload => {
-        dispatch(trendingPlace(payload))
+        payload.trending = true
+        dispatch(setTrendingPlace(payload))
       })
       //cooled place is for the place_id that is no longer trending.
       //cooled is default (regular marker)
       channel.on("trending:cooled", payload =>{
-        dispatch(cooledPlace(payload))
+        dispatch(cooledPlace(fromJS(payload)))
       })
   }
 }
@@ -186,7 +189,7 @@ const initial_state = fromJS({
   socket: null,
   location_channel: null,
   current_place_channel: null,
-  home_channels_joined: null,
+  home_channels_joined: {},
   presences: {},
   presence_channel: null,
   votes_channel: null,
@@ -211,7 +214,7 @@ export default function connections(state = initial_state, action) {
         })
       case SET_HOME_CHANNEL:
         return state.merge({
-          home_channels_joined: state.setIn(['home_channels_joined', action.home_channel_name],action.channel)
+          home_channels_joined: state.setIn(['home_channels_joined', action.home_channel_name], action.channel)
         })
       case SET_PRESENCES:
         return state.merge({
